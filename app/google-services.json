@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "87322494460",
+    "firebase_url": "https://pewpew-203ca.firebaseio.com",
+    "project_id": "pewpew-203ca",
+    "storage_bucket": "pewpew-203ca.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:87322494460:android:8b0dcc22a595a929",
+        "android_client_info": {
+          "package_name": "sis.pewpew"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "87322494460-hdmludcot8md551ctvhqpvtv61r4tsep.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "sis.pewpew",
+            "certificate_hash": "cb5015456ac7aeabe0355703e499a28679351e1c"
+          }
+        },
+        {
+          "client_id": "87322494460-9na57t67qbhfctk5npfdm0imfrvq713f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBq17-l7WiebI7fXBeOAR5c0oXPLMSEIRI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "87322494460-9na57t67qbhfctk5npfdm0imfrvq713f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

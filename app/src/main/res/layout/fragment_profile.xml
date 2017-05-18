@@ -1,0 +1,403 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="sis.pewpew.fragments.ProfileFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/profile_main_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_margin="10dp"
+                android:clickable="true"
+                android:foreground="?selectableItemBackground"
+                card_view:cardBackgroundColor="#FFFFFF"
+                card_view:cardCornerRadius="10dp"
+                card_view:cardElevation="5dp"
+                card_view:contentPadding="0dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/profile_user_icon"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:contentDescription="@string/description"
+                        android:paddingBottom="5dp"
+                        android:paddingTop="15dp"
+                        app:srcCompat="@drawable/profile_icon" />
+
+                    <TextView
+                        android:id="@+id/profile_username"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/profile_user_icon"
+                        android:layout_centerHorizontal="true"
+                        android:textColor="#222"
+                        android:textSize="40sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/profile_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/profile_username"
+                        android:layout_centerHorizontal="true"
+                        android:paddingBottom="15dp"
+                        android:text="Проверяем пометку…"
+                        android:textSize="20sp" />
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/profile_points_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/profile_main_card"
+                android:layout_margin="10dp"
+                android:clickable="true"
+                android:foreground="?selectableItemBackground"
+                card_view:cardBackgroundColor="#456"
+                card_view:cardCornerRadius="10dp"
+                card_view:cardElevation="5dp"
+                card_view:contentPadding="5dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/profile_points_icon"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_alignParentTop="true"
+                        android:contentDescription="@string/description"
+                        android:foregroundGravity="left"
+                        android:padding="10dp"
+                        app:srcCompat="@drawable/profile_points_icon_2" />
+
+                    <TextView
+                        android:id="@+id/profile_points"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/profile_points_icon"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="0dp"
+                        android:text="Загрузка…"
+                        android:textColor="#FFFFFF"
+                        android:textSize="45sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/profile_points_call"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/profile_points"
+                        android:layout_toRightOf="@id/profile_points_icon"
+                        android:paddingLeft="10dp"
+                        android:text="Очков получено"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20sp" />
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/profile_rank_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/profile_points_card"
+                android:layout_margin="10dp"
+                android:clickable="true"
+                android:foreground="?selectableItemBackground"
+                card_view:cardBackgroundColor="#298"
+                card_view:cardCornerRadius="10dp"
+                card_view:cardElevation="5dp"
+                card_view:contentPadding="5dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/profile_rank_icon"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_alignParentTop="true"
+                        android:contentDescription="@string/description"
+                        android:foregroundGravity="left"
+                        android:padding="10dp"
+                        app:srcCompat="@drawable/profile_rank_icon" />
+
+                    <TextView
+                        android:id="@+id/profile_rank"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_toRightOf="@id/profile_rank_icon"
+                        android:paddingLeft="10dp"
+                        android:text="Загрузка…"
+                        android:textColor="#FFFFFF"
+                        android:textSize="45sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/profile_rank_call"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/profile_rank"
+                        android:layout_toRightOf="@id/profile_rank_icon"
+                        android:paddingLeft="10dp"
+                        android:text="Ваше звание"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20sp" />
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/profile_achieves_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/profile_rank_card"
+                android:layout_margin="10dp"
+                android:clickable="true"
+                android:foreground="?selectableItemBackground"
+                card_view:cardBackgroundColor="#987"
+                card_view:cardCornerRadius="10dp"
+                card_view:cardElevation="5dp"
+                card_view:contentPadding="5dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/profile_achieves_icon"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_alignParentTop="true"
+                        android:contentDescription="@string/description"
+                        android:foregroundGravity="left"
+                        android:padding="10dp"
+                        app:srcCompat="@drawable/profile_achieves_icon" />
+
+                    <TextView
+                        android:id="@+id/profile_achieves"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_toRightOf="@id/profile_achieves_icon"
+                        android:paddingLeft="10dp"
+                        android:text="Загрузка…"
+                        android:textColor="#FFFFFF"
+                        android:textSize="45sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/profile_achieves_call"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/profile_achieves"
+                        android:layout_toRightOf="@id/profile_achieves_icon"
+                        android:paddingLeft="10dp"
+                        android:text="Достижений открыто"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20sp" />
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/profile_saved_trees_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/profile_achieves_card"
+                android:layout_margin="10dp"
+                android:clickable="true"
+                android:foreground="?selectableItemBackground"
+                card_view:cardBackgroundColor="#490"
+                card_view:cardCornerRadius="10dp"
+                card_view:cardElevation="5dp"
+                card_view:contentPadding="5dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/profile_saved_trees_icon"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_alignParentTop="true"
+                        android:contentDescription="@string/description"
+                        android:foregroundGravity="left"
+                        android:padding="10dp"
+                        app:srcCompat="@drawable/profile_saved_trees_icon" />
+
+                    <TextView
+                        android:id="@+id/profile_saved_trees"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_toRightOf="@id/profile_saved_trees_icon"
+                        android:paddingLeft="10dp"
+                        android:text="Загрузка…"
+                        android:textColor="#FFFFFF"
+                        android:textSize="45sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/profile_saved_trees_call"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/profile_saved_trees"
+                        android:layout_toRightOf="@id/profile_saved_trees_icon"
+                        android:paddingLeft="10dp"
+                        android:text="Деревьев спасено"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20sp" />
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/profile_saved_animals_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/profile_saved_trees_card"
+                android:layout_margin="10dp"
+                android:clickable="true"
+                android:foreground="?selectableItemBackground"
+                card_view:cardBackgroundColor="#756"
+                card_view:cardCornerRadius="10dp"
+                card_view:cardElevation="5dp"
+                card_view:contentPadding="5dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/profile_saved_animals_icon"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_alignParentTop="true"
+                        android:contentDescription="@string/description"
+                        android:foregroundGravity="left"
+                        android:padding="10dp"
+                        app:srcCompat="@drawable/profile_saved_animals_icon" />
+
+                    <TextView
+                        android:id="@+id/profile_saved_animals"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_toRightOf="@id/profile_saved_animals_icon"
+                        android:paddingLeft="10dp"
+                        android:text="Загрузка…"
+                        android:textColor="#FFFFFF"
+                        android:textSize="45sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/profile_saved_animals_call"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/profile_saved_animals"
+                        android:layout_toRightOf="@id/profile_saved_animals_icon"
+                        android:paddingLeft="10dp"
+                        android:text="Животных спасено"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20sp" />
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/profile_saved_people_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/profile_saved_animals_card"
+                android:layout_margin="10dp"
+                android:clickable="true"
+                android:foreground="?selectableItemBackground"
+                card_view:cardBackgroundColor="#999"
+                card_view:cardCornerRadius="10dp"
+                card_view:cardElevation="5dp"
+                card_view:contentPadding="5dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/profile_saved_people_icon"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_alignParentTop="true"
+                        android:contentDescription="@string/description"
+                        android:foregroundGravity="left"
+                        android:padding="10dp"
+                        app:srcCompat="@drawable/profile_saved_people_icon" />
+
+                    <TextView
+                        android:id="@+id/profile_saved_people"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_toRightOf="@id/profile_saved_people_icon"
+                        android:paddingLeft="10dp"
+                        android:text="Загрузка…"
+                        android:textColor="#FFFFFF"
+                        android:textSize="45sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/profile_saved_people_call"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/profile_saved_people"
+                        android:layout_toRightOf="@id/profile_saved_people_icon"
+                        android:paddingLeft="10dp"
+                        android:text="Человек спасено"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20sp" />
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</FrameLayout>

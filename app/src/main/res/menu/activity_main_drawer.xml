@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_map"
+            android:icon="@drawable/ic_menu_map"
+            android:title="@string/map_fragment_name" />
+        <item
+            android:id="@+id/nav_progress"
+            android:icon="@drawable/ic_menu_progress"
+            android:title="@string/progress_fragment_name" />
+        <item
+            android:id="@+id/nav_rating"
+            android:icon="@drawable/ic_menu_rating"
+            android:title="@string/rating_fragment_name" />
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/ic_menu_profile"
+            android:title="@string/profile_fragment_name" />
+        <item
+            android:id="@+id/nav_achievements"
+            android:icon="@drawable/ic_menu_achievements"
+            android:title="@string/achievements_fragment_name" />
+        <item
+            android:id="@+id/nav_events"
+            android:icon="@drawable/ic_menu_events"
+            android:title="@string/events_fragment_name" />
+        <item
+            android:id="@+id/nav_news"
+            android:icon="@drawable/ic_menu_news"
+            android:title="@string/news_fragment_name" />
+        <item
+            android:id="@+id/nav_training"
+            android:icon="@drawable/ic_menu_training"
+            android:title="@string/training_fragment_name" />
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_menu_settings"
+            android:title="@string/settings_fragment_name" />
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/ic_menu_about"
+            android:title="@string/about_fragment_name" />
+    </group>
+
+    <item android:title="@string/feedback_header_name">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="@string/share_fragment_name" />
+            <item
+                android:id="@+id/nav_feedback"
+                android:icon="@drawable/ic_menu_feedback"
+                android:title="@string/feedback_fragment_name" />
+            <item
+                android:id="@+id/nav_gratitude"
+                android:icon="@drawable/ic_menu_gratitude"
+                android:title="@string/gratitude_fragment_name" />
+        </menu>
+    </item>
+
+</menu>

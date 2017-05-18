@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/map_filter_battery"
+        android:checkable="true"
+        android:checked="true"
+        android:title="Батареи"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/map_filter_paper"
+        android:checkable="true"
+        android:title="Бумага"
+        android:checked="true"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/map_filter_glass"
+        android:checkable="true"
+        android:title="Стекло"
+        android:checked="true"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/map_filter_metal"
+        android:checkable="true"
+        android:title="Металл"
+        android:checked="true"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/map_filter_plastic"
+        android:checkable="true"
+        android:checked="true"
+        android:title="Пластик"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/map_filter_bulb"
+        android:checkable="true"
+        android:title="Лампы"
+        android:checked="true"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/map_filter_dangers"
+        android:checkable="true"
+        android:checked="true"
+        android:title="Опасные отходы"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/map_filter_other"
+        android:checkable="true"
+        android:checked="true"
+        android:title="Другое"
+        app:showAsAction="never" />
+
+</menu>

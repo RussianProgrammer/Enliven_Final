@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="Уведомления">
+
+        <PreferenceScreen android:title="Лицензионное соглашение">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="http://www.android.com" />
+        </PreferenceScreen>
+
+        <PreferenceScreen android:title="Политика конфиденциальности">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="http://www.android.com" />
+        </PreferenceScreen>
+
+        <PreferenceScreen android:title="Правовая информация">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="http://www.android.com" />
+        </PreferenceScreen>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Персональные данные">
+
+        <ListPreference
+            android:defaultValue="1"
+            android:dialogTitle="Выберите Ваш город:"
+            android:entries="@array/listArrayCity"
+            android:entryValues="@array/listValuesCity"
+            android:key="city_selector"
+            android:summary="Укажите Ваш город проживания для корректной работы карты."
+            android:title="Город" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Использование">
+
+        <Preference
+            android:key="reset_button"
+            android:summary="Настройки приложения вернутся к первоначальным значениям."
+            android:title="Сбросить настройки" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Управление аккаунтом">
+
+        <PreferenceScreen
+            android:key="screen_preference"
+            android:summary="Настройки, которые помогут нам защитить Ваш аккаунт."
+            android:title="Безопасность">
+
+            <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="account_verified_checkbox"
+                android:selectable="false"
+                android:summary="Проверка подлинности и актуальности Вашего аккаунта. Верификация аккаунта проводится через электронную почту."
+                android:title="Подтвержденный аккаунт" />
+
+            <Preference
+                android:key="verify_account_button"
+                android:summary="Письмо с уникальной ссылкой верификации аккаунта будет отправлено на Ваш адрес электронной почты."
+                android:title="Подтвердить аккаунт" />
+
+            <PreferenceCategory android:title="Помощь">
+
+                <Preference
+                    android:key="verify_account_support_button"
+                    android:title="Я не подтверждал(-а) свой аккаунт" />
+            </PreferenceCategory>
+
+
+        </PreferenceScreen>
+
+        <Preference
+            android:key="sign_out_button"
+            android:summary="Вы будете перенаправлены на страницу входа."
+            android:title="Выйти из аккаунта" />
+
+        <Preference
+            android:key="delete_account_button"
+            android:summary="Ваш аккаунт со всеми связанными с ним данными будет удален, а Вы будете перенаправлены на страницу входа."
+            android:title="Удалить аккаунт" />
+
+
+        <!-- The visual style of a child is defined by this styled theme attribute. -->
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
+

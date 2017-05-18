@@ -1,0 +1,30 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="sis.pewpew.tutorial.TutorialFragment5">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:id="@+id/tutorial_text_5"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="5dp"
+        android:text="FIFTH TEXT"
+        android:textSize="100sp"
+        tools:text="FIFTH TEXT" />
+
+    <Button
+        android:id="@+id/request_permission_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="15dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp"
+        android:elevation="5dp"
+        android:onClick="finishTutorial"
+        android:text="@string/grant_access_button_text" />
+
+</FrameLayout>
