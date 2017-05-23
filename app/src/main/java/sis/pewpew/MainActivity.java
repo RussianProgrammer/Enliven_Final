@@ -1,9 +1,6 @@
 package sis.pewpew;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,7 +17,7 @@ import android.view.MenuItem;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import sis.pewpew.connections.GoogleAuthActivity;
+import sis.pewpew.connections.AuthActivity;
 import sis.pewpew.fragments.AboutFragment;
 import sis.pewpew.fragments.AchievementsFragment;
 import sis.pewpew.fragments.EventsFragment;
@@ -64,32 +61,8 @@ public class MainActivity extends NetIntegrationActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        SharedPreferences settings = this.getSharedPreferences("DEMO", 0);
-        boolean dialogShown = settings.getBoolean("dialogShown", false);
-
-        if (!dialogShown) {
-            AlertDialog.Builder demoVersionAttentionDialog = new AlertDialog.Builder(this);
-            demoVersionAttentionDialog.setTitle("Демоверсия");
-            demoVersionAttentionDialog.setCancelable(false);
-            demoVersionAttentionDialog.setIcon(R.drawable.ic_error_demo);
-            demoVersionAttentionDialog.setMessage("Пожалуйста, обратите внимание на то, " +
-                    "что данная версия приложения не является окончательной. " +
-                    "Некоторые функции используют демонстрационные сэмплы, вместо показа актуальной информации.");
-            demoVersionAttentionDialog.setNegativeButton("Нет проблем", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.cancel();
-                }
-            });
-            demoVersionAttentionDialog.show();
-
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putBoolean("dialogShown", true);
-            editor.apply();
-        }
-
         if (user == null) {
-            Intent intent = new Intent(MainActivity.this, GoogleAuthActivity.class);
+            Intent intent = new Intent(MainActivity.this, AuthActivity.class);
             startActivity(intent);
             finish();
         }
@@ -119,6 +92,10 @@ public class MainActivity extends NetIntegrationActivity
         shareFragment = new ShareFragment();
         trainingFragment = new TrainingFragment();
         eventsFragment = new EventsFragment();
+
+        android.app.FragmentTransaction fragmentTransaction1 = getFragmentManager().beginTransaction();
+        fragmentTransaction1.replace(R.id.container, progressFragment);
+        fragmentTransaction1.commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -166,22 +143,22 @@ public class MainActivity extends NetIntegrationActivity
 
         android.app.FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
 
-        if (id == R.id.nav_map) {
-            fragmentTransaction.replace(R.id.container, mapFragment);
-        } else if (id == R.id.nav_progress) {
+        if (id == R.id.nav_progress) {
             fragmentTransaction.replace(R.id.container, progressFragment);
-        } else if (id == R.id.nav_rating) {
-            fragmentTransaction.replace(R.id.container, ratingFragment);
+        } else if (id == R.id.nav_map) {
+            fragmentTransaction.replace(R.id.container, mapFragment);
+            //} else if (id == R.id.nav_rating) {
+            // fragmentTransaction.replace(R.id.container, ratingFragment);
         } else if (id == R.id.nav_profile) {
             fragmentTransaction.replace(R.id.container, profileFragment);
         } else if (id == R.id.nav_achievements) {
             fragmentTransaction.replace(R.id.container, achievementsFragment);
         } else if (id == R.id.nav_events) {
             fragmentTransaction.replace(R.id.container, eventsFragment);
-        } else if (id == R.id.nav_news) {
-            fragmentTransaction.replace(R.id.container, newsFragment);
         } else if (id == R.id.nav_training) {
             fragmentTransaction.replace(R.id.container, trainingFragment);
+        } else if (id == R.id.nav_news) {
+            fragmentTransaction.replace(R.id.container, newsFragment);
         } else if (id == R.id.nav_settings) {
             fragmentTransaction.replace(R.id.container, settingsFragment);
         } else if (id == R.id.nav_share) {

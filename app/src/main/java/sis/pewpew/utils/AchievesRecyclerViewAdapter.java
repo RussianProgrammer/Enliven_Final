@@ -39,7 +39,7 @@ public class AchievesRecyclerViewAdapter extends RecyclerView.Adapter<AchievesRe
 
     private String[] titles = new String[]{
             "Мангостин", "Дуриан", "Купуасу",
-            "Тамаринд", "Цитрон", "Жаботикаба",
+            "Нони", "Цитрон", "Жаботикаба",
             "Рамбутан", "Лонган", "Карамбола",
             "Питайя", "Гуава", "Чомпу",
             "Салак", "Баиль", "Кивано"};
@@ -49,15 +49,6 @@ public class AchievesRecyclerViewAdapter extends RecyclerView.Adapter<AchievesRe
             2600, 3100, 3600, 4100, 4600,
             5100, 5600, 6100, 6600, 7100};
 
-    private int[] ids = new int[15];
-
-    {
-        for (int i = 0; i < 15; i++) {
-            ids[i] = i;
-        }
-
-    }
-
     private final int[] iconIds = new int[]{
             R.drawable.achieve_1_icon, R.drawable.achieve_2_icon,
             R.drawable.achieve_3_icon, R.drawable.achieve_4_icon,
@@ -65,33 +56,29 @@ public class AchievesRecyclerViewAdapter extends RecyclerView.Adapter<AchievesRe
             R.drawable.achieve_7_icon, R.drawable.achieve_8_icon,
             R.drawable.achieve_9_icon, R.drawable.achieve_10_icon,
             R.drawable.achieve_11_icon, R.drawable.achieve_12_icon,
-            R.drawable.profile_saved_trees_icon, R.drawable.profile_saved_trees_icon,
-            R.drawable.profile_saved_trees_icon,
-    };
+            R.drawable.achieve_13_icon, R.drawable.achieve_14_icon,
+            R.drawable.achieve_15_icon};
 
     private final String[] colors1 = new String[]{
             "#262427", "#979329", "#705544",
-            "#E3B06E", "#E0A81D", "#440C1A",
+            "#7B8E08", "#E0A81D", "#440C1A",
             "#D00624", "#DCB141", "#DDD705",
             "#DD0F3A", "#778F03", "#F95754",
-            "#AD7568", "#C6A59A", "#EA8E04"
-    };
+            "#AD7568", "#C6A59A", "#EA8E04"};
 
     private final String[] colors2 = new String[]{
             "#8B5D5B", "#D7E5ED", "#B09F83",
-            "#996A4C", "#36680A", "#6F3C40",
+            "#D7E5ED", "#36680A", "#6F3C40",
             "#306026", "#A59A8D", "#859F03",
             "#D7E5ED", "#F45F3D", "#32630F",
-            "#30130B", "#6F986C", "#5D6E07"
-    };
+            "#30130B", "#6F986C", "#5D6E07"};
 
     private final String[] colors3 = new String[]{
             "#D7E5ED", "#F1C919", "#D7E5ED",
-            "#311E18", "#6B3D12", "#6E5242",
+            "#C6842E", "#6B3D12", "#6E5242",
             "#D7E5ED", "#510803", "#BE8500",
             "#111613", "#FFA366", "#A30002",
-            "#FEA961", "#D7E5ED", "#E0CE0B"
-    };
+            "#FEA961", "#D7E5ED", "#E0CE0B"};
 
     class ViewHolder extends RecyclerView.ViewHolder {
 

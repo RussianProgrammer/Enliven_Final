@@ -1,9 +1,47 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#1B5E20"
     tools:context="sis.pewpew.fragments.FeedbackFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:id="@+id/feedback_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:padding="20dp"
+        android:text="Поделитесь с нами своими впечатлениями о проекте"
+        android:textColor="#FFFFFF"
+        android:textSize="40dp" />
 
-</FrameLayout>
+    <ImageView
+        android:id="@+id/done"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_below="@id/feedback_result"
+        android:layout_centerHorizontal="true"/>
+
+    <EditText
+        android:id="@+id/feedback_field"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/send_feedback_button"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:hint="Текст отзыва"
+        android:inputType="text"
+        android:textColor="#FFFFFF" />
+
+    <Button
+        android:id="@+id/send_feedback_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:text="Отправить" />
+
+
+</RelativeLayout>

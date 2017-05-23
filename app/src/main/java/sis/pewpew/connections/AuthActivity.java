@@ -1,5 +1,7 @@
 package sis.pewpew.connections;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,7 +29,7 @@ import sis.pewpew.MainActivity;
 import sis.pewpew.R;
 import sis.pewpew.utils.ProgressDialogActivity;
 
-public class GoogleAuthActivity extends ProgressDialogActivity implements
+public class AuthActivity extends ProgressDialogActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener {
 
@@ -44,6 +46,50 @@ public class GoogleAuthActivity extends ProgressDialogActivity implements
         setContentView(R.layout.activity_google_auth);
         findViewById(R.id.sign_in_button).setOnClickListener(this);
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        findViewById(R.id.anonymous_sign_in_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder achievementsFragmentWelcomeDialog = new AlertDialog.Builder(AuthActivity.this);
+                achievementsFragmentWelcomeDialog.setTitle("Демоверсия");
+                achievementsFragmentWelcomeDialog.setCancelable(false);
+                achievementsFragmentWelcomeDialog.setIcon(R.drawable.ic_error_demo);
+                achievementsFragmentWelcomeDialog.setMessage("Демонстрационный режим предназначен исключительно " +
+                        "для ознакомительных целей. У Вас не будет личного аккаунта, однако Вам будет " +
+                        "открыт весь функционал приложения, не связанный с персональными данными. " +
+                        "Кроме того все достижения будут открыты по умолчанию");
+                achievementsFragmentWelcomeDialog.setPositiveButton("Попробовать", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        showProgressDialog();
+                        mAuth.signInAnonymously()
+                                .addOnCompleteListener(AuthActivity.this, new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if (task.isSuccessful()) {
+                                            Log.d(TAG, "signInAnonymously:success");
+                                            FirebaseUser user = mAuth.getCurrentUser();
+                                            updateUI(user);
+                                        } else {
+                                            Log.w(TAG, "signInAnonymously:failure", task.getException());
+                                            Toast.makeText(AuthActivity.this, "Не удалось создать аккаунт",
+                                                    Toast.LENGTH_SHORT).show();
+                                            updateUI(null);
+                                        }
+                                    }
+                                });
+                    }
+                });
+                achievementsFragmentWelcomeDialog.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+                achievementsFragmentWelcomeDialog.show();
+
+            }
+        });
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -111,7 +157,7 @@ public class GoogleAuthActivity extends ProgressDialogActivity implements
                         Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
                         if (!task.isSuccessful()) {
                             Log.w(TAG, "signInWithCredential", task.getException());
-                            Toast.makeText(GoogleAuthActivity.this, R.string.authentication_error_message,
+                            Toast.makeText(AuthActivity.this, R.string.authentication_error_message,
                                     Toast.LENGTH_SHORT).show();
                         }
                         hideProgressDialog();
@@ -127,9 +173,16 @@ public class GoogleAuthActivity extends ProgressDialogActivity implements
     private void updateUI(FirebaseUser user) {
         hideProgressDialog();
         if (user != null) {
-            mDatabase.child("users").child(user.getUid()).child("name").setValue(user.getDisplayName());
-            mDatabase.child("users").child(user.getUid()).child("email").setValue(user.getEmail());
-            Intent intent = new Intent(GoogleAuthActivity.this, MainActivity.class);
+            if (user.getDisplayName() != null) {
+                mDatabase.child("users").child(user.getUid()).child("name").setValue(user.getDisplayName());
+            } else {
+                mDatabase.child("users").child(user.getUid()).child("name").setValue("Demo Account");
+                mDatabase.child("users").child(user.getUid()).child("points").setValue(579185);
+            }
+            if (user.getEmail() != null) {
+                mDatabase.child("users").child(user.getUid()).child("email").setValue(user.getEmail());
+            }
+            Intent intent = new Intent(AuthActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
         }

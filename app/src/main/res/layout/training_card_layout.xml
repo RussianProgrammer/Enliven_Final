@@ -1,14 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/profile_points_card"
+    android:id="@+id/training_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
     android:clickable="true"
     android:foreground="?selectableItemBackground"
-    card_view:cardBackgroundColor="#E65100"
     card_view:cardCornerRadius="10dp"
     card_view:cardElevation="5dp"
     card_view:contentPadding="5dp">
@@ -18,20 +15,19 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/achieves_icon"
+            android:id="@+id/training_icon"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_alignParentTop="true"
             android:contentDescription="@string/description"
             android:foregroundGravity="left"
-            android:padding="10dp"
-            app:srcCompat="@drawable/profile_points_icon_2" />
+            android:padding="10dp" />
 
         <TextView
-            android:id="@+id/achieves_name"
+            android:id="@+id/training_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/achieves_icon"
+            android:layout_toRightOf="@id/training_icon"
             android:paddingLeft="10dp"
             android:paddingTop="0dp"
             android:text="Закрыто"
@@ -40,24 +36,14 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/achieves_progress"
+            android:id="@+id/training_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/achieves_name"
-            android:layout_toRightOf="@id/achieves_icon"
+            android:layout_below="@id/training_title"
+            android:layout_toRightOf="@id/training_icon"
             android:paddingLeft="10dp"
-            android:text="Загрузка выполнения…"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/achieves_location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/achieves_icon"
             android:paddingBottom="5dp"
-            android:paddingLeft="10dp"
-            android:text="Неизвестно"
+            android:text="Загрузка выполнения…"
             android:textColor="#FFFFFF"
             android:textSize="20sp" />
 

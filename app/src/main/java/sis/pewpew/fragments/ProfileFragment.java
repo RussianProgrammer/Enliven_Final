@@ -24,6 +24,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import sis.pewpew.MainActivity;
 import sis.pewpew.R;
 
@@ -50,9 +53,9 @@ public class ProfileFragment extends Fragment {
             profileFragmentWelcomeDialog.setCancelable(false);
             profileFragmentWelcomeDialog.setIcon(R.drawable.ic_menu_profile);
             profileFragmentWelcomeDialog.setMessage("В разделе \"Профиль\" мы собрали всю самую интересную информацию о Вас. " +
-                    "А именно все Ваши очки, достижения и заслуги перед планетой. Не забудьте похвастаться ими, " +
+                    "А именно, все Ваши очки, достижения и заслуги перед планетой. Не забудьте похвастаться ими, " +
                     "коснувшись кнопки \"Поделиться\".");
-            profileFragmentWelcomeDialog.setNegativeButton("Не забуду", new DialogInterface.OnClickListener() {
+            profileFragmentWelcomeDialog.setNegativeButton("Понятно", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     dialogInterface.cancel();
@@ -88,7 +91,7 @@ public class ProfileFragment extends Fragment {
                     points.setText("" + pointsFromDatabase);
                     savedTrees.setText("" + (int) pointsFromDatabase / 500);
                     savedAnimals.setText("" + (int) pointsFromDatabase / 1000);
-                    savedPeople.setText("" + (int) pointsFromDatabase / 1500);
+                    savedPeople.setText("" + (int) pointsFromDatabase / 1200);
 
                     if (pointsFromDatabase < 100) {
                         achieves.setText("0");
@@ -193,222 +196,90 @@ public class ProfileFragment extends Fragment {
             username.setText("Имя пользователя");
         }
 
-        final AlertDialog.Builder profileMainCardDialog = new AlertDialog.Builder(getActivity());
-        profileMainCardDialog.setTitle("Карточка профиля");
-        profileMainCardDialog.setIcon(R.drawable.profile_icon);
-        profileMainCardDialog.setMessage("Это Ваша карточка профиля, на которой мы аккуратно " +
+        List<CardView> cards = new ArrayList<>();
+        cards.add((CardView) rootView.findViewById(R.id.profile_main_card));
+        cards.add((CardView) rootView.findViewById(R.id.profile_points_card));
+        cards.add((CardView) rootView.findViewById(R.id.profile_rank_card));
+        cards.add((CardView) rootView.findViewById(R.id.profile_achieves_card));
+        cards.add((CardView) rootView.findViewById(R.id.profile_saved_trees_card));
+        cards.add((CardView) rootView.findViewById(R.id.profile_saved_animals_card));
+        cards.add((CardView) rootView.findViewById(R.id.profile_saved_people_card));
+
+        final List<String> titles = new ArrayList<>();
+        titles.add("Карточка профиля");
+        titles.add("Карточка очков");
+        titles.add("Карточка звания");
+        titles.add("Карточка достижений");
+        titles.add("Карточка спасенных деервье");
+        titles.add("Карточка спасеных животных");
+        titles.add("Карточка спасеных людей");
+
+        final List<String> messages = new ArrayList<>();
+        messages.add("Это Ваша карточка профиля, на которой мы аккуратно " +
                 "выгравировали Ваше имя и фамилию. У Вас мог возникнуть вопрос, " +
                 "что означает пометка под именем. Отвечаем: она показывает, какую роль Вы выполняете в нашем сообществе. " +
                 "Вы можете быть как обычным пользователем, так и модератором. " +
                 "По всем вопросам касательно пометки Вы всегда можете обратиться к нам на нашем сайте.");
-        profileMainCardDialog.setNegativeButton("Закрыть", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-        profileMainCardDialog.setPositiveButton("Поделиться", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                shareProfile();
-            }
-        });
-
-        final AlertDialog.Builder profilePointsCardDialog = new AlertDialog.Builder(getActivity());
-        profilePointsCardDialog.setTitle("Карточка очков");
-        profilePointsCardDialog.setIcon(R.drawable.profile_points_icon_2);
-        profilePointsCardDialog.setMessage("Здесь показано количество заработанных Вами очков. " +
+        messages.add("Здесь показано количество заработанных Вами очков. " +
                 "Их можно получать, используя экологические пункты на карте. И помните: " +
                 "с каждой новой цифрой на этой карточке мы все ближе к светлому будущему.");
-        profilePointsCardDialog.setNegativeButton("Закрыть", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-        profilePointsCardDialog.setPositiveButton("Поделиться", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.setType("text/plain");
-                String shareBody = "У меня крутой профиль: " + (int) pointsFromDatabase;
-                shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
-                startActivity(Intent.createChooser(shareIntent, "Поделиться профилем"));
-            }
-        });
-
-        final AlertDialog.Builder profileRankCardDialog = new AlertDialog.Builder(getActivity());
-        profileRankCardDialog.setTitle("Карточка звания");
-        profileRankCardDialog.setIcon(R.drawable.profile_rank_icon);
-        profileRankCardDialog.setMessage("Здесь паказано Ваше звание. Чем больше очков Вы зарабатываете, тем оно выше. " +
+        messages.add("Здесь паказано Ваше звание. Чем больше очков Вы зарабатываете, тем оно выше. " +
                 "Не забывайте им хвастаться время от времени.");
-        profileRankCardDialog.setNegativeButton("Закрыть", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-        profileRankCardDialog.setPositiveButton("Поделиться", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.setType("text/plain");
-                String shareBody = "У меня крутой профиль: " + (int) pointsFromDatabase;
-                shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
-                startActivity(Intent.createChooser(shareIntent, "Поделиться профилем"));
-            }
-        });
-
-        final AlertDialog.Builder profileAchievesCardDialog = new AlertDialog.Builder(getActivity());
-        profileAchievesCardDialog.setTitle("Карточка достижений");
-        profileAchievesCardDialog.setIcon(R.drawable.profile_achieves_icon);
-        profileAchievesCardDialog.setMessage("Здесь мы посчитали все собранные Вами достижения. Как Вы уже наверняка знаете, " +
-                "всего их 25, но со временем их количество будет расти. За каждые 200 очков Вы получаете одно новое. " +
+        messages.add("Здесь мы посчитали все собранные Вами достижения. Как Вы уже наверняка знаете, " +
+                "всего их 15, но со временем их количество будет расти. За каждые 200 очков Вы получаете одно новое. " +
                 "Кроме того Вы всегда можете поделиться ими.");
-        profileAchievesCardDialog.setNegativeButton("Закрыть", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-        profileAchievesCardDialog.setPositiveButton("Поделиться", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.setType("text/plain");
-                String shareBody = "У меня крутой профиль: " + (int) pointsFromDatabase;
-                shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
-                startActivity(Intent.createChooser(shareIntent, "Поделиться профилем"));
-            }
-        });
-
-        final AlertDialog.Builder profileSavedTreesCardDialog = new AlertDialog.Builder(getActivity());
-        profileSavedTreesCardDialog.setTitle("Карточка спасенных деревьев");
-        profileSavedTreesCardDialog.setIcon(R.drawable.profile_saved_trees_icon);
-        profileSavedTreesCardDialog.setMessage("Здесь отображено количество спасенных Вами деревьев. " +
+        messages.add("Здесь отображено количество спасенных Вами деревьев. " +
                 "Каждый раз зарабатывая 500 очков, Вы спасаете одно новое дерево, " +
                 "которое могло погибнуть из-за токсинов и химикатов, находящихся в мусоре. " +
                 "Кстати, собрав 2 млн очков, Вы спасете целый лес. Думаете, невозможно? " +
                 "Просто сделайте использование приложения своей привычкой. Причем очень полезной.");
-        profileSavedTreesCardDialog.setNegativeButton("Закрыть", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-        profileSavedTreesCardDialog.setPositiveButton("Поделиться", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.setType("text/plain");
-                String shareBody = "У меня крутой профиль: " + (int) pointsFromDatabase;
-                shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
-                startActivity(Intent.createChooser(shareIntent, "Поделиться профилем"));
-            }
-        });
-
-        final AlertDialog.Builder profileSavedAnimalsCardDialog = new AlertDialog.Builder(getActivity());
-        profileSavedAnimalsCardDialog.setTitle("Карточка спасенных животных");
-        profileSavedAnimalsCardDialog.setIcon(R.drawable.profile_saved_animals_icon);
-        profileSavedAnimalsCardDialog.setMessage("Здесь показано количество спасенных Вами животных. " +
+        messages.add("Здесь показано количество спасенных Вами животных. " +
                 "Каждый раз собирая 1000 очков, Вы спасаете одного зверька, а может даже и целого зверя. " +
                 "Не стесняйтесь делиться своими заслугами перед фауной нашей планеты с миром.");
-        profileSavedAnimalsCardDialog.setNegativeButton("Закрыть", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-        profileSavedAnimalsCardDialog.setPositiveButton("Поделиться", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.setType("text/plain");
-                String shareBody = "У меня крутой профиль: " + (int) pointsFromDatabase;
-                shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
-                startActivity(Intent.createChooser(shareIntent, "Поделиться профилем"));
-            }
-        });
+        messages.add("Здесь мы посчитали, сколько реальных людей Вы спасли, используя приложение. " +
+                "За каждые заработанные Вами 1200 очков один человек из будущего или даже настоящего говорит Вам \"Спасибо\"" +
+                " за сохраненную жизнь.");
 
-        final AlertDialog.Builder profileSavedPeopleCardDialog = new AlertDialog.Builder(getActivity());
-        profileSavedPeopleCardDialog.setTitle("Карточка спасенных людей");
-        profileSavedPeopleCardDialog.setIcon(R.drawable.profile_saved_people_icon);
-        profileSavedPeopleCardDialog.setMessage("Здесь мы посчитали, сколько реальных людей Вы спасли, используя приложение. " +
-                "За каждые заработанные Вами 1500 очков один человек из будущего или даже настоящего говорит Вам \"Спасибо\" " +
-                "за сохраненную жизнь.");
-        profileSavedPeopleCardDialog.setNegativeButton("Закрыть", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-        profileSavedPeopleCardDialog.setPositiveButton("Поделиться", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.setType("text/plain");
-                String shareBody = "У меня крутой профиль: " + (int) pointsFromDatabase;
-                shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
-                startActivity(Intent.createChooser(shareIntent, "Поделиться профилем"));
-            }
-        });
+        final List<Integer> imageIds = new ArrayList<>();
+        imageIds.add(R.drawable.profile_icon);
+        imageIds.add(R.drawable.profile_points_icon_2);
+        imageIds.add(R.drawable.profile_rank_icon);
+        imageIds.add(R.drawable.profile_achieves_icon);
+        imageIds.add(R.drawable.profile_saved_trees_icon);
+        imageIds.add(R.drawable.profile_saved_animals_icon);
+        imageIds.add(R.drawable.profile_saved_people_icon);
 
-        CardView profileMainCard = (CardView) rootView.findViewById(R.id.profile_main_card);
-        CardView profilePointsCard = (CardView) rootView.findViewById(R.id.profile_points_card);
-        CardView profileRankCard = (CardView) rootView.findViewById(R.id.profile_rank_card);
-        CardView profileAchievesCard = (CardView) rootView.findViewById(R.id.profile_achieves_card);
-        CardView profileSavedTreesCard = (CardView) rootView.findViewById(R.id.profile_saved_trees_card);
-        CardView profileSavedAnimalsCard = (CardView) rootView.findViewById(R.id.profile_saved_animals_card);
-        CardView profileSavedPeopleCard = (CardView) rootView.findViewById(R.id.profile_saved_people_card);
-
-        profileMainCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                profileMainCardDialog.show();
-            }
-        });
-
-        profilePointsCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                profilePointsCardDialog.show();
-            }
-        });
-
-        profileRankCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                profileRankCardDialog.show();
-            }
-        });
-
-        profileAchievesCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                profileAchievesCardDialog.show();
-            }
-        });
-
-        profileSavedTreesCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                profileSavedTreesCardDialog.show();
-            }
-        });
-
-        profileSavedAnimalsCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                profileSavedAnimalsCardDialog.show();
-            }
-        });
-
-        profileSavedPeopleCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                profileSavedPeopleCardDialog.show();
-            }
-        });
+        for (int i = 0; i < cards.size(); i++) {
+            final String title = titles.get(i);
+            final int imageId = imageIds.get(i);
+            final String message = messages.get(i);
+            cards.get(i).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final AlertDialog.Builder profileDialog = new AlertDialog.Builder(getActivity());
+                    profileDialog.setTitle(title);
+                    profileDialog.setIcon(imageId);
+                    profileDialog.setMessage(message);
+                    profileDialog.setNegativeButton("Закрыть", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.cancel();
+                        }
+                    });
+                    profileDialog.setPositiveButton("Поделиться", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                            shareIntent.setType("text/plain");
+                            String shareBody = "У меня крутой профиль: " + (int) pointsFromDatabase;
+                            shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+                            startActivity(Intent.createChooser(shareIntent, "Поделиться профилем"));
+                        }
+                    });
+                    profileDialog.show();
+                }
+            });
+        }
 
         return rootView;
     }
@@ -431,8 +302,33 @@ public class ProfileFragment extends Fragment {
     private void shareProfile() {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
-        String shareBody = "У меня крутой профиль: " + (int) pointsFromDatabase;
-        shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+        if (pointsFromDatabase > 0) {
+            String shareBody = "В приложении Enliven я получил " + (int) pointsFromDatabase + " очков." +
+                    " Зарабатывая их, я улучшаю экологию на планете. Присоединяйтесь ко мне, " +
+                    "пора все менять! #Enliven";
+            shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+        } else if (pointsFromDatabase > 500) {
+            String shareBody = "В приложении Enliven я заработал " + (int) pointsFromDatabase + " очков и спас " +
+                    (int) (pointsFromDatabase / 500) + " дерево! Присоединяйтесь ко мне, " +
+                    "пора все менять! #Enliven";
+            shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+        } else if (pointsFromDatabase > 1000) {
+            String shareBody = "В приложении Enliven я заработал " + (int) pointsFromDatabase + " очков, спас " +
+                    (int) (pointsFromDatabase / 500) + " дерева и " + (int) (pointsFromDatabase / 1000) +
+                    " животное! Присоединяйтесь ко мне, " +
+                    "пора все менять! #Enliven";
+            shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+        } else if (pointsFromDatabase > 1200) {
+            String shareBody = "В приложении Enliven я заработал " + (int) pointsFromDatabase + " очков, спас " +
+                    (int) (pointsFromDatabase / 500) + " деревьев, " + (int) (pointsFromDatabase / 1000) +
+                    " животных и " + (int) (pointsFromDatabase / 1200) + " человек! Присоединяйтесь ко мне, " +
+                    "пора все менять! #Enliven";
+            shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+        } else {
+            String shareBody = "В приложении Enliven я спасаю наш мир. Присоединяйтесь ко мне, " +
+                    "пора все менять! #Enliven";
+            shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+        }
         startActivity(Intent.createChooser(shareIntent, "Поделиться профилем"));
     }
 

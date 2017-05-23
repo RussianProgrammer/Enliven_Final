@@ -13,7 +13,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import sis.pewpew.R;
-import sis.pewpew.connections.GoogleAuthActivity;
+import sis.pewpew.connections.AuthActivity;
 
 public class NetIntegrationActivity extends AppCompatActivity {
 
@@ -55,7 +55,7 @@ public class NetIntegrationActivity extends AppCompatActivity {
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
                     // User is signed out
-                    Intent intent = new Intent(NetIntegrationActivity.this, GoogleAuthActivity.class);
+                    Intent intent = new Intent(NetIntegrationActivity.this, AuthActivity.class);
                     startActivity(intent);
                     finish();
                     Log.d(TAG, "onAuthStateChanged:signed_out");

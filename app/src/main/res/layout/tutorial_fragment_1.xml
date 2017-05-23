@@ -1,17 +1,32 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#1B5E20"
     tools:context="sis.pewpew.tutorial.TutorialFragment1">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:text="FIRST TEXT"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:elevation="5dp"
-        android:id="@+id/tutorial_text_1"
-        tools:text="FIRST TEXT"
-        android:textSize="100sp" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/tutorial_text_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:padding="20dp"
+        android:text="Мы бы не хотели начинать с грустной ноты, но наша планета умирает"
+        android:textColor="#FFFFFF"
+        android:textSize="40dp" />
+
+    <TextView
+        android:id="@+id/tutorial_switch_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
+        android:paddingBottom="20dp"
+        android:text="Смахните, чтобы продолжить"
+        android:textSize="20sp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>

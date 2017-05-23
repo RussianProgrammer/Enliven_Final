@@ -48,6 +48,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/profile_user_icon"
                         android:layout_centerHorizontal="true"
+                        android:gravity="center"
                         android:textColor="#222"
                         android:textSize="40sp"
                         android:textStyle="bold" />

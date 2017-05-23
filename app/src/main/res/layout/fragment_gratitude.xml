@@ -4,6 +4,73 @@
     android:layout_height="match_parent"
     tools:context="sis.pewpew.fragments.GratitudeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/gratitude_call"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:padding="20dp"
+                android:text="Особая благодарность за помощь в разработке проекта выражается:"
+                android:textSize="25dp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/gratitude_icon_1"
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:layout_below="@+id/gratitude_call"
+                android:padding="40dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/gratitude_icon_1" />
+
+            <ImageView
+                android:id="@+id/gratitude_icon_2"
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:layout_below="@+id/gratitude_icon_1"
+                android:padding="40dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/gratitude_icon_2" />
+
+            <ImageView
+                android:id="@+id/gratitude_icon_3"
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:scaleType="fitCenter"
+                android:layout_below="@+id/gratitude_icon_2"
+                android:padding="40dp"
+                android:src="@drawable/gratitude_icon_3" />
+
+            <ImageView
+                android:id="@+id/gratitude_icon_4"
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:layout_below="@+id/gratitude_icon_3"
+                android:padding="40dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/gratitude_icon_4" />
+
+            <ImageView
+                android:id="@+id/gratitude_icon_5"
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:layout_below="@+id/gratitude_icon_4"
+                android:padding="40dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/gratitude_icon_5" />
+
+        </RelativeLayout>
+
+    </ScrollView>
 
 </FrameLayout>

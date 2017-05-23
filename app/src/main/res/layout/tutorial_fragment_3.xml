@@ -1,17 +1,32 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#1B5E20"
     tools:context="sis.pewpew.tutorial.TutorialFragment3">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:text="THIRD TEXT"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:elevation="5dp"
-        android:id="@+id/tutorial_text_3"
-        tools:text="THIRD TEXT"
-        android:textSize="100sp" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/tutorial_text_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:padding="20dp"
+        android:text="В проекте Enliven мы создали карту, на которой отмечены пункты, где можно безопасно утилизировать отходы без вреда для окружающей среды"
+        android:textColor="#FFFFFF"
+        android:textSize="40dp" />
+
+    <TextView
+        android:id="@+id/tutorial_switch_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
+        android:paddingBottom="20dp"
+        android:text="Смахните, чтобы продолжить"
+        android:textSize="20sp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>

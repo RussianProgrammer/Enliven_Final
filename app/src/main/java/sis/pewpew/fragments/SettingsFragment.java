@@ -83,8 +83,19 @@ public class SettingsFragment extends PreferenceFragment {
         signOutDialog.setPositiveButton("Выйти", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                FirebaseAuth.getInstance().signOut();
-                logOut();
+                if (user.getDisplayName() != null) {
+                    FirebaseAuth.getInstance().signOut();
+                    logOut();
+                } else {
+                    mDatabase.child("users").child(user.getUid()).removeValue().addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            FirebaseAuth.getInstance().signOut();
+                            logOut();
+                        }
+                    });
+                }
+
             }
         });
         signOutDialog.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
@@ -96,9 +107,9 @@ public class SettingsFragment extends PreferenceFragment {
 
         verifyAccountSupport = new AlertDialog.Builder(getActivity());
         verifyAccountSupport.setTitle("Аккаунт уже был подтвержден");
-        verifyAccountSupport.setMessage("Дело в том, что при использовании учетной записи Google, мы подтверждаем Ваш аккаунт автоматически. " +
+        verifyAccountSupport.setMessage("Дело в том, что при использовании учетной записи Google или демонстрационного режима, мы подтверждаем Ваш аккаунт автоматически. " +
                 "Если же у Вас возникли подозрения, что кто-то мог получить доступ к Вашему аккаунту, пожалуйста, незамедлительно свяжитесь с нами.");
-        verifyAccountSupport.setNegativeButton("Ясно", new DialogInterface.OnClickListener() {
+        verifyAccountSupport.setNegativeButton("Закрыть", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.cancel();
@@ -176,24 +187,28 @@ public class SettingsFragment extends PreferenceFragment {
     }
 
     private void sendEmailVerification() {
-        final FirebaseUser user = mAuth.getCurrentUser();
-        assert user != null;
-        user.sendEmailVerification()
-                .addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
+        if (user.getDisplayName() != null) {
+            final FirebaseUser user = mAuth.getCurrentUser();
+            assert user != null;
+            user.sendEmailVerification()
+                    .addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
 
-                        if (task.isSuccessful()) {
-                            Toast.makeText(getActivity(), "Email подтверждения отправлен на " + user.getEmail(),
-                                    Toast.LENGTH_SHORT).show();
-                        } else {
-                            Log.e(TAG, "sendEmailVerification", task.getException());
-                            Toast.makeText(getActivity(),
-                                    R.string.email_sending_error_message,
-                                    Toast.LENGTH_SHORT).show();
+                            if (task.isSuccessful()) {
+                                Toast.makeText(getActivity(), "Email подтверждения отправлен на " + user.getEmail(),
+                                        Toast.LENGTH_SHORT).show();
+                            } else {
+                                Log.e(TAG, "sendEmailVerification", task.getException());
+                                Toast.makeText(getActivity(),
+                                        R.string.email_sending_error_message,
+                                        Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
+                    });
+        } else {
+            Toast.makeText(getActivity(), "В деморежиме нельзя подтвердить аккаунт", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void logOut() {

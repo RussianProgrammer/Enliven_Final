@@ -28,6 +28,7 @@ public class AboutFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), TutorialActivity.class);
+                intent.putExtra("ABOUT", 5);
                 startActivity(intent);
             }
         });

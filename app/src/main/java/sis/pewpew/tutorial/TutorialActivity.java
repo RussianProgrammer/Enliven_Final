@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 
 import sis.pewpew.MainActivity;
 import sis.pewpew.R;
-import sis.pewpew.connections.GoogleAuthActivity;
+import sis.pewpew.connections.AuthActivity;
 
 public class TutorialActivity extends AppCompatActivity {
 
@@ -25,15 +25,18 @@ public class TutorialActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tutorial);
 
-        SharedPreferences preferences = getSharedPreferences("TUTORIAL", Context.MODE_PRIVATE);
-        if (preferences.getBoolean("activity_executed", false)) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        } else {
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putBoolean("activity_executed", true);
-            editor.apply();
+        Bundle extras = getIntent().getExtras();
+        if (extras == null) {
+            SharedPreferences preferences = getSharedPreferences("TUTORIAL", Context.MODE_PRIVATE);
+            if (preferences.getBoolean("activity_executed", false)) {
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            } else {
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putBoolean("activity_executed", true);
+                editor.apply();
+            }
         }
 
         SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -98,7 +101,7 @@ public class TutorialActivity extends AppCompatActivity {
     }
 
     public void finishTutorial(View view) {
-        Intent intent = new Intent(TutorialActivity.this, GoogleAuthActivity.class);
+        Intent intent = new Intent(TutorialActivity.this, AuthActivity.class);
         startActivity(intent);
         finish();
     }

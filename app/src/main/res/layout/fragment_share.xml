@@ -1,9 +1,26 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="sis.pewpew.fragments.ShareFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:id="@+id/main_share_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:padding="20dp"
+        android:text="Уже совсем скоро Вы сможете приглашать своих друзей и знакомых в Enliven и получать за это очки, а пока у Вас есть возможность поделиться  нашим замыслом с миром"
+        android:textSize="30sp" />
 
-</FrameLayout>
+    <Button
+        android:id="@+id/main_share_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="25dp"
+        android:text="Поделиться" />
+
+</RelativeLayout>

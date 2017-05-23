@@ -15,9 +15,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -75,6 +72,12 @@ public class MapFragment extends Fragment {
     private MarkerOptions otherMarkerOptions = new MarkerOptions();
     private MarkerOptions eventMarkerOptions = new MarkerOptions();
 
+    private String markerIdentifier;
+    private String markerTitle;
+    private String markerGroup;
+    private double markerLatitude;
+    private double markerLongitude;
+
     LocationListener mLocationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
@@ -125,7 +128,6 @@ public class MapFragment extends Fragment {
                                         .child("progress").child("points");
                                 onUsualProfilePointsAdded(mProfilePoints);
                                 onUsualPublicPointsAdded(mPublicPoints);
-                                showGratitudeDialog();
                             }
                         });
 
@@ -287,8 +289,6 @@ public class MapFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        //setHasOptionsMenu(true);
-
         SharedPreferences settings = getActivity().getSharedPreferences("MAP", 0);
         boolean dialogShown = settings.getBoolean("dialogShown", false);
 
@@ -383,8 +383,7 @@ public class MapFragment extends Fragment {
                     if (mLocationPermissionGranted) {
 
                         setMarkerOptionsIcon();
-                        addBatteryMarkers();
-                        addEventMarkers();
+                        addMarkers();
 
                         LocationManager mLocationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
                         Location mLastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -412,38 +411,93 @@ public class MapFragment extends Fragment {
         eventMarkerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.event_marker_icon));
     }
 
-    private void addBatteryMarkers() {
-        usualMarkers.add(mMap.addMarker(batteryMarkerOptions.position(new LatLng(55.744733, 37.619666)).title("ВкусВилл").snippet("bat1")));
-        usualMarkers.add(mMap.addMarker(batteryMarkerOptions.position(new LatLng(55.756459, 37.620181)).title("ВкусВилл").snippet("bat2")));
-        usualMarkers.add(mMap.addMarker(batteryMarkerOptions.position(new LatLng(55.757485, 37.606491)).title("ВкусВилл").snippet("bat3")));
-    }
-
-    private void addEventMarkers() {
-        eventMarkers.add(mMap.addMarker(eventMarkerOptions.position(new LatLng(55.744733, 37.60228)).title("Тестовый фестиваль").snippet("ev0")));
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_map_filter_actions, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.map_filter_battery:
-                item.setChecked(!item.isChecked());
-                if (!item.isChecked()) {
-                    for (Marker marker : usualMarkers) {
-                        marker.setVisible(false);
+    private void addMarkers() {
+        ValueEventListener markersListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot childSnapShot : dataSnapshot.child("markers").getChildren()) {
+                    if (childSnapShot.child("id").getValue() != null) {
+                        markerIdentifier = childSnapShot.child("id").getValue().toString();
+                    } else {
+                        markerIdentifier = "unknown";
                     }
-                } else {
-                    for (Marker marker : usualMarkers) {
-                        marker.setVisible(true);
+                    if (childSnapShot.child("title").getValue() != null) {
+                        markerTitle = childSnapShot.child("title").getValue().toString();
+                    } else {
+                        markerTitle = "Неизвестный пункт";
+                    }
+                    if (childSnapShot.child("group").getValue() != null) {
+                        markerGroup = childSnapShot.child("group").getValue().toString();
+                    } else {
+                        markerGroup = "battery";
+                    }
+                    if (childSnapShot.child("lat").getValue() != null) {
+                        markerLatitude = (double) childSnapShot.child("lat").getValue();
+                    } else {
+                        markerLatitude = 5.0000;
+                    }
+                    if (childSnapShot.child("long").getValue() != null) {
+                        markerLongitude = (double) childSnapShot.child("long").getValue();
+                    } else {
+                        markerLongitude = 7.0000;
+                    }
+                    if (childSnapShot.child("eventMark").getValue() == null) {
+                        switch (markerGroup) {
+                            case "battery":
+                                usualMarkers.add(mMap.addMarker(batteryMarkerOptions
+                                        .position(new LatLng(markerLatitude, markerLongitude))
+                                        .title(markerTitle).snippet(markerIdentifier)));
+                                break;
+                            case "paper":
+                                usualMarkers.add(mMap.addMarker(paperMarkerOptions
+                                        .position(new LatLng(markerLatitude, markerLongitude))
+                                        .title(markerTitle).snippet(markerIdentifier)));
+                                break;
+                            case "glass":
+                                usualMarkers.add(mMap.addMarker(glassMarkerOptions
+                                        .position(new LatLng(markerLatitude, markerLongitude))
+                                        .title(markerTitle).snippet(markerIdentifier)));
+                                break;
+                            case "metal":
+                                usualMarkers.add(mMap.addMarker(metalMarkerOptions
+                                        .position(new LatLng(markerLatitude, markerLongitude))
+                                        .title(markerTitle).snippet(markerIdentifier)));
+                                break;
+                            case "plastic":
+                                usualMarkers.add(mMap.addMarker(plasticMarkerOptions
+                                        .position(new LatLng(markerLatitude, markerLongitude))
+                                        .title(markerTitle).snippet(markerIdentifier)));
+                                break;
+                            case "bulb":
+                                usualMarkers.add(mMap.addMarker(bulbMarkerOptions
+                                        .position(new LatLng(markerLatitude, markerLongitude))
+                                        .title(markerTitle).snippet(markerIdentifier)));
+                                break;
+                            case "danger":
+                                usualMarkers.add(mMap.addMarker(dangersMarkerOptions
+                                        .position(new LatLng(markerLatitude, markerLongitude))
+                                        .title(markerTitle).snippet(markerIdentifier)));
+                                break;
+                            case "other":
+                                usualMarkers.add(mMap.addMarker(otherMarkerOptions
+                                        .position(new LatLng(markerLatitude, markerLongitude))
+                                        .title(markerTitle).snippet(markerIdentifier)));
+                                break;
+                        }
+                    } else {
+                        eventMarkers.add(mMap.addMarker(eventMarkerOptions
+                                .position(new LatLng(markerLatitude, markerLongitude))
+                                .title(markerTitle).snippet(markerIdentifier)));
                     }
                 }
-        }
-        return super.onOptionsItemSelected(item);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+            }
+        };
+        mDatabase.addValueEventListener(markersListener);
     }
 
     private void showGratitudeDialog() {
@@ -468,7 +522,9 @@ public class MapFragment extends Fragment {
     private void share() {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
-        String shareBody = "У меня крутой профиль: ";
+        String shareBody = "Найдя и использовав экопункт в приложении Enliven, я показал, " +
+                "насколько мне небезразлично будущее нашей планеты. " +
+                "Присоединяйтесь ко мне, пора все менять! #Enliven";
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
         startActivity(Intent.createChooser(shareIntent, "Поделиться профилем"));
     }

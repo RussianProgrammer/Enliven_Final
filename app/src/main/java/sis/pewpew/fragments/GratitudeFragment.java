@@ -14,7 +14,10 @@ public class GratitudeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
+        //ОГРОМНОЕ СПАСИБО ВСЕМ ТЕМ, КТО ПОМОГАЛ МНЕ В СОЗДАНИИ ПРОЕКТА ЛЮБЫМ СПОСОБОМ.
+        //ДЛЯ МЕНЯ ЭТО ПО-НАСТОЯЩЕМУ ОЧЕНЬ ВАЖНО.
+
         ((MainActivity) getActivity()).setActionBarTitle(getString(R.string.gratitude_fragment_name));
         return inflater.inflate(R.layout.fragment_gratitude, container, false);
     }
