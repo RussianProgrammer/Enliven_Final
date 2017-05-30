@@ -108,7 +108,7 @@ public class MapFragment extends Fragment {
 
                         final AlertDialog.Builder isPointUsedDialog = new AlertDialog.Builder(getActivity());
                         isPointUsedDialog.setTitle("Обнаружен флажок экопункта");
-                        isPointUsedDialog.setIcon(R.drawable.ic_menu_map);
+                        isPointUsedDialog.setIcon(R.drawable.ic_menu_marker_icon);
                         isPointUsedDialog.setCancelable(false);
                         isPointUsedDialog.setMessage("Поздравляем, Вы нашли экопункт \"" + marker.getTitle() + "\"! " +
                                 "Если это не случайность, и Вы действительно использовали этот пункт по назначению, " +

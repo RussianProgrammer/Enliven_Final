@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 import sis.pewpew.connections.AuthActivity;
 import sis.pewpew.fragments.AboutFragment;
 import sis.pewpew.fragments.AchievementsFragment;
+import sis.pewpew.fragments.ConsoleFragment;
 import sis.pewpew.fragments.EventsFragment;
 import sis.pewpew.fragments.FeedbackFragment;
 import sis.pewpew.fragments.GratitudeFragment;
@@ -37,6 +38,7 @@ public class MainActivity extends NetIntegrationActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public boolean mLocationPermissionGranted;
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     AchievementsFragment achievementsFragment;
     FeedbackFragment feedbackFragment;
@@ -46,13 +48,12 @@ public class MainActivity extends NetIntegrationActivity
     ProgressFragment progressFragment;
     RatingFragment ratingFragment;
     ProfileFragment profileFragment;
+    ConsoleFragment consoleFragment;
     NewsFragment newsFragment;
     SettingsFragment settingsFragment;
     ShareFragment shareFragment;
     TrainingFragment trainingFragment;
     AboutFragment aboutFragment;
-
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +88,7 @@ public class MainActivity extends NetIntegrationActivity
         profileFragment = new ProfileFragment();
         progressFragment = new ProgressFragment();
         ratingFragment = new RatingFragment();
+        consoleFragment = new ConsoleFragment();
         newsFragment = new NewsFragment();
         settingsFragment = new SettingsFragment();
         shareFragment = new ShareFragment();
@@ -103,7 +105,7 @@ public class MainActivity extends NetIntegrationActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
@@ -157,6 +159,8 @@ public class MainActivity extends NetIntegrationActivity
             fragmentTransaction.replace(R.id.container, eventsFragment);
         } else if (id == R.id.nav_training) {
             fragmentTransaction.replace(R.id.container, trainingFragment);
+        } else if (id == R.id.nav_console) {
+            fragmentTransaction.replace(R.id.container, consoleFragment);
         } else if (id == R.id.nav_news) {
             fragmentTransaction.replace(R.id.container, newsFragment);
         } else if (id == R.id.nav_settings) {

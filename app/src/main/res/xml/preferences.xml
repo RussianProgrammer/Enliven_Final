@@ -43,6 +43,11 @@
             android:summary="Настройки приложения вернутся к первоначальным значениям."
             android:title="Сбросить настройки" />
 
+        <Preference
+            android:key="redeem_voucher_button"
+            android:summary="Если у Вас есть уникальный промокод, Вы можете ввести его здесь для получения награды."
+            android:title="Погасить промокод" />
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Управление аккаунтом">

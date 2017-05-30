@@ -18,6 +18,7 @@
     <string name="about_fragment_name">О приложении</string>
     <string name="feedback_header_name">Обратная связь</string>
     <string name="share_fragment_name">Поделиться</string>
+    <string name="console_fragment_name">Консоль</string>
     <string name="feedback_fragment_name">Отправить отзыв</string>
     <string name="gratitude_fragment_name">Особая благодарность</string>
     <string name="progress_dialog_message">Подождите…</string>

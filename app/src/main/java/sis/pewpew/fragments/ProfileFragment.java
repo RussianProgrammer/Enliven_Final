@@ -37,6 +37,7 @@ public class ProfileFragment extends Fragment {
     public FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     public long pointsFromDatabase;
     private String statusFromDatabase;
+    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,7 +72,6 @@ public class ProfileFragment extends Fragment {
         final View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
         ((MainActivity) getActivity()).setActionBarTitle(getString(R.string.profile_fragment_name));
 
-        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         mDatabase.keepSynced(true);
 
         ValueEventListener pointsListener = new ValueEventListener() {
@@ -210,7 +210,7 @@ public class ProfileFragment extends Fragment {
         titles.add("Карточка очков");
         titles.add("Карточка звания");
         titles.add("Карточка достижений");
-        titles.add("Карточка спасенных деервье");
+        titles.add("Карточка спасенных деревьев");
         titles.add("Карточка спасеных животных");
         titles.add("Карточка спасеных людей");
 
@@ -269,18 +269,13 @@ public class ProfileFragment extends Fragment {
                     profileDialog.setPositiveButton("Поделиться", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                            shareIntent.setType("text/plain");
-                            String shareBody = "У меня крутой профиль: " + (int) pointsFromDatabase;
-                            shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
-                            startActivity(Intent.createChooser(shareIntent, "Поделиться профилем"));
+                            shareProfile();
                         }
                     });
                     profileDialog.show();
                 }
             });
         }
-
         return rootView;
     }
 
@@ -300,36 +295,62 @@ public class ProfileFragment extends Fragment {
     }
 
     private void shareProfile() {
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.setType("text/plain");
-        if (pointsFromDatabase > 0) {
-            String shareBody = "В приложении Enliven я получил " + (int) pointsFromDatabase + " очков." +
-                    " Зарабатывая их, я улучшаю экологию на планете. Присоединяйтесь ко мне, " +
-                    "пора все менять! #Enliven";
-            shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
-        } else if (pointsFromDatabase > 500) {
-            String shareBody = "В приложении Enliven я заработал " + (int) pointsFromDatabase + " очков и спас " +
-                    (int) (pointsFromDatabase / 500) + " дерево! Присоединяйтесь ко мне, " +
-                    "пора все менять! #Enliven";
-            shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
-        } else if (pointsFromDatabase > 1000) {
-            String shareBody = "В приложении Enliven я заработал " + (int) pointsFromDatabase + " очков, спас " +
-                    (int) (pointsFromDatabase / 500) + " дерева и " + (int) (pointsFromDatabase / 1000) +
-                    " животное! Присоединяйтесь ко мне, " +
-                    "пора все менять! #Enliven";
-            shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
-        } else if (pointsFromDatabase > 1200) {
-            String shareBody = "В приложении Enliven я заработал " + (int) pointsFromDatabase + " очков, спас " +
-                    (int) (pointsFromDatabase / 500) + " деревьев, " + (int) (pointsFromDatabase / 1000) +
-                    " животных и " + (int) (pointsFromDatabase / 1200) + " человек! Присоединяйтесь ко мне, " +
-                    "пора все менять! #Enliven";
-            shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
-        } else {
-            String shareBody = "В приложении Enliven я спасаю наш мир. Присоединяйтесь ко мне, " +
-                    "пора все менять! #Enliven";
-            shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
-        }
-        startActivity(Intent.createChooser(shareIntent, "Поделиться профилем"));
+        ValueEventListener postListenerForSharing = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (user != null && dataSnapshot.child("users").child(user.getUid()).child("points").getValue() != null) {
+                    pointsFromDatabase = (long) dataSnapshot.child("users").child(user.getUid()).child("points").getValue();
+                } else {
+                    pointsFromDatabase = 0;
+                }
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                if (pointsFromDatabase > 1200) {
+                    String shareBody = "В приложении Enliven я заработал " + (int) pointsFromDatabase + " очков, спас " +
+                            (int) (pointsFromDatabase / 500) + " деревьев, " + (int) (pointsFromDatabase / 1000) +
+                            " животных и " + (int) (pointsFromDatabase / 1200) + " человек! Присоединяйтесь ко мне, " +
+                            "пора все менять! #Enliven";
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+                } else if (pointsFromDatabase > 1000) {
+                    String shareBody = "В приложении Enliven я заработал " + (int) pointsFromDatabase + " очков, спас " +
+                            (int) (pointsFromDatabase / 500) + " дерева и " + (int) (pointsFromDatabase / 1000) +
+                            " животное! Присоединяйтесь ко мне, " +
+                            "пора все менять! #Enliven";
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+                } else if (pointsFromDatabase > 500) {
+                    String shareBody = "В приложении Enliven я заработал " + (int) pointsFromDatabase + " очков и спас " +
+                            (int) (pointsFromDatabase / 500) + " дерево! Присоединяйтесь ко мне, " +
+                            "пора все менять! #Enliven";
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+                } else if (pointsFromDatabase > 0) {
+                    String shareBody = "В приложении Enliven я получил " + (int) pointsFromDatabase + " очков." +
+                            " Зарабатывая их, я улучшаю экологию на планете. Присоединяйтесь ко мне, " +
+                            "пора все менять! #Enliven";
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+                } else {
+                    String shareBody = "В приложении Enliven я спасаю наш мир. Присоединяйтесь ко мне, " +
+                            "пора все менять! #Enliven";
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+                }
+                startActivity(Intent.createChooser(shareIntent, "Поделиться профилем"));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+            }
+        };
+        mDatabase.addListenerForSingleValueEvent(postListenerForSharing);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override

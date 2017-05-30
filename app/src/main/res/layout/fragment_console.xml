@@ -1,0 +1,29 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="sis.pewpew.fragments.ConsoleFragment">
+
+    <ImageView
+        android:id="@+id/console_denied_icon"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="88dp"
+        app:srcCompat="@drawable/achieve_15_icon" />
+
+    <TextView
+        android:id="@+id/console_denied_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/console_denied_icon"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:paddingTop="20dp"
+        android:text="Консоль доступна только для пользователей, набравших свыше 10000 очков, либо имеющих пометку уровня Модератор или выше."
+        android:textSize="20sp" />
+</RelativeLayout>

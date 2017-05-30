@@ -9,18 +9,25 @@ import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.support.annotation.NonNull;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
 
 import sis.pewpew.MainActivity;
 import sis.pewpew.R;
@@ -32,6 +39,7 @@ public class SettingsFragment extends PreferenceFragment {
     private static final String TAG = "LogInStatus";
     private DatabaseReference mDatabase;
     private AlertDialog.Builder signOutDialog;
+    private AlertDialog.Builder redeemVoucherDialog;
     private AlertDialog.Builder deleteAccountDialog;
     private AlertDialog.Builder verifyAccountSupport;
     private AlertDialog.Builder resetDialog;
@@ -53,7 +61,7 @@ public class SettingsFragment extends PreferenceFragment {
         deleteAccountDialog.setPositiveButton("Продолжить", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                showProgressDialog();
+                showProgressDialog("Удаление…");
                 mDatabase.child("users").child(user.getUid()).removeValue().addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -132,7 +140,6 @@ public class SettingsFragment extends PreferenceFragment {
             }
         });
 
-
         final Preference preference1 = findPreference("delete_account_button");
         preference1.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -154,6 +161,59 @@ public class SettingsFragment extends PreferenceFragment {
         preference5.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 resetDialog.show();
+                return false;
+            }
+        });
+
+        final Preference preference6 = findPreference("redeem_voucher_button");
+        preference6.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                redeemVoucherDialog = new AlertDialog.Builder(getActivity());
+                redeemVoucherDialog.setTitle("Погашение промокода");
+                redeemVoucherDialog.setMessage("Введите Ваш уникальный промокод ниже. " +
+                        "Регистр не учитывается, однако дефисное разделение необходимо.");
+                final EditText input = new EditText(getActivity());
+                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                input.setHint("xxxx-xxxx-xxxx");
+                redeemVoucherDialog.setView(input);
+                redeemVoucherDialog.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+                redeemVoucherDialog.setPositiveButton("Погасить", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (input.getText().length() < 14 || !input.getText().toString().contains("-")) {
+                            showVoucherRedeemResultDialog("Неверный формат", "Пожалуйста, проверьте формат предоставленных данных. " +
+                                    "Промокод должен содержать в общей сложности 12 символов и 2 дефиса-разделителя.");
+                        } else {
+                            showProgressDialog("Погашение…");
+                            ValueEventListener postListener = new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.child("vouchers").child(input.getText().toString().toLowerCase()).getValue() != null) {
+                                        long pointsFromVoucher = (long) dataSnapshot.child("vouchers").child(input.getText().toString().toLowerCase()).getValue();
+                                        DatabaseReference mProfilePoints = FirebaseDatabase.getInstance().getReference()
+                                                .child("users").child(user.getUid()).child("points");
+                                        onVoucherPointsAdded(mProfilePoints, pointsFromVoucher);
+                                        mDatabase.child("vouchers").child(input.getText().toString().toLowerCase()).removeValue();
+                                    } else {
+                                        showVoucherRedeemResultDialog("Несуществующий промокод", "Пожалуйста, проверьте корректность введенного промокода. " +
+                                                "Возможно, он уже был погашен ранее.");
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                }
+                            };
+                            mDatabase.addListenerForSingleValueEvent(postListener);
+                        }
+                    }
+                });
+                redeemVoucherDialog.show();
                 return false;
             }
         });
@@ -194,7 +254,6 @@ public class SettingsFragment extends PreferenceFragment {
                     .addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-
                             if (task.isSuccessful()) {
                                 Toast.makeText(getActivity(), "Email подтверждения отправлен на " + user.getEmail(),
                                         Toast.LENGTH_SHORT).show();
@@ -224,10 +283,10 @@ public class SettingsFragment extends PreferenceFragment {
         Toast.makeText(getActivity(), "Настройки сброшены", Toast.LENGTH_SHORT).show();
     }
 
-    public void showProgressDialog() {
+    public void showProgressDialog(String title) {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(getActivity());
-            mProgressDialog.setTitle("Удаление…");
+            mProgressDialog.setTitle(title);
             mProgressDialog.setMessage("Подождите…");
             mProgressDialog.setIndeterminate(true);
         }
@@ -239,6 +298,44 @@ public class SettingsFragment extends PreferenceFragment {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
         }
+    }
+
+    private void onVoucherPointsAdded(DatabaseReference postRef, final long prizePoints) {
+        postRef.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                long pointsFromDatabase = 0;
+                if (mutableData != null) {
+                    pointsFromDatabase = (long) mutableData.getValue();
+                }
+                pointsFromDatabase = pointsFromDatabase + prizePoints;
+                assert mutableData != null;
+                mutableData.setValue(pointsFromDatabase);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b,
+                                   DataSnapshot dataSnapshot) {
+                hideProgressDialog();
+                showVoucherRedeemResultDialog("Промокод погашен", "Призовые очки успешно добавлены к Вашему профилю.");
+                Log.d(TAG, "postTransaction:onComplete:" + databaseError);
+            }
+        });
+    }
+
+    private void showVoucherRedeemResultDialog(String resultTitle, String resultMessage) {
+        hideProgressDialog();
+        AlertDialog.Builder voucherRedeemResultDialog = new AlertDialog.Builder(getActivity());
+        voucherRedeemResultDialog.setTitle(resultTitle);
+        voucherRedeemResultDialog.setMessage(resultMessage);
+        voucherRedeemResultDialog.setNegativeButton("Закрыть", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        voucherRedeemResultDialog.show();
     }
 
     @Override
