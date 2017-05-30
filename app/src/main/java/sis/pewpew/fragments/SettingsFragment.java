@@ -9,6 +9,7 @@ import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.support.annotation.NonNull;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -67,6 +68,7 @@ public class SettingsFragment extends PreferenceFragment {
                     public void onComplete(@NonNull Task<Void> task) {
                         hideProgressDialog();
                         FirebaseAuth.getInstance().signOut();
+                        user.delete();
                         logOut();
                         String[] sharedPrefsName = new String[]{"ACHIEVE1", "ACHIEVE2", "ACHIEVE3", "ACHIEVE4",
                                 "ACHIEVE5", "ACHIEVE6", "ACHIEVE7", "ACHIEVE8", "ACHIEVE9", "ACHIEVE10", "ACHIEVE11",
@@ -91,7 +93,7 @@ public class SettingsFragment extends PreferenceFragment {
         signOutDialog.setPositiveButton("Выйти", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                if (user.getDisplayName() != null) {
+                if (!user.isAnonymous()) {
                     FirebaseAuth.getInstance().signOut();
                     logOut();
                 } else {
@@ -99,11 +101,11 @@ public class SettingsFragment extends PreferenceFragment {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             FirebaseAuth.getInstance().signOut();
+                            user.delete();
                             logOut();
                         }
                     });
                 }
-
             }
         });
         signOutDialog.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
@@ -173,8 +175,9 @@ public class SettingsFragment extends PreferenceFragment {
                 redeemVoucherDialog.setMessage("Введите Ваш уникальный промокод ниже. " +
                         "Регистр не учитывается, однако дефисное разделение необходимо.");
                 final EditText input = new EditText(getActivity());
-                input.setInputType(InputType.TYPE_CLASS_TEXT);
-                input.setHint("xxxx-xxxx-xxxx");
+                input.setHint("XXXX-XXXX-XXXX");
+                input.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+                input.setFilters(new InputFilter[]{new InputFilter.AllCaps(), new InputFilter.LengthFilter(14)});
                 redeemVoucherDialog.setView(input);
                 redeemVoucherDialog.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
                     @Override
@@ -185,7 +188,7 @@ public class SettingsFragment extends PreferenceFragment {
                 redeemVoucherDialog.setPositiveButton("Погасить", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        if (input.getText().length() < 14 || !input.getText().toString().contains("-")) {
+                        if (input.getText().length() != 14 || !input.getText().toString().contains("-")) {
                             showVoucherRedeemResultDialog("Неверный формат", "Пожалуйста, проверьте формат предоставленных данных. " +
                                     "Промокод должен содержать в общей сложности 12 символов и 2 дефиса-разделителя.");
                         } else {
@@ -193,12 +196,12 @@ public class SettingsFragment extends PreferenceFragment {
                             ValueEventListener postListener = new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
-                                    if (dataSnapshot.child("vouchers").child(input.getText().toString().toLowerCase()).getValue() != null) {
-                                        long pointsFromVoucher = (long) dataSnapshot.child("vouchers").child(input.getText().toString().toLowerCase()).getValue();
+                                    if (dataSnapshot.child("vouchers").child(input.getText().toString().toUpperCase()).getValue() != null) {
+                                        long pointsFromVoucher = (long) dataSnapshot.child("vouchers").child(input.getText().toString().toUpperCase()).getValue();
                                         DatabaseReference mProfilePoints = FirebaseDatabase.getInstance().getReference()
                                                 .child("users").child(user.getUid()).child("points");
                                         onVoucherPointsAdded(mProfilePoints, pointsFromVoucher);
-                                        mDatabase.child("vouchers").child(input.getText().toString().toLowerCase()).removeValue();
+                                        mDatabase.child("vouchers").child(input.getText().toString().toUpperCase()).removeValue();
                                     } else {
                                         showVoucherRedeemResultDialog("Несуществующий промокод", "Пожалуйста, проверьте корректность введенного промокода. " +
                                                 "Возможно, он уже был погашен ранее.");

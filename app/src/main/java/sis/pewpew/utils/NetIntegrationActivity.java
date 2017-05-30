@@ -54,7 +54,6 @@ public class NetIntegrationActivity extends AppCompatActivity {
 
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
-                    // User is signed out
                     Intent intent = new Intent(NetIntegrationActivity.this, AuthActivity.class);
                     startActivity(intent);
                     finish();

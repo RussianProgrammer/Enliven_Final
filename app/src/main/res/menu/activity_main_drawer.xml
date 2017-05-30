@@ -11,6 +11,10 @@
             android:icon="@drawable/ic_menu_map"
             android:title="@string/map_fragment_name" />
         <item
+            android:id="@+id/nav_rating"
+            android:icon="@drawable/ic_menu_rating"
+            android:title="@string/rating_fragment_name" />
+        <item
             android:id="@+id/nav_profile"
             android:icon="@drawable/ic_menu_profile"
             android:title="@string/profile_fragment_name" />

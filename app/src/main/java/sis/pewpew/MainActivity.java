@@ -149,8 +149,8 @@ public class MainActivity extends NetIntegrationActivity
             fragmentTransaction.replace(R.id.container, progressFragment);
         } else if (id == R.id.nav_map) {
             fragmentTransaction.replace(R.id.container, mapFragment);
-            //} else if (id == R.id.nav_rating) {
-            // fragmentTransaction.replace(R.id.container, ratingFragment);
+        } else if (id == R.id.nav_rating) {
+            fragmentTransaction.replace(R.id.container, ratingFragment);
         } else if (id == R.id.nav_profile) {
             fragmentTransaction.replace(R.id.container, profileFragment);
         } else if (id == R.id.nav_achievements) {
