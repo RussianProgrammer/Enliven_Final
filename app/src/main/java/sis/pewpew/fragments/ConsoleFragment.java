@@ -55,6 +55,7 @@ public class ConsoleFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        onDestroyView();
     }
 
     @Override

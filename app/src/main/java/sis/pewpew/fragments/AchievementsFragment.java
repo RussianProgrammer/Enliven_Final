@@ -333,13 +333,12 @@ public class AchievementsFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        closed = true;
+        onDestroyView();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        closed = false;
     }
 
     @Override

@@ -35,6 +35,17 @@ public class ShareFragment extends Fragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        onDestroyView();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
     }

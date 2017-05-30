@@ -346,6 +346,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        onDestroyView();
     }
 
     @Override

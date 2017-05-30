@@ -65,6 +65,7 @@ public class ProgressFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        onDestroyView();
     }
 
     @Override
