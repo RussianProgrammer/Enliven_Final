@@ -25,7 +25,7 @@ public class GratitudeFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        onDestroyView();
+        super.onDestroyView();
     }
 
     @Override

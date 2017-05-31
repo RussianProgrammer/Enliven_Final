@@ -83,7 +83,7 @@ public class AchievementsFragment extends Fragment {
                 }
 
                 if (!closed) {
-                    if (user.getDisplayName() != null) {
+                    if (!user.isAnonymous()) {
                         if (points >= 100) {
                             SharedPreferences settings = getActivity().getSharedPreferences("ACHIEVE1", 0);
                             boolean achieve1Gotten = settings.getBoolean("achieve1Gotten", true);
@@ -333,12 +333,14 @@ public class AchievementsFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        onDestroyView();
+        super.onDestroyView();
+        closed = true;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        closed = false;
     }
 
     @Override

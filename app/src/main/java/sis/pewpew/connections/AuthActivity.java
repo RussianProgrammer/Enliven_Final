@@ -173,11 +173,10 @@ public class AuthActivity extends ProgressDialogActivity implements
     private void updateUI(FirebaseUser user) {
         hideProgressDialog();
         if (user != null) {
-            if (user.getDisplayName() != null) {
+            if (!user.isAnonymous()) {
                 mDatabase.child("users").child(user.getUid()).child("name").setValue(user.getDisplayName());
             } else {
                 mDatabase.child("users").child(user.getUid()).child("name").setValue("Demo Account");
-                mDatabase.child("users").child(user.getUid()).child("points").setValue(579185);
             }
             if (user.getEmail() != null) {
                 mDatabase.child("users").child(user.getUid()).child("email").setValue(user.getEmail());

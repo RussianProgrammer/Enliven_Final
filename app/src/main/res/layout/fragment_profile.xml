@@ -124,10 +124,65 @@
 
             <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/profile_rank_card"
+                android:id="@+id/profile_used_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/profile_points_card"
+                android:layout_margin="10dp"
+                android:clickable="true"
+                android:foreground="?selectableItemBackground"
+                card_view:cardBackgroundColor="#394"
+                card_view:cardCornerRadius="10dp"
+                card_view:cardElevation="5dp"
+                card_view:contentPadding="5dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/profile_used_icon"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_alignParentTop="true"
+                        android:contentDescription="@string/description"
+                        android:foregroundGravity="left"
+                        android:padding="10dp"
+                        app:srcCompat="@drawable/profile_used_icon" />
+
+                    <TextView
+                        android:id="@+id/profile_used"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_toRightOf="@id/profile_used_icon"
+                        android:paddingLeft="10dp"
+                        android:text="Загрузка…"
+                        android:textColor="#FFFFFF"
+                        android:textSize="45sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/profile_used_call"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/profile_used"
+                        android:layout_toRightOf="@id/profile_used_icon"
+                        android:paddingLeft="10dp"
+                        android:text="Экопунктов использовано"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20sp" />
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/profile_rank_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/profile_used_card"
                 android:layout_margin="10dp"
                 android:clickable="true"
                 android:foreground="?selectableItemBackground"

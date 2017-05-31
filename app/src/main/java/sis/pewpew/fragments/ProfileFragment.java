@@ -36,6 +36,7 @@ public class ProfileFragment extends Fragment {
 
     public FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     public long pointsFromDatabase;
+    public long timesUsedFromDatabase;
     private String statusFromDatabase;
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
@@ -78,6 +79,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 TextView points = (TextView) rootView.findViewById(R.id.profile_points);
+                TextView used = (TextView) rootView.findViewById(R.id.profile_used);
                 TextView status = (TextView) rootView.findViewById(R.id.profile_status);
                 TextView rank = (TextView) rootView.findViewById(R.id.profile_rank);
                 TextView achieves = (TextView) rootView.findViewById(R.id.profile_achieves);
@@ -179,6 +181,12 @@ public class ProfileFragment extends Fragment {
                 } else {
                     status.setText("Пользователь");
                 }
+                if (dataSnapshot.child("users").child(user.getUid()).child("timesUsed").getValue() != null) {
+                    timesUsedFromDatabase = (long) dataSnapshot.child("users").child(user.getUid()).child("timesUsed").getValue();
+                    used.setText("" + timesUsedFromDatabase);
+                } else {
+                    used.setText("0");
+                }
             }
 
             @Override
@@ -199,6 +207,7 @@ public class ProfileFragment extends Fragment {
         List<CardView> cards = new ArrayList<>();
         cards.add((CardView) rootView.findViewById(R.id.profile_main_card));
         cards.add((CardView) rootView.findViewById(R.id.profile_points_card));
+        cards.add((CardView) rootView.findViewById(R.id.profile_used_card));
         cards.add((CardView) rootView.findViewById(R.id.profile_rank_card));
         cards.add((CardView) rootView.findViewById(R.id.profile_achieves_card));
         cards.add((CardView) rootView.findViewById(R.id.profile_saved_trees_card));
@@ -208,6 +217,7 @@ public class ProfileFragment extends Fragment {
         final List<String> titles = new ArrayList<>();
         titles.add("Карточка профиля");
         titles.add("Карточка очков");
+        titles.add("Карточка использованных экопунктов");
         titles.add("Карточка звания");
         titles.add("Карточка достижений");
         titles.add("Карточка спасенных деревьев");
@@ -223,6 +233,7 @@ public class ProfileFragment extends Fragment {
         messages.add("Здесь показано количество заработанных Вами очков. " +
                 "Их можно получать, используя экологические пункты на карте. И помните: " +
                 "с каждой новой цифрой на этой карточке мы все ближе к светлому будущему.");
+        messages.add("КРУТО");
         messages.add("Здесь паказано Ваше звание. Чем больше очков Вы зарабатываете, тем оно выше. " +
                 "Не забывайте им хвастаться время от времени.");
         messages.add("Здесь мы посчитали все собранные Вами достижения. Как Вы уже наверняка знаете, " +
@@ -243,6 +254,7 @@ public class ProfileFragment extends Fragment {
         final List<Integer> imageIds = new ArrayList<>();
         imageIds.add(R.drawable.profile_icon);
         imageIds.add(R.drawable.profile_points_icon_2);
+        imageIds.add(R.drawable.profile_used_icon);
         imageIds.add(R.drawable.profile_rank_icon);
         imageIds.add(R.drawable.profile_achieves_icon);
         imageIds.add(R.drawable.profile_saved_trees_icon);
@@ -346,7 +358,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        onDestroyView();
+        super.onDestroyView();
     }
 
     @Override

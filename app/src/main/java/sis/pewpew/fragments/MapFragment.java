@@ -99,7 +99,7 @@ public class MapFragment extends Fragment {
                 mMap.getUiSettings().setMyLocationButtonEnabled(true);
                 mMap.getUiSettings().setZoomControlsEnabled(true);
 
-                for (Marker marker : usualMarkers) {
+                for (final Marker marker : usualMarkers) {
                     Location loc = new Location(location);
                     loc.setLatitude(marker.getPosition().latitude);
                     loc.setLongitude(marker.getPosition().longitude);
@@ -126,8 +126,15 @@ public class MapFragment extends Fragment {
                                         .child("users").child(user.getUid()).child("points");
                                 DatabaseReference mPublicPoints = FirebaseDatabase.getInstance().getReference()
                                         .child("progress").child("points");
+                                DatabaseReference mTimesUsed = FirebaseDatabase.getInstance().getReference()
+                                        .child("markers").child(marker.getSnippet()).child("timesUsed");
+                                DatabaseReference mTimesUsedProfile = FirebaseDatabase.getInstance().getReference()
+                                        .child("users").child(user.getUid()).child("timesUsed");
                                 onUsualProfilePointsAdded(mProfilePoints);
                                 onUsualPublicPointsAdded(mPublicPoints);
+                                onTimesUsedCount(mTimesUsed);
+                                onTimesUsedProfileCount(mTimesUsedProfile);
+                                showProgressDialog();
                             }
                         });
 
@@ -138,7 +145,7 @@ public class MapFragment extends Fragment {
                     }
                 }
 
-                for (Marker marker : eventMarkers) {
+                for (final Marker marker : eventMarkers) {
                     Location loc = new Location(location);
                     loc.setLatitude(marker.getPosition().latitude);
                     loc.setLongitude(marker.getPosition().longitude);
@@ -165,8 +172,14 @@ public class MapFragment extends Fragment {
                                         .child("users").child(user.getUid()).child("points");
                                 DatabaseReference mPublicPoints = FirebaseDatabase.getInstance().getReference()
                                         .child("progress").child("points");
+                                DatabaseReference mTimesUsed = FirebaseDatabase.getInstance().getReference()
+                                        .child("markers").child(marker.getSnippet()).child("timesUsed");
+                                DatabaseReference mTimesUsedProfile = FirebaseDatabase.getInstance().getReference()
+                                        .child("users").child(user.getUid()).child("timesUsed");
                                 onEventProfilePointsAdded(mProfilePoints);
                                 onEventPublicPointsAdded(mPublicPoints);
+                                onTimesUsedCount(mTimesUsed);
+                                onTimesUsedProfileCount(mTimesUsedProfile);
                                 showProgressDialog();
                             }
                         });
@@ -199,6 +212,50 @@ public class MapFragment extends Fragment {
                                        DataSnapshot dataSnapshot) {
                     hideProgressDialog();
                     showGratitudeDialog();
+                    Log.d(TAG, "postTransaction:onComplete:" + databaseError);
+                }
+            });
+        }
+
+        private void onTimesUsedCount(DatabaseReference postRef) {
+            postRef.runTransaction(new Transaction.Handler() {
+                @Override
+                public Transaction.Result doTransaction(MutableData mutableData) {
+                    long timesUsed = 0;
+                    if (mutableData != null) {
+                        timesUsed = (long) mutableData.getValue();
+                    }
+                    timesUsed = timesUsed + 1;
+                    assert mutableData != null;
+                    mutableData.setValue(timesUsed);
+                    return Transaction.success(mutableData);
+                }
+
+                @Override
+                public void onComplete(DatabaseError databaseError, boolean b,
+                                       DataSnapshot dataSnapshot) {
+                    Log.d(TAG, "postTransaction:onComplete:" + databaseError);
+                }
+            });
+        }
+
+        private void onTimesUsedProfileCount(DatabaseReference postRef) {
+            postRef.runTransaction(new Transaction.Handler() {
+                @Override
+                public Transaction.Result doTransaction(MutableData mutableData) {
+                    long timesUsed = 0;
+                    if (mutableData != null) {
+                        timesUsed = (long) mutableData.getValue();
+                    }
+                    timesUsed = timesUsed + 1;
+                    assert mutableData != null;
+                    mutableData.setValue(timesUsed);
+                    return Transaction.success(mutableData);
+                }
+
+                @Override
+                public void onComplete(DatabaseError databaseError, boolean b,
+                                       DataSnapshot dataSnapshot) {
                     Log.d(TAG, "postTransaction:onComplete:" + databaseError);
                 }
             });
@@ -297,6 +354,9 @@ public class MapFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.child("users").child(user.getUid()).child("points").getValue() == null && !closed) {
                     mDatabase.child("users").child(user.getUid()).child("points").setValue(0);
+                }
+                if (dataSnapshot.child("users").child(user.getUid()).child("timesUsed").getValue() == null && !closed) {
+                    mDatabase.child("users").child(user.getUid()).child("timesUsed").setValue(0);
                 }
             }
 

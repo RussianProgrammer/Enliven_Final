@@ -188,7 +188,7 @@ public class SettingsFragment extends PreferenceFragment {
                 redeemVoucherDialog.setPositiveButton("Погасить", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        if (input.getText().length() != 14 || !input.getText().toString().contains("-")) {
+                        if (input.getText().length() < 14 || !input.getText().toString().contains("-")) {
                             showVoucherRedeemResultDialog("Неверный формат", "Пожалуйста, проверьте формат предоставленных данных. " +
                                     "Промокод должен содержать в общей сложности 12 символов и 2 дефиса-разделителя.");
                         } else {
@@ -250,7 +250,7 @@ public class SettingsFragment extends PreferenceFragment {
     }
 
     private void sendEmailVerification() {
-        if (user.getDisplayName() != null) {
+        if (!user.isAnonymous()) {
             final FirebaseUser user = mAuth.getCurrentUser();
             assert user != null;
             user.sendEmailVerification()
