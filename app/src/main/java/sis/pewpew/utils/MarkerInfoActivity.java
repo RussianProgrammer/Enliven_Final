@@ -2,6 +2,7 @@ package sis.pewpew.utils;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -23,6 +26,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import sis.pewpew.R;
 
@@ -32,6 +41,8 @@ public class MarkerInfoActivity extends AppCompatActivity {
     private String snippet;
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private Locale locale = new Locale("ru");
+    private String date = new SimpleDateFormat("dd-MM-yyyy", locale).format(new Date());
     private String detailsFromDatabase;
     private String addressFromDatabase;
     private String workTimeFromDatabase;
@@ -41,6 +52,7 @@ public class MarkerInfoActivity extends AppCompatActivity {
     private String contactsUrlFromDatabase;
     private String prizeFundFromDatabase;
     private long timesUsedFromDatabase;
+    private String rating;
     private String iconUrl;
 
 
@@ -78,7 +90,71 @@ public class MarkerInfoActivity extends AppCompatActivity {
 
         ValueEventListener postListener = new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(final DataSnapshot dataSnapshot) {
+
+                findViewById(R.id.marker_info_rating_card).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        final android.app.AlertDialog.Builder markerInfoRatingDialog = new android.app.AlertDialog.Builder(MarkerInfoActivity.this);
+                        markerInfoRatingDialog.setTitle("Карточка рейтинга");
+                        markerInfoRatingDialog.setIcon(R.drawable.marker_info_rating_icon);
+                        markerInfoRatingDialog.setMessage("Здесь отображен средний рейтинг экопункта. " +
+                                "Он необходим для того, чтобы пользователи смогли узнать, насколько хорошо " +
+                                "его работники следят за ним. Если Вы уже использовали этот пункт " +
+                                "и у Вас есть, что рассказать о нем, пожалуйста, оставьте оцентку, коснувшись кнопки \"Оценить\".");
+                        markerInfoRatingDialog.setNegativeButton("Закрыть", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.cancel();
+                            }
+                        });
+                        markerInfoRatingDialog.setPositiveButton("Оценить", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                if (dataSnapshot.child("users").child(user.getUid()).child("markers").child(snippet).getChildrenCount() > 0) {
+                                    final android.app.AlertDialog.Builder setRatingDialog = new android.app.AlertDialog.Builder(MarkerInfoActivity.this);
+                                    setRatingDialog.setTitle("Оценить");
+                                    setRatingDialog.setMessage("Учтите, что в итоговом рейтинге будет учитываться " +
+                                            "лишь одна положительная и одна отрицательная оценка от Вас. Кроме того, пожалуйста, " +
+                                            "ставьте оценки максимально конструктивно, так как даже одна отрицательная " +
+                                            "оценка может снизить общий рейтинг настолько, что никому не захочется его использовать.");
+                                    setRatingDialog.setCancelable(false);
+                                    setRatingDialog.setPositiveButton("Понравилось", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            mDatabase.child("markers").child(snippet).child("rating")
+                                                    .child("positive").child(user.getUid()).setValue(date).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    showInfoDialog("Спасибо за оценку", "Сотрудники компаний по защите окружающей среды стараются делать все возможное для того, " +
+                                                            "чтобы Вам было комфортно использовать их экологические пункты.");
+                                                }
+                                            });
+                                        }
+                                    });
+                                    setRatingDialog.setNegativeButton("Не понравилось", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            mDatabase.child("markers").child(snippet).child("rating")
+                                                    .child("negative").child(user.getUid()).setValue(date).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    showInfoDialog("Спасибо за оценку", "Сотрудники компаний по защите окружающей среды " +
+                                                            "постараются сделать все возможное для улучшения услуг.");
+                                                }
+                                            });
+                                        }
+                                    });
+                                    setRatingDialog.show();
+                                } else {
+                                    showErrorDialog();
+                                }
+                            }
+                        });
+                        markerInfoRatingDialog.show();
+                    }
+                });
+
                 try {
                     if (dataSnapshot.child("markers").child(snippet).child("iconUrl").getValue() != null) {
                         iconUrl = dataSnapshot.child("markers").child(snippet).child("iconUrl").getValue().toString();
@@ -123,6 +199,14 @@ public class MarkerInfoActivity extends AppCompatActivity {
                     } else {
                         timesUsedFromDatabase = 0;
                     }
+                    if (dataSnapshot.child("markers").child(snippet).child("rating").getChildrenCount() > 0) {
+                        rating = dataSnapshot.child("markers").child(snippet)
+                                .child("rating").child("positive").getChildrenCount() * 100 / (dataSnapshot.child("markers").child(snippet)
+                                .child("rating").child("positive").getChildrenCount() + dataSnapshot.child("markers").child(snippet)
+                                .child("rating").child("negative").getChildrenCount()) + "%";
+                    } else {
+                        rating = "Нет рейтинга";
+                    }
                     if (dataSnapshot.child("markers").child(snippet).child("prizeFund").getValue() != null) {
                         prizeFundFromDatabase = dataSnapshot.child("markers").child(snippet).child("contactsUrl").getValue().toString();
                     } else if (snippet.contains("ev")) {
@@ -151,6 +235,7 @@ public class MarkerInfoActivity extends AppCompatActivity {
                 ((TextView) findViewById(R.id.marker_info_contacts_url)).setText(contactsUrlFromDatabase);
                 ((TextView) findViewById(R.id.marker_info_prize_fund)).setText(prizeFundFromDatabase + " очков");
                 ((TextView) findViewById(R.id.marker_info_used)).setText("" + timesUsedFromDatabase);
+                ((TextView) findViewById(R.id.marker_info_rating)).setText(rating);
 
                 if (snippet.contains("ev")) {
                     ((TextView) findViewById(R.id.marker_info_work_time_call)).setText("Дата");
@@ -184,7 +269,9 @@ public class MarkerInfoActivity extends AppCompatActivity {
                         if (input.getText() != null) {
                             mDatabase.child("markers").child(snippet).child("reports").child(user.getUid())
                                     .setValue(input.getText().toString());
-                            showGratitudeDialog();
+                            showInfoDialog("Спасибо",
+                                    "Благодаря Вам наше приложение становится лучше. " +
+                                            "Мы рассмотрим Вашу жалобу и примем необходимые меры.");
                         }
                     }
                 });
@@ -198,124 +285,97 @@ public class MarkerInfoActivity extends AppCompatActivity {
             }
         });
 
-        final android.app.AlertDialog.Builder markerInfoDetailsCardDialog = new android.app.AlertDialog.Builder(this);
-        markerInfoDetailsCardDialog.setTitle("Карточка информции");
-        markerInfoDetailsCardDialog.setIcon(R.drawable.marker_info_details_icon);
-        markerInfoDetailsCardDialog.setMessage("Здесь мы собрали всю известную нам информацию об этом месте. " +
+        final List<CardView> cards = new ArrayList<>();
+        cards.add((CardView) findViewById(R.id.marker_info_details_card));
+        cards.add((CardView) findViewById(R.id.marker_info_address_card));
+        cards.add((CardView) findViewById(R.id.marker_info_work_time_card));
+        cards.add((CardView) findViewById(R.id.marker_info_contacts_card));
+        cards.add((CardView) findViewById(R.id.marker_info_prize_fund_card));
+        cards.add((CardView) findViewById(R.id.marker_info_used_card));
+
+        final List<String> titles = new ArrayList<>();
+        titles.add("Карточка информции");
+        titles.add("Карточка адреса");
+        titles.add("Карточка времени работы и дат проведения");
+        titles.add("Карточка контактов");
+        titles.add("Карточка награды");
+        titles.add("Карточка использования");
+
+        final List<String> messages = new ArrayList<>();
+        messages.add("Здесь мы собрали всю известную нам информацию об этом месте. " +
                 "Если Вы считаете, что мы в чем-то ошиблись, пожалуйста, сообщите нам об этом, " +
                 "используя кнопку жалобы в правом верхрем углу экрана информации.");
-        markerInfoDetailsCardDialog.setNegativeButton("Закрыть", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-
-        final android.app.AlertDialog.Builder markerInfoAddressCardDialog = new android.app.AlertDialog.Builder(this);
-        markerInfoAddressCardDialog.setTitle("Карточка адреса");
-        markerInfoAddressCardDialog.setIcon(R.drawable.marker_info_address_icon);
-        markerInfoAddressCardDialog.setMessage("Чтобы Вам не пришлось искать это место вручную, " +
+        messages.add("Чтобы Вам не пришлось искать это место вручную, " +
                 "мы добавили особое меню в правом нижнем углу экрана с картой. " +
                 "Просто коснитесь флажка экопункта. для отображения кнопок \"Проложить маршрут\" и " +
                 "\"Показать на карте\". Коснувшись любой из них, " +
                 "Вы будете перенаправлены в приложение \"Google Maps\" для дальнейшей навигации.");
-        markerInfoAddressCardDialog.setNegativeButton("Закрыть", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-
-        final android.app.AlertDialog.Builder markerInfoWorkTimeCardDialog = new android.app.AlertDialog.Builder(this);
-        markerInfoWorkTimeCardDialog.setTitle("Карточка времени работы и дат проведения");
-        markerInfoWorkTimeCardDialog.setIcon(R.drawable.marker_info_work_time_icon);
-        markerInfoWorkTimeCardDialog.setMessage("Для экопунктов здесь показано время работы на протяжении недели, " +
+        messages.add("Для экопунктов здесь показано время работы на протяжении недели, " +
                 "а для экособытий – даты проведения. " +
                 "Кроме того, здесь отображен график перерывов.");
-        markerInfoWorkTimeCardDialog.setNegativeButton("Закрыть", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-        final android.app.AlertDialog.Builder markerInfoContactsCardDialog = new android.app.AlertDialog.Builder(this);
-        markerInfoContactsCardDialog.setTitle("Карточка контактов");
-        markerInfoContactsCardDialog.setIcon(R.drawable.marker_info_contacts_icon);
-        markerInfoContactsCardDialog.setMessage("Мы опросили работников экопунктов " +
+        messages.add("Мы опросили работников экопунктов " +
                 "и собрали для Вас всю имеющуюся у них контактную информацию. К сожалению, " +
                 "далеко не все пункты имеют контактный телефон или собственный сайт, " +
                 "однако даже у самых отдаленных пунктов нам удалось получить хотя бы один способ связи.");
-        markerInfoContactsCardDialog.setNegativeButton("Закрыть", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-        final android.app.AlertDialog.Builder markerInfoPrizeFundCardDialog = new android.app.AlertDialog.Builder(this);
-        markerInfoPrizeFundCardDialog.setTitle("Карточка награды");
-        markerInfoPrizeFundCardDialog.setIcon(R.drawable.marker_info_prize_fund_icon);
-        markerInfoPrizeFundCardDialog.setMessage("У каждого экопункта есть свой призовой фонд. " +
+        messages.add("У каждого экопункта есть свой призовой фонд. " +
                 "Просто доберитесь до него, используйте и получите заслуженные очки в приложении. " +
                 "Спасать планету еще никогда не было так просто!");
-        markerInfoPrizeFundCardDialog.setNegativeButton("Закрыть", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
+        messages.add("Здесь отображено суммартное количество раз использования этого экопункта.");
 
-        CardView markerInfoDetailsCard = (CardView) findViewById(R.id.marker_info_details_card);
-        CardView markerInfoAddressCard = (CardView) findViewById(R.id.marker_info_address_card);
-        CardView markerInfoWorkTimeCard = (CardView) findViewById(R.id.marker_info_work_time_card);
-        CardView markerInfoContactsCard = (CardView) findViewById(R.id.marker_info_contacts_card);
-        CardView markerInfoPrizeFundCard = (CardView) findViewById(R.id.marker_info_prize_fund_card);
+        final List<Integer> imageIds = new ArrayList<>();
+        imageIds.add(R.drawable.marker_info_details_icon);
+        imageIds.add(R.drawable.marker_info_address_icon);
+        imageIds.add(R.drawable.marker_info_work_time_icon);
+        imageIds.add(R.drawable.marker_info_contacts_icon);
+        imageIds.add(R.drawable.marker_info_prize_fund_icon);
+        imageIds.add(R.drawable.marker_info_used_icon);
 
-        markerInfoDetailsCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                markerInfoDetailsCardDialog.show();
-            }
-        });
-
-        markerInfoAddressCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                markerInfoAddressCardDialog.show();
-            }
-        });
-
-        markerInfoWorkTimeCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                markerInfoWorkTimeCardDialog.show();
-            }
-        });
-
-        markerInfoContactsCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                markerInfoContactsCardDialog.show();
-            }
-        });
-
-        markerInfoPrizeFundCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                markerInfoPrizeFundCardDialog.show();
-            }
-        });
+        for (int i = 0; i < cards.size(); i++) {
+            final String title = titles.get(i);
+            final int imageId = imageIds.get(i);
+            final String message = messages.get(i);
+            cards.get(i).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final android.app.AlertDialog.Builder markerInfoDialog = new android.app.AlertDialog.Builder(MarkerInfoActivity.this);
+                    markerInfoDialog.setTitle(title);
+                    markerInfoDialog.setIcon(imageId);
+                    markerInfoDialog.setMessage(message);
+                    markerInfoDialog.setNegativeButton("Закрыть", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.cancel();
+                        }
+                    });
+                    markerInfoDialog.show();
+                }
+            });
+        }
     }
 
-    private void showGratitudeDialog() {
-        android.app.AlertDialog.Builder gratitudeDialog = new android.app.AlertDialog.Builder(this);
-        gratitudeDialog.setTitle("Спасибо");
-        gratitudeDialog.setMessage("Благодаря Вам наше приложение становится лучше. Мы рассмотрим Вашу жалобу и примем необходимые меры.");
-        gratitudeDialog.setNegativeButton("Закрыть", new DialogInterface.OnClickListener() {
+    private void showErrorDialog() {
+        android.app.AlertDialog.Builder errorDialog = new android.app.AlertDialog.Builder(this);
+        errorDialog.setTitle("Экопункт не был использован");
+        errorDialog.setMessage("Вы можете оценивать только те экопункты, которые Вы посетили.");
+        errorDialog.setNegativeButton("Закрыть", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.cancel();
             }
         });
-        gratitudeDialog.show();
+        errorDialog.show();
+    }
+
+    private void showInfoDialog(String title, String message) {
+        android.app.AlertDialog.Builder infoDialog = new android.app.AlertDialog.Builder(this);
+        infoDialog.setTitle(title);
+        infoDialog.setMessage(message);
+        infoDialog.setNegativeButton("Закрыть", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        infoDialog.show();
     }
 }

@@ -37,8 +37,11 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import sis.pewpew.MainActivity;
 import sis.pewpew.R;
@@ -58,6 +61,9 @@ public class MapFragment extends Fragment {
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     private boolean closed;
     private ProgressDialog mProgressDialog;
+
+    private Locale locale = new Locale("ru");
+    private String date = new SimpleDateFormat("dd-MM-yyyy", locale).format(new Date());
 
     private List<Marker> usualMarkers = new ArrayList<>();
     private List<Marker> eventMarkers = new ArrayList<>();
@@ -122,6 +128,10 @@ public class MapFragment extends Fragment {
                         isPointUsedDialog.setPositiveButton("Получить", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+                                showProgressDialog();
+
+                                mDatabase.child("users").child(user.getUid()).child("markers").child(marker.getSnippet()).child(date).setValue("used");
+
                                 DatabaseReference mProfilePoints = FirebaseDatabase.getInstance().getReference()
                                         .child("users").child(user.getUid()).child("points");
                                 DatabaseReference mPublicPoints = FirebaseDatabase.getInstance().getReference()
@@ -137,7 +147,7 @@ public class MapFragment extends Fragment {
                                 onTimesUsedProgressCount(mTimesUsedProgress);
                                 onUsualProfilePointsAdded(mProfilePoints);
                                 onUsualPublicPointsAdded(mPublicPoints);
-                                showProgressDialog();
+
                             }
                         });
 
@@ -171,6 +181,10 @@ public class MapFragment extends Fragment {
                         isPointUsedDialog.setPositiveButton("Получить", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+                                showProgressDialog();
+
+                                mDatabase.child("users").child(user.getUid()).child("markers").child(marker.getSnippet()).child(date).setValue("used");
+
                                 DatabaseReference mProfilePoints = FirebaseDatabase.getInstance().getReference()
                                         .child("users").child(user.getUid()).child("points");
                                 DatabaseReference mPublicPoints = FirebaseDatabase.getInstance().getReference()
@@ -186,7 +200,7 @@ public class MapFragment extends Fragment {
                                 onTimesUsedProgressCount(mTimesUsedProgress);
                                 onEventProfilePointsAdded(mProfilePoints);
                                 onEventPublicPointsAdded(mPublicPoints);
-                                showProgressDialog();
+
                             }
                         });
 
@@ -620,7 +634,7 @@ public class MapFragment extends Fragment {
     public void showProgressDialog() {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(getActivity());
-            mProgressDialog.setTitle("Зачисление…");
+            mProgressDialog.setTitle("Получение очков…");
             mProgressDialog.setMessage("Подождите…");
             mProgressDialog.setIndeterminate(true);
         }

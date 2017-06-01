@@ -47,10 +47,12 @@
 
         <activity
             android:name=".utils.MarkerInfoActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_marker_info"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".utils.AchievementInfoActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_achievement_info"
             android:theme="@style/AppTheme" />
         <activity android:name=".utils.TrainingActivity">
