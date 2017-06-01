@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.util.Log;
@@ -39,6 +40,7 @@ public class ProfileFragment extends Fragment {
     public long timesUsedFromDatabase;
     private String statusFromDatabase;
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+    private final List<Integer> imageIds = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -252,7 +254,6 @@ public class ProfileFragment extends Fragment {
                 "За каждые заработанные Вами 1200 очков один человек из будущего или даже настоящего говорит Вам \"Спасибо\"" +
                 " за сохраненную жизнь.");
 
-        final List<Integer> imageIds = new ArrayList<>();
         imageIds.add(R.drawable.profile_icon);
         imageIds.add(R.drawable.profile_points_icon_2);
         imageIds.add(R.drawable.profile_used_icon);
@@ -359,6 +360,9 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        for (Integer id : imageIds) {
+            BitmapFactory.decodeResource(getResources(), id);
+        }
     }
 
     @Override
