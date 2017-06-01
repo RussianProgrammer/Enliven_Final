@@ -42,7 +42,7 @@ public class AchievementsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         SharedPreferences settings = getActivity().getSharedPreferences("ACHIEVEMENTS", 0);
         boolean dialogShown = settings.getBoolean("dialogShown", false);
 
@@ -333,8 +333,12 @@ public class AchievementsFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        super.onDestroyView();
         closed = true;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
     }
 
     @Override

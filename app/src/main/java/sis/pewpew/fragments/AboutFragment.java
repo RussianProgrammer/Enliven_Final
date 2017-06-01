@@ -19,7 +19,7 @@ public class AboutFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         final View rootView = inflater.inflate(R.layout.fragment_about, container, false);
         ((MainActivity) getActivity()).setActionBarTitle(getString(R.string.about_fragment_name));
 
@@ -38,6 +38,10 @@ public class AboutFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+    }
+
+    @Override
+    public void onDestroyView() {
         super.onDestroyView();
     }
 

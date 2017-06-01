@@ -70,6 +70,10 @@ public class EventsFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+    }
+
+    @Override
+    public void onDestroyView() {
         super.onDestroyView();
     }
 
