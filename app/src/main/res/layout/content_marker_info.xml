@@ -280,25 +280,25 @@
                     app:srcCompat="@drawable/marker_info_prize_fund_icon" />
 
                 <TextView
-                    android:id="@+id/marker_info_prize_fund_call"
+                    android:id="@+id/marker_info_prize_fund"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_toRightOf="@id/marker_info_prize_fund_icon"
                     android:paddingLeft="10dp"
-                    android:text="Награда"
+                    android:text="Загрузка…"
                     android:textColor="#FFFFFF"
                     android:textSize="45sp"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/marker_info_prize_fund"
+                    android:id="@+id/marker_info_prize_fund_call"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/marker_info_prize_fund_call"
+                    android:layout_below="@id/marker_info_prize_fund"
                     android:layout_toRightOf="@id/marker_info_prize_fund_icon"
                     android:paddingLeft="10dp"
-                    android:text="Загрузка…"
+                    android:text="Награда"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp" />
 
@@ -315,7 +315,7 @@
             android:layout_margin="10dp"
             android:clickable="true"
             android:foreground="?selectableItemBackground"
-            card_view:cardBackgroundColor="#490"
+            card_view:cardBackgroundColor="#757575"
             card_view:cardCornerRadius="10dp"
             card_view:cardElevation="5dp"
             card_view:contentPadding="5dp">
@@ -332,28 +332,83 @@
                     android:contentDescription="@string/description"
                     android:foregroundGravity="left"
                     android:padding="10dp"
-                    app:srcCompat="@drawable/marker_info_prize_fund_icon" />
-
-                <TextView
-                    android:id="@+id/marker_info_used_call"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_toRightOf="@id/marker_info_used_icon"
-                    android:paddingLeft="10dp"
-                    android:text="Награда"
-                    android:textColor="#FFFFFF"
-                    android:textSize="45sp"
-                    android:textStyle="bold" />
+                    app:srcCompat="@drawable/marker_info_used_icon" />
 
                 <TextView
                     android:id="@+id/marker_info_used"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/marker_info_used_call"
+                    android:layout_centerHorizontal="true"
                     android:layout_toRightOf="@id/marker_info_used_icon"
                     android:paddingLeft="10dp"
                     android:text="Загрузка…"
+                    android:textColor="#FFFFFF"
+                    android:textSize="45sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/marker_info_used_call"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/marker_info_used"
+                    android:layout_toRightOf="@id/marker_info_used_icon"
+                    android:paddingLeft="10dp"
+                    android:text="Раз был использован"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/marker_info_rating_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/marker_info_used_card"
+            android:layout_margin="10dp"
+            android:clickable="true"
+            android:foreground="?selectableItemBackground"
+            card_view:cardBackgroundColor="#FF9800"
+            card_view:cardCornerRadius="10dp"
+            card_view:cardElevation="5dp"
+            card_view:contentPadding="5dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/marker_info_rating_icon"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_alignParentTop="true"
+                    android:contentDescription="@string/description"
+                    android:foregroundGravity="left"
+                    android:padding="10dp"
+                    app:srcCompat="@drawable/marker_info_rating_icon" />
+
+                <TextView
+                    android:id="@+id/marker_info_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_toRightOf="@id/marker_info_rating_icon"
+                    android:paddingLeft="10dp"
+                    android:text="Загрузка…"
+                    android:textColor="#FFFFFF"
+                    android:textSize="45sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/marker_info_rating_call"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/marker_info_rating"
+                    android:layout_toRightOf="@id/marker_info_rating_icon"
+                    android:paddingLeft="10dp"
+                    android:text="Средний рейтинг"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp" />
 

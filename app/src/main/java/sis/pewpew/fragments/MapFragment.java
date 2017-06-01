@@ -130,10 +130,13 @@ public class MapFragment extends Fragment {
                                         .child("markers").child(marker.getSnippet()).child("timesUsed");
                                 DatabaseReference mTimesUsedProfile = FirebaseDatabase.getInstance().getReference()
                                         .child("users").child(user.getUid()).child("timesUsed");
-                                onUsualProfilePointsAdded(mProfilePoints);
-                                onUsualPublicPointsAdded(mPublicPoints);
+                                DatabaseReference mTimesUsedProgress = FirebaseDatabase.getInstance().getReference()
+                                        .child("progress").child("timesUsed");
                                 onTimesUsedCount(mTimesUsed);
                                 onTimesUsedProfileCount(mTimesUsedProfile);
+                                onTimesUsedProgressCount(mTimesUsedProgress);
+                                onUsualProfilePointsAdded(mProfilePoints);
+                                onUsualPublicPointsAdded(mPublicPoints);
                                 showProgressDialog();
                             }
                         });
@@ -176,10 +179,13 @@ public class MapFragment extends Fragment {
                                         .child("markers").child(marker.getSnippet()).child("timesUsed");
                                 DatabaseReference mTimesUsedProfile = FirebaseDatabase.getInstance().getReference()
                                         .child("users").child(user.getUid()).child("timesUsed");
-                                onEventProfilePointsAdded(mProfilePoints);
-                                onEventPublicPointsAdded(mPublicPoints);
+                                DatabaseReference mTimesUsedProgress = FirebaseDatabase.getInstance().getReference()
+                                        .child("progress").child("timesUsed");
                                 onTimesUsedCount(mTimesUsed);
                                 onTimesUsedProfileCount(mTimesUsedProfile);
+                                onTimesUsedProgressCount(mTimesUsedProgress);
+                                onEventProfilePointsAdded(mProfilePoints);
+                                onEventPublicPointsAdded(mPublicPoints);
                                 showProgressDialog();
                             }
                         });
@@ -240,6 +246,28 @@ public class MapFragment extends Fragment {
         }
 
         private void onTimesUsedProfileCount(DatabaseReference postRef) {
+            postRef.runTransaction(new Transaction.Handler() {
+                @Override
+                public Transaction.Result doTransaction(MutableData mutableData) {
+                    long timesUsed = 0;
+                    if (mutableData != null) {
+                        timesUsed = (long) mutableData.getValue();
+                    }
+                    timesUsed = timesUsed + 1;
+                    assert mutableData != null;
+                    mutableData.setValue(timesUsed);
+                    return Transaction.success(mutableData);
+                }
+
+                @Override
+                public void onComplete(DatabaseError databaseError, boolean b,
+                                       DataSnapshot dataSnapshot) {
+                    Log.d(TAG, "postTransaction:onComplete:" + databaseError);
+                }
+            });
+        }
+
+        private void onTimesUsedProgressCount(DatabaseReference postRef) {
             postRef.runTransaction(new Transaction.Handler() {
                 @Override
                 public Transaction.Result doTransaction(MutableData mutableData) {

@@ -40,6 +40,7 @@ public class MarkerInfoActivity extends AppCompatActivity {
     private String contactsEmailFromDatabase;
     private String contactsUrlFromDatabase;
     private String prizeFundFromDatabase;
+    private long timesUsedFromDatabase;
     private String iconUrl;
 
 
@@ -117,6 +118,11 @@ public class MarkerInfoActivity extends AppCompatActivity {
                     } else {
                         contactsUrlFromDatabase = "Сайт не указан";
                     }
+                    if (dataSnapshot.child("markers").child(snippet).child("timesUsed").getValue() != null) {
+                        timesUsedFromDatabase = (long) dataSnapshot.child("markers").child(snippet).child("timesUsed").getValue();
+                    } else {
+                        timesUsedFromDatabase = 0;
+                    }
                     if (dataSnapshot.child("markers").child(snippet).child("prizeFund").getValue() != null) {
                         prizeFundFromDatabase = dataSnapshot.child("markers").child(snippet).child("contactsUrl").getValue().toString();
                     } else if (snippet.contains("ev")) {
@@ -144,6 +150,8 @@ public class MarkerInfoActivity extends AppCompatActivity {
                 ((TextView) findViewById(R.id.marker_info_contacts_email)).setText(contactsEmailFromDatabase);
                 ((TextView) findViewById(R.id.marker_info_contacts_url)).setText(contactsUrlFromDatabase);
                 ((TextView) findViewById(R.id.marker_info_prize_fund)).setText(prizeFundFromDatabase + " очков");
+                ((TextView) findViewById(R.id.marker_info_used)).setText("" + timesUsedFromDatabase);
+
                 if (snippet.contains("ev")) {
                     ((TextView) findViewById(R.id.marker_info_work_time_call)).setText("Дата");
                 }

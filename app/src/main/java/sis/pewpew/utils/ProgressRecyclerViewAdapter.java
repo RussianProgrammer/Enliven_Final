@@ -31,6 +31,7 @@ public class ProgressRecyclerViewAdapter extends RecyclerView.Adapter<ProgressRe
     private DecimalFormat numberFormat = new DecimalFormat("0.0000");
     private long users;
     private long points;
+    private long timesUsed;
     private double balance;
     private Context context;
 
@@ -39,16 +40,17 @@ public class ProgressRecyclerViewAdapter extends RecyclerView.Adapter<ProgressRe
     }
 
     private String[] titles = new String[]{
-            "Всего участников", "Очков собрано", "Баланс восстановлен на",
+            "Всего участников", "Очков собрано", "Экопунктов использовано", "Баланс восстановлен на",
             "Деревьев спасено", "Животных спасено", "Людей спасено"};
 
     private final int[] iconIds = new int[]{
             R.drawable.progress_users_icon, R.drawable.progress_points_icon,
+            R.drawable.progress_used_icon,
             R.drawable.progress_balance_icon, R.drawable.progress_saved_trees_icon,
             R.drawable.progress_saved_animals_icon, R.drawable.progress_saved_people_icon};
 
     private final String[] colors = new String[]{
-            "#262427", "#338782", "#705544",
+            "#262427", "#338782", "#339944", "#705544",
             "#1B5E20", "#E0A81D", "#440C1A"};
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -80,24 +82,30 @@ public class ProgressRecyclerViewAdapter extends RecyclerView.Adapter<ProgressRe
                                     "сколько всего очков собрано усилиями нашего сообщества.");
                             break;
                         case 2:
+                            showProgressDialog("Карточка использованных экопунктов", "Здесь " +
+                                    "отображено суммарное количество экопунктов, использованных " +
+                                    "всеми участниками сообщества. Планета улыбается каждой новой цифре. " +
+                                    "Давайте заставим ее смеяться от счастья?");
+                            break;
+                        case 3:
                             showProgressDialog("Карточка баланса", "По ходу того, как все участники" +
                                     " проекта зарабывают очки, используя экопункты, " +
                                     "мы все ближе к экологичному будущему с чистым воздухом и землей, " +
                                     "к здоровым животным и растениям, к людям с долгой жизнью. " +
                                     "Когда-нибудь мы достигнем отметки в 100%, и тогда все изменится.");
                             break;
-                        case 3:
+                        case 4:
                             showProgressDialog("Карточка спасенных деревьев", "Собирая очки в приложении," +
                                     " Вы спасаете настоящие деревья в будущем. Со временем мы спасем " +
                                     "целые леса.");
                             break;
-                        case 4:
+                        case 5:
                             showProgressDialog("Карточка спасенных животных", "Собирая очки в приложении," +
                                     " Вы спасаете настоящих животных в будущем. " +
                                     "Они никак не могут повлиять на катострофу, от которой погибают. " +
                                     "Но мы можем.");
                             break;
-                        case 5:
+                        case 6:
                             showProgressDialog("Карточка спасенных людей", "Собирая очки в приложении," +
                                     " Вы спасаете настоящих людей в будущем. Все верно, мы настоящие " +
                                     "супергерои. Миллионы человек умирают ежегодно от плохой экологии. " +
@@ -132,26 +140,29 @@ public class ProgressRecyclerViewAdapter extends RecyclerView.Adapter<ProgressRe
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
-                    String[] data = new String[6];
+                    String[] data = new String[7];
 
                     if (dataSnapshot.child("progress").child("points").getValue() != null
                             && dataSnapshot.child("users").getChildren() != null) {
                         users = dataSnapshot.child("users").getChildrenCount();
                         points = (long) dataSnapshot.child("progress").child("points").getValue();
+                        timesUsed = (long) dataSnapshot.child("progress").child("timesUsed").getValue();
                         balance = (double) points * 100 / 300000;
                         data[0] = "" + users;
                         data[1] = "" + points;
-                        data[2] = numberFormat.format(balance / 1000) + "%";
-                        data[3] = "" + points / 500;
-                        data[4] = "" + points / 1000;
-                        data[5] = "" + points / 1200;
+                        data[2] = "" + timesUsed;
+                        data[3] = numberFormat.format(balance / 1000) + "%";
+                        data[4] = "" + points / 500;
+                        data[5] = "" + points / 1000;
+                        data[6] = "" + points / 1200;
                     } else {
                         data[0] = "0";
                         data[1] = "0";
-                        data[2] = "0%";
-                        data[3] = "0";
+                        data[2] = "0";
+                        data[3] = "0%";
                         data[4] = "0";
                         data[5] = "0";
+                        data[6] = "0";
                     }
 
                     viewHolder.progressTitle.setText(titles[position]);
