@@ -30,6 +30,10 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import sis.pewpew.MainActivity;
 import sis.pewpew.R;
 
@@ -38,6 +42,8 @@ public class SettingsFragment extends PreferenceFragment {
     public FirebaseAuth mAuth;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private static final String TAG = "LogInStatus";
+    private Locale locale = new Locale("ru");
+    private String date = new SimpleDateFormat("dd-MM-yyyy", locale).format(new Date());
     private DatabaseReference mDatabase;
     private AlertDialog.Builder signOutDialog;
     private AlertDialog.Builder redeemVoucherDialog;
@@ -229,6 +235,62 @@ public class SettingsFragment extends PreferenceFragment {
                 } else {
                     sendEmailVerification();
                 }
+                return false;
+            }
+        });
+
+        final Preference preference7 = findPreference("request_moderation_button");
+        preference7.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                AlertDialog.Builder requestModerationDialog = new AlertDialog.Builder(getActivity());
+                final EditText input = new EditText(getActivity());
+                input.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
+                input.setFilters(new InputFilter[]{new InputFilter.LengthFilter(500)});
+                requestModerationDialog.setView(input);
+                requestModerationDialog.setTitle("Запрос разрешения на модерацию");
+                requestModerationDialog.setMessage("Если Вы являетесь сотрудником компании " +
+                        "по защите окружающей среды и хотите проводить модерацию экологических пунктов, " +
+                        "Вы можете подать заявку на присуждение личной пометки повышенного уровня. " +
+                        "Пожалуйста, опишите в деталях, в какой компании Вы работаете и какую " +
+                        "занимаете в ней должность. Кроме того, не забудьте уточнить причину запроса.");
+                requestModerationDialog.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+                requestModerationDialog.setPositiveButton("Отправить", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (input.getText().toString().isEmpty()) {
+                            dialogInterface.cancel();
+                        } else if (user.isAnonymous()) {
+                            dialogInterface.cancel();
+                            Toast.makeText(getActivity(), "В деморежиме нельзя запросить пометку.", Toast.LENGTH_LONG).show();
+                        } else {
+                            mDatabase.child("requests").child(date).child(user.getUid()).child("email")
+                                    .setValue(user.getEmail());
+                            mDatabase.child("requests").child(date).child(user.getUid()).child("message")
+                                    .setValue(input.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    AlertDialog.Builder requestModerationSentDialog = new AlertDialog.Builder(getActivity());
+                                    requestModerationSentDialog.setTitle("Запрос на модерацию отправлен");
+                                    requestModerationSentDialog.setMessage("Мы рассмотрим Ваш запрос и свяжемся с Вами " +
+                                            "по электронной почте в ближайшее время.");
+                                    requestModerationSentDialog.setNegativeButton("Закрыть", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            dialogInterface.cancel();
+                                        }
+                                    });
+                                    requestModerationSentDialog.show();
+                                }
+                            });
+                        }
+                    }
+                });
+                requestModerationDialog.show();
                 return false;
             }
         });

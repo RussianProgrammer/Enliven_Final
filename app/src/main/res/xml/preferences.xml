@@ -34,6 +34,11 @@
             android:summary="Укажите Ваш город проживания для корректной работы карты."
             android:title="Город" />
 
+        <Preference
+            android:key="request_moderation_button"
+            android:summary="Вы можете запросить личную пометку повышенного уровня доступа для осуществления модерации экопунктов."
+            android:title="Запрос пометки" />
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Использование">
