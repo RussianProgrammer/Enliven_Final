@@ -40,7 +40,11 @@ public class ProfileFragment extends Fragment {
     public long timesUsedFromDatabase;
     private String statusFromDatabase;
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+    private BitmapFactory.Options options = new BitmapFactory.Options();
     private final List<Integer> imageIds = new ArrayList<>();
+    final List<CardView> cards = new ArrayList<>();
+    final List<String> titles = new ArrayList<>();
+    final List<String> messages = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -206,7 +210,6 @@ public class ProfileFragment extends Fragment {
             username.setText("Имя пользователя");
         }
 
-        List<CardView> cards = new ArrayList<>();
         cards.add((CardView) rootView.findViewById(R.id.profile_main_card));
         cards.add((CardView) rootView.findViewById(R.id.profile_points_card));
         cards.add((CardView) rootView.findViewById(R.id.profile_used_card));
@@ -216,7 +219,7 @@ public class ProfileFragment extends Fragment {
         cards.add((CardView) rootView.findViewById(R.id.profile_saved_animals_card));
         cards.add((CardView) rootView.findViewById(R.id.profile_saved_people_card));
 
-        final List<String> titles = new ArrayList<>();
+
         titles.add("Карточка профиля");
         titles.add("Карточка очков");
         titles.add("Карточка использованных экопунктов");
@@ -226,7 +229,6 @@ public class ProfileFragment extends Fragment {
         titles.add("Карточка спасеных животных");
         titles.add("Карточка спасеных людей");
 
-        final List<String> messages = new ArrayList<>();
         messages.add("Это Ваша карточка профиля, на которой мы аккуратно " +
                 "выгравировали Ваше имя и фамилию. У Вас мог возникнуть вопрос, " +
                 "что означает пометка под именем. Отвечаем: она показывает, какую роль Вы выполняете в нашем сообществе. " +
@@ -360,8 +362,9 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        options.inJustDecodeBounds = true;
         for (Integer id : imageIds) {
-            BitmapFactory.decodeResource(getResources(), id);
+            BitmapFactory.decodeResource(getResources(), id, options);
         }
     }
 

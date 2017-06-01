@@ -15,6 +15,8 @@ import sis.pewpew.R;
 
 public class GratitudeFragment extends Fragment {
 
+    private BitmapFactory.Options options = new BitmapFactory.Options();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -29,6 +31,7 @@ public class GratitudeFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        options.inJustDecodeBounds = true;
         List<Integer> imageIds = new ArrayList<>();
         imageIds.add(R.drawable.gratitude_icon_1);
         imageIds.add(R.drawable.gratitude_icon_2);
@@ -36,7 +39,7 @@ public class GratitudeFragment extends Fragment {
         imageIds.add(R.drawable.gratitude_icon_4);
         imageIds.add(R.drawable.gratitude_icon_5);
         for (Integer id : imageIds) {
-            BitmapFactory.decodeResource(getResources(), id);
+            BitmapFactory.decodeResource(getResources(), id, options);
         }
     }
 

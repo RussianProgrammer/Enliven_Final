@@ -22,6 +22,8 @@ import sis.pewpew.utils.EventsRecyclerViewAdapter;
 
 public class EventsFragment extends Fragment {
 
+    private BitmapFactory.Options options = new BitmapFactory.Options();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -74,12 +76,13 @@ public class EventsFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        options.inJustDecodeBounds = true;
         List<Integer> imageIds = new ArrayList<>();
         imageIds.add(R.drawable.fest_icon);
         imageIds.add(R.drawable.fest_icon_2);
         imageIds.add(R.drawable.fest_icon_3);
         for (Integer id : imageIds) {
-            BitmapFactory.decodeResource(getResources(), id);
+            BitmapFactory.decodeResource(getResources(), id, options);
         }
     }
 

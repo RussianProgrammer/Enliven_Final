@@ -25,6 +25,7 @@ import sis.pewpew.utils.ProgressRecyclerViewAdapter;
 public class ProgressFragment extends Fragment {
 
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+    private BitmapFactory.Options options = new BitmapFactory.Options();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,6 +70,7 @@ public class ProgressFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        options.inJustDecodeBounds = true;
         List<Integer> imageIds = new ArrayList<>();
         imageIds.add(R.drawable.progress_users_icon);
         imageIds.add(R.drawable.progress_points_icon);
@@ -78,7 +80,7 @@ public class ProgressFragment extends Fragment {
         imageIds.add(R.drawable.progress_saved_animals_icon);
         imageIds.add(R.drawable.progress_saved_people_icon);
         for (Integer id : imageIds) {
-            BitmapFactory.decodeResource(getResources(), id);
+            BitmapFactory.decodeResource(getResources(), id, options);
         }
     }
 

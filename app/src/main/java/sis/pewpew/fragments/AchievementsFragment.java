@@ -41,6 +41,7 @@ public class AchievementsFragment extends Fragment {
     private String date = new SimpleDateFormat("dd.MM.yyyy", locale).format(new Date());
     private long points;
     private boolean closed;
+    private BitmapFactory.Options options = new BitmapFactory.Options();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -337,6 +338,7 @@ public class AchievementsFragment extends Fragment {
     public void onPause() {
         super.onPause();
         closed = true;
+        options.inJustDecodeBounds = true;
         List<Integer> imageIds = new ArrayList<>();
         imageIds.add(R.drawable.achieve_1_icon);
         imageIds.add(R.drawable.achieve_2_icon);
@@ -354,7 +356,7 @@ public class AchievementsFragment extends Fragment {
         imageIds.add(R.drawable.achieve_14_icon);
         imageIds.add(R.drawable.achieve_15_icon);
         for (Integer id : imageIds) {
-            BitmapFactory.decodeResource(getResources(), id);
+            BitmapFactory.decodeResource(getResources(), id, options);
         }
     }
 
