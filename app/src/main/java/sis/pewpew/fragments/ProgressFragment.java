@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,17 +14,15 @@ import android.view.ViewGroup;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import sis.pewpew.MainActivity;
 import sis.pewpew.R;
 import sis.pewpew.utils.ProgressRecyclerViewAdapter;
 
+import static sis.pewpew.MainActivity.deleteCache;
+
 public class ProgressFragment extends Fragment {
 
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-    private BitmapFactory.Options options = new BitmapFactory.Options();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,18 +67,6 @@ public class ProgressFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        options.inJustDecodeBounds = true;
-        List<Integer> imageIds = new ArrayList<>();
-        imageIds.add(R.drawable.progress_users_icon);
-        imageIds.add(R.drawable.progress_points_icon);
-        imageIds.add(R.drawable.progress_used_icon);
-        imageIds.add(R.drawable.progress_balance_icon);
-        imageIds.add(R.drawable.progress_saved_trees_icon);
-        imageIds.add(R.drawable.progress_saved_animals_icon);
-        imageIds.add(R.drawable.progress_saved_people_icon);
-        for (Integer id : imageIds) {
-            BitmapFactory.decodeResource(getResources(), id, options);
-        }
     }
 
     @Override
@@ -97,5 +82,6 @@ public class ProgressFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        deleteCache(getActivity());
     }
 }

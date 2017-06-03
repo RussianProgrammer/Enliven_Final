@@ -37,6 +37,8 @@ import java.util.Locale;
 import sis.pewpew.MainActivity;
 import sis.pewpew.R;
 
+import static sis.pewpew.MainActivity.deleteCache;
+
 public class SettingsFragment extends PreferenceFragment {
 
     public FirebaseAuth mAuth;
@@ -412,5 +414,6 @@ public class SettingsFragment extends PreferenceFragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        deleteCache(getActivity());
     }
 }

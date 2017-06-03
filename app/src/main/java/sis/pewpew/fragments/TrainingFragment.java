@@ -15,6 +15,8 @@ import sis.pewpew.MainActivity;
 import sis.pewpew.R;
 import sis.pewpew.utils.TrainingRecyclerViewAdapter;
 
+import static sis.pewpew.MainActivity.deleteCache;
+
 public class TrainingFragment extends Fragment {
 
 
@@ -74,5 +76,6 @@ public class TrainingFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        deleteCache(getActivity());
     }
 }

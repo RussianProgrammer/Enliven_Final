@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,16 +12,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import sis.pewpew.MainActivity;
 import sis.pewpew.R;
 import sis.pewpew.utils.EventsRecyclerViewAdapter;
 
-public class EventsFragment extends Fragment {
+import static sis.pewpew.MainActivity.deleteCache;
 
-    private BitmapFactory.Options options = new BitmapFactory.Options();
+public class EventsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,14 +72,6 @@ public class EventsFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        options.inJustDecodeBounds = true;
-        List<Integer> imageIds = new ArrayList<>();
-        imageIds.add(R.drawable.fest_icon);
-        imageIds.add(R.drawable.fest_icon_2);
-        imageIds.add(R.drawable.fest_icon_3);
-        for (Integer id : imageIds) {
-            BitmapFactory.decodeResource(getResources(), id, options);
-        }
     }
 
     @Override
@@ -99,5 +87,6 @@ public class EventsFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        deleteCache(getActivity());
     }
 }

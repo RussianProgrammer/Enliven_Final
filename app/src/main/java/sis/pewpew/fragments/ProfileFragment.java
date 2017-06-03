@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.util.Log;
@@ -32,6 +31,7 @@ import sis.pewpew.MainActivity;
 import sis.pewpew.R;
 
 import static com.google.android.gms.internal.zzt.TAG;
+import static sis.pewpew.MainActivity.deleteCache;
 
 public class ProfileFragment extends Fragment {
 
@@ -40,7 +40,6 @@ public class ProfileFragment extends Fragment {
     public long timesUsedFromDatabase;
     private String statusFromDatabase;
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-    private BitmapFactory.Options options = new BitmapFactory.Options();
     private final List<Integer> imageIds = new ArrayList<>();
     final List<CardView> cards = new ArrayList<>();
     final List<String> titles = new ArrayList<>();
@@ -362,10 +361,6 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        options.inJustDecodeBounds = true;
-        for (Integer id : imageIds) {
-            BitmapFactory.decodeResource(getResources(), id, options);
-        }
     }
 
     @Override
@@ -381,5 +376,6 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        deleteCache(getActivity());
     }
 }

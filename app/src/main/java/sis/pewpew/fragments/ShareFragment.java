@@ -11,6 +11,8 @@ import android.widget.Button;
 import sis.pewpew.MainActivity;
 import sis.pewpew.R;
 
+import static sis.pewpew.MainActivity.deleteCache;
+
 public class ShareFragment extends Fragment {
 
     @Override
@@ -52,5 +54,6 @@ public class ShareFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        deleteCache(getActivity());
     }
 }

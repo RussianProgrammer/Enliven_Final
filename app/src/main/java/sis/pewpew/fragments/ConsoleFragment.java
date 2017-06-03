@@ -14,6 +14,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import sis.pewpew.MainActivity;
 import sis.pewpew.R;
 
+import static sis.pewpew.MainActivity.deleteCache;
+
 public class ConsoleFragment extends Fragment {
 
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -70,5 +72,6 @@ public class ConsoleFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        deleteCache(getActivity());
     }
 }

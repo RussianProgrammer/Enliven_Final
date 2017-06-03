@@ -12,6 +12,8 @@ import sis.pewpew.MainActivity;
 import sis.pewpew.R;
 import sis.pewpew.tutorial.TutorialActivity;
 
+import static sis.pewpew.MainActivity.deleteCache;
+
 public class AboutFragment extends Fragment {
 
     Button startTutorialButton;
@@ -53,5 +55,6 @@ public class AboutFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        deleteCache(getActivity());
     }
 }

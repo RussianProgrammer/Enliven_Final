@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,9 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import sis.pewpew.MainActivity;
@@ -32,6 +29,7 @@ import sis.pewpew.R;
 import sis.pewpew.utils.AchievesRecyclerViewAdapter;
 
 import static com.google.android.gms.internal.zzt.TAG;
+import static sis.pewpew.MainActivity.deleteCache;
 
 public class AchievementsFragment extends Fragment {
 
@@ -41,7 +39,6 @@ public class AchievementsFragment extends Fragment {
     private String date = new SimpleDateFormat("dd.MM.yyyy", locale).format(new Date());
     private long points;
     private boolean closed;
-    private BitmapFactory.Options options = new BitmapFactory.Options();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -338,26 +335,6 @@ public class AchievementsFragment extends Fragment {
     public void onPause() {
         super.onPause();
         closed = true;
-        options.inJustDecodeBounds = true;
-        List<Integer> imageIds = new ArrayList<>();
-        imageIds.add(R.drawable.achieve_1_icon);
-        imageIds.add(R.drawable.achieve_2_icon);
-        imageIds.add(R.drawable.achieve_3_icon);
-        imageIds.add(R.drawable.achieve_4_icon);
-        imageIds.add(R.drawable.achieve_5_icon);
-        imageIds.add(R.drawable.achieve_6_icon);
-        imageIds.add(R.drawable.achieve_7_icon);
-        imageIds.add(R.drawable.achieve_8_icon);
-        imageIds.add(R.drawable.achieve_9_icon);
-        imageIds.add(R.drawable.achieve_10_icon);
-        imageIds.add(R.drawable.achieve_11_icon);
-        imageIds.add(R.drawable.achieve_12_icon);
-        imageIds.add(R.drawable.achieve_13_icon);
-        imageIds.add(R.drawable.achieve_14_icon);
-        imageIds.add(R.drawable.achieve_15_icon);
-        for (Integer id : imageIds) {
-            BitmapFactory.decodeResource(getResources(), id, options);
-        }
     }
 
     @Override
@@ -374,5 +351,6 @@ public class AchievementsFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        deleteCache(getActivity());
     }
 }

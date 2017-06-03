@@ -25,6 +25,8 @@ import java.util.Locale;
 import sis.pewpew.MainActivity;
 import sis.pewpew.R;
 
+import static sis.pewpew.MainActivity.deleteCache;
+
 public class FeedbackFragment extends Fragment {
 
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -87,5 +89,6 @@ public class FeedbackFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        deleteCache(getActivity());
     }
 }
