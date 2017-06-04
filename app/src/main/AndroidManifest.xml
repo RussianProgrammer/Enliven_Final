@@ -3,7 +3,7 @@
     package="sis.pewpew">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.CLEAR_APP_CACHE"/>
+    <uses-permission android:name="android.permission.CLEAR_APP_CACHE" />
 
     <application
         android:allowBackup="true"
@@ -47,18 +47,21 @@
             android:resource="@color/colorPrimary" />
 
         <activity
-            android:name=".utils.MarkerInfoActivity"
+            android:name=".support.MarkerInfoActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_marker_info"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".utils.AchievementInfoActivity"
+            android:name=".support.AchievementInfoActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_achievement_info"
             android:theme="@style/AppTheme" />
-        <activity android:name=".utils.TrainingActivity">
-
-        </activity>
+        <activity
+            android:name=".support.TrainingActivity"
+            android:configChanges="orientation|screenSize" />
+        <activity
+            android:name=".support.SendMarkerInfoActivity"
+            android:configChanges="orientation|screenSize" />
     </application>
 
 </manifest>

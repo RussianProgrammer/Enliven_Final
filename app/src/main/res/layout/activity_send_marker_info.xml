@@ -1,0 +1,238 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="sis.pewpew.fragments.ConsoleFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/uploaded_image"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_alignParentTop="true"
+            android:clickable="true"
+            android:contentDescription="@string/description"
+            android:foreground="?selectableItemBackground"
+            android:scaleType="centerCrop"
+            android:src="@drawable/console_add_image_icon" />
+
+        <EditText
+            android:id="@+id/console_enter_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/uploaded_image"
+            android:hint="Название экопункта"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="40dp" />
+
+        <EditText
+            android:id="@+id/console_enter_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/console_enter_title"
+            android:hint="Адрес"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="40dp" />
+
+        <EditText
+            android:id="@+id/console_enter_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/console_enter_address"
+            android:hint="Описание"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="40dp" />
+
+        <EditText
+            android:id="@+id/console_enter_work_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/console_enter_details"
+            android:hint="Время работы"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="40dp" />
+
+        <EditText
+            android:id="@+id/console_enter_work_time_break"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/console_enter_work_time"
+            android:hint="Перерыв"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="40dp" />
+
+        <EditText
+            android:id="@+id/console_enter_contacts_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/console_enter_work_time_break"
+            android:hint="Телефонный номер"
+            android:inputType="phone"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="40dp" />
+
+        <EditText
+            android:id="@+id/console_enter_contacts_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/console_enter_contacts_phone"
+            android:hint="Адрес электронной почты"
+            android:inputType="textEmailAddress"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="40dp" />
+
+        <EditText
+            android:id="@+id/console_enter_contacts_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/console_enter_contacts_email"
+            android:hint="Вебсайт"
+            android:inputType="textUri"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="40dp" />
+
+        <TextView
+            android:id="@+id/console_latitude_call"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/console_enter_contacts_url"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="40dp"
+            android:text="Широта:"
+            android:textColor="#000000"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/console_enter_latitude_1"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/console_enter_contacts_url"
+            android:layout_toEndOf="@+id/console_latitude_call"
+            android:layout_toRightOf="@+id/console_latitude_call"
+            android:hint="XX"
+            android:inputType="number"
+            android:maxLength="2"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="40dp" />
+
+        <TextView
+            android:id="@+id/console_latitude_dot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/console_enter_contacts_url"
+            android:layout_toRightOf="@+id/console_enter_latitude_1"
+            android:paddingBottom="5dp"
+            android:paddingTop="40dp"
+            android:text="."
+            android:textColor="#000000"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/console_enter_latitude_2"
+            android:layout_width="210dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/console_enter_contacts_url"
+            android:layout_toEndOf="@+id/console_latitude_dot"
+            android:layout_toRightOf="@+id/console_latitude_dot"
+            android:hint="XXXXXX"
+            android:inputType="number"
+            android:maxLength="6"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="40dp" />
+
+        <TextView
+            android:id="@+id/console_longitude_call"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/console_latitude_call"
+            android:paddingBottom="50dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="30dp"
+            android:text="Долгота:"
+            android:textColor="#000000"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/console_enter_longitude_1"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/console_enter_latitude_1"
+            android:layout_toEndOf="@+id/console_longitude_call"
+            android:layout_toRightOf="@+id/console_longitude_call"
+            android:hint="XX"
+            android:inputType="number"
+            android:maxLength="2"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="30dp" />
+
+        <TextView
+            android:id="@+id/console_longitude_dot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/console_latitude_dot"
+            android:layout_toEndOf="@+id/console_enter_longitude_1"
+            android:layout_toRightOf="@+id/console_enter_longitude_1"
+            android:paddingTop="30dp"
+            android:text="."
+            android:textColor="#000000"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/console_enter_longitude_2"
+            android:layout_width="210dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/console_enter_latitude_1"
+            android:layout_toEndOf="@+id/console_longitude_dot"
+            android:layout_toRightOf="@+id/console_longitude_dot"
+            android:hint="XXXXXX"
+            android:inputType="number"
+            android:maxLength="6"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="30dp" />
+
+        <Button
+            android:id="@+id/choose_marker_group_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/console_longitude_call"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:text="Отправить" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_above="@+id/console_enter_title"
+            android:padding="10dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            app:srcCompat="@drawable/ic_photo_camera"
+            tools:ignore="VectorDrawableCompat" />
+
+    </RelativeLayout>
+
+</ScrollView>
+
+

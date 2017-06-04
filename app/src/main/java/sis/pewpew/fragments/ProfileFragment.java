@@ -1,5 +1,6 @@
 package sis.pewpew.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
@@ -81,6 +82,8 @@ public class ProfileFragment extends Fragment {
         mDatabase.keepSynced(true);
 
         ValueEventListener pointsListener = new ValueEventListener() {
+            @SuppressWarnings("ConstantConditions")
+            @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 TextView points = (TextView) rootView.findViewById(R.id.profile_points);

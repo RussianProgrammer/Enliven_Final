@@ -1,4 +1,4 @@
-package sis.pewpew.utils;
+package sis.pewpew.support;
 
 import android.graphics.Color;
 import android.os.Bundle;

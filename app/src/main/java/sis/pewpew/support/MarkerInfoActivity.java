@@ -1,5 +1,6 @@
-package sis.pewpew.utils;
+package sis.pewpew.support;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -63,6 +64,7 @@ public class MarkerInfoActivity extends AppCompatActivity {
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         try {
+            //noinspection ConstantConditions
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -89,6 +91,7 @@ public class MarkerInfoActivity extends AppCompatActivity {
         mDatabase.keepSynced(true);
 
         ValueEventListener postListener = new ValueEventListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
 

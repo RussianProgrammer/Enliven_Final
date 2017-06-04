@@ -8,4 +8,16 @@
     <string-array name="listValuesCity">
         <item>1</item>
     </string-array>
+
+    <string-array name="listMarkerGroups">
+        <item>Батареи</item>
+        <item>Бумага</item>
+        <item>Стекло</item>
+        <item>Металл</item>
+        <item>Пластик</item>
+        <item>Лампы</item>
+        <item>Опасные отходы</item>
+        <item>Другое</item>
+        <item>События</item>
+    </string-array>
 </resources>

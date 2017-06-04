@@ -1,5 +1,6 @@
-package sis.pewpew.utils;
+package sis.pewpew.support;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -29,7 +30,6 @@ import sis.pewpew.R;
 public class AchievementInfoActivity extends AppCompatActivity {
 
     private String title;
-    private String date;
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private String color1;
@@ -46,6 +46,7 @@ public class AchievementInfoActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         try {
+            //noinspection ConstantConditions
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -121,6 +122,7 @@ public class AchievementInfoActivity extends AppCompatActivity {
         mDatabase.keepSynced(true);
 
         ValueEventListener postListener = new ValueEventListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 allUsers = dataSnapshot.child("users").getChildrenCount();

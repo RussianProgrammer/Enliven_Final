@@ -45,7 +45,7 @@ import java.util.Locale;
 
 import sis.pewpew.MainActivity;
 import sis.pewpew.R;
-import sis.pewpew.utils.MarkerInfoActivity;
+import sis.pewpew.support.MarkerInfoActivity;
 
 import static android.content.Context.LOCATION_SERVICE;
 import static com.google.android.gms.internal.zzt.TAG;

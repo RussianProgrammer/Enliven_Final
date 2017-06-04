@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import sis.pewpew.R;
+import sis.pewpew.support.AchievementInfoActivity;
 
 import static com.google.android.gms.internal.zzt.TAG;
 
