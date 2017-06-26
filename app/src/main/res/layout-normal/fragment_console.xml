@@ -1,0 +1,148 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="sis.pewpew.fragments.ConsoleFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/console_times_sent_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="7dp"
+            android:clickable="true"
+            android:foreground="?selectableItemBackground"
+            card_view:cardBackgroundColor="#324"
+            card_view:cardCornerRadius="10dp"
+            card_view:cardElevation="5dp"
+            card_view:contentPadding="0dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/console_times_sent_icon"
+                    android:layout_width="78dp"
+                    android:layout_height="78dp"
+                    android:layout_alignParentTop="true"
+                    android:contentDescription="@string/description"
+                    android:foregroundGravity="left"
+                    android:padding="8dp"
+                    app:srcCompat="@drawable/add_marker_icon" />
+
+                <TextView
+                    android:id="@+id/console_times_sent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_toRightOf="@id/console_times_sent_icon"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="5dp"
+                    android:text="Загрузка…"
+                    android:textColor="#FFFFFF"
+                    android:textSize="33sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/console_times_sent_call"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/console_times_sent"
+                    android:layout_toRightOf="@id/console_times_sent_icon"
+                    android:paddingLeft="5dp"
+                    android:text="Экопунктов предложено"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp" />
+
+                <Button
+                    android:id="@+id/console_times_sent_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/console_times_sent_icon"
+                    android:layout_centerHorizontal="true"
+                    android:background="#D7E5ED"
+                    android:foreground="?selectableItemBackground"
+                    android:text="Предложить новый пункт"
+                    android:textColor="#324" />
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/console_times_accepted_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/console_times_sent_card"
+            android:layout_margin="7dp"
+            android:clickable="true"
+            android:foreground="?selectableItemBackground"
+            card_view:cardBackgroundColor="#955"
+            card_view:cardCornerRadius="10dp"
+            card_view:cardElevation="5dp"
+            card_view:contentPadding="0dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/console_times_accepted_icon"
+                    android:layout_width="78dp"
+                    android:layout_height="78dp"
+                    android:layout_alignParentTop="true"
+                    android:contentDescription="@string/description"
+                    android:foregroundGravity="left"
+                    android:padding="8dp"
+                    app:srcCompat="@drawable/verified_markers_icon" />
+
+                <TextView
+                    android:id="@+id/console_times_accepted"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_toRightOf="@id/console_times_accepted_icon"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="5dp"
+                    android:text="Загрузка…"
+                    android:textColor="#FFFFFF"
+                    android:textSize="33sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/console_times_accepted_call"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/console_times_accepted"
+                    android:layout_toRightOf="@id/console_times_accepted_icon"
+                    android:paddingLeft="5dp"
+                    android:text="Экопунктов одобрено"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp" />
+
+                <Button
+                    android:id="@+id/console_times_accepted_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/console_times_accepted_icon"
+                    android:layout_centerHorizontal="true"
+                    android:background="#D7E5ED"
+                    android:foreground="?selectableItemBackground"
+                    android:text="Открыть консоль модерации"
+                    android:textColor="#955" />
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+
+    </RelativeLayout>
+
+</ScrollView>

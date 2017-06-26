@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:gravity="center_horizontal"
     android:weightSum="4"
-    tools:context="sis.pewpew.connections.AuthActivity">
+    tools:context="sis.pewpew.providers.AuthActivity">
 
     <EditText
         android:id="@+id/emailSignIn"

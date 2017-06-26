@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.io.File;
 
-import sis.pewpew.connections.AuthActivity;
+import sis.pewpew.providers.AuthActivity;
 import sis.pewpew.fragments.AboutFragment;
 import sis.pewpew.fragments.AchievementsFragment;
 import sis.pewpew.fragments.ConsoleFragment;
@@ -175,8 +175,8 @@ public class MainActivity extends NetIntegrationActivity
             fragmentTransaction.replace(R.id.container, feedbackFragment);
         } else if (id == R.id.nav_about) {
             fragmentTransaction.replace(R.id.container, aboutFragment);
-        } else if (id == R.id.nav_gratitude) {
-            fragmentTransaction.replace(R.id.container, gratitudeFragment);
+        //} else if (id == R.id.nav_gratitude) {
+          //  fragmentTransaction.replace(R.id.container, gratitudeFragment);
         }
         fragmentTransaction.commit();
 

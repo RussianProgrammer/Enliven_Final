@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.util.Log;
@@ -28,9 +29,9 @@ import java.util.List;
 
 import sis.pewpew.MainActivity;
 import sis.pewpew.R;
-import sis.pewpew.support.SendMarkerInfoActivity;
+import sis.pewpew.additions.MarkerModerationActivity;
+import sis.pewpew.additions.SendMarkerInfoActivity;
 
-import static com.google.android.gms.internal.zzt.TAG;
 import static sis.pewpew.MainActivity.deleteCache;
 
 public class ConsoleFragment extends Fragment {
@@ -39,6 +40,7 @@ public class ConsoleFragment extends Fragment {
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private long points;
     private long timesSent;
+    private long timesAccepted;
     private long status;
 
     View rootView;
@@ -47,13 +49,38 @@ public class ConsoleFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
 
+        SharedPreferences settings = getActivity().getSharedPreferences("CONSOLE", 0);
+        boolean dialogShown = settings.getBoolean("dialogShown", false);
+
+        if (!dialogShown) {
+            AlertDialog.Builder newsFragmentWelcomeDialog = new AlertDialog.Builder(getActivity());
+            newsFragmentWelcomeDialog.setTitle(getString(R.string.console_fragment_name));
+            newsFragmentWelcomeDialog.setCancelable(false);
+            newsFragmentWelcomeDialog.setIcon(R.drawable.ic_menu_console);
+            newsFragmentWelcomeDialog.setMessage("В разделе \"Консоль\" Вы можете добавлять свои собственые маркеры " +
+                    "на Карту. Здесь есть два раздела: один – для пользователя, а другой – для модератора. В первом Вы можете " +
+                    "отправлять запросы на добавление новых экопунктов, а во втором сотрудники организаций по охране природы " +
+                    "могут просматривать Ваши запросы, а также принимать или отклонять их.");
+            newsFragmentWelcomeDialog.setNegativeButton("Понятно", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.cancel();
+                }
+            });
+            newsFragmentWelcomeDialog.show();
+
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putBoolean("dialogShown", true);
+            editor.apply();
+        }
+
         rootView = inflater.inflate(R.layout.fragment_console, container, false);
         ((MainActivity) getActivity()).setActionBarTitle(getString(R.string.console_fragment_name));
 
         final Button addMarkerButton = (Button) rootView.findViewById(R.id.console_times_sent_button);
         final Button openModerationConsoleButton = (Button) rootView.findViewById(R.id.console_times_accepted_button);
         final TextView timesSentText = (TextView) rootView.findViewById(R.id.console_times_sent);
-        TextView timesAcceptedText = (TextView) rootView.findViewById(R.id.console_times_accepted);
+        final TextView timesAcceptedText = (TextView) rootView.findViewById(R.id.console_times_accepted);
 
         ValueEventListener postListener = new ValueEventListener() {
             @SuppressLint("SetTextI18n")
@@ -63,6 +90,13 @@ public class ConsoleFragment extends Fragment {
                     timesSent = (long) dataSnapshot.child("users").child(user.getUid()).child("timesSent").getValue();
                 } else {
                     timesSent = 0;
+                    mDatabase.child("users").child(user.getUid()).child("timesSent").setValue(0);
+                }
+                if (dataSnapshot.child("users").child(user.getUid()).child("timesAccepted").getValue() != null) {
+                    timesAccepted = (long) dataSnapshot.child("users").child(user.getUid()).child("timesAccepted").getValue();
+                } else {
+                    timesAccepted = 0;
+                    mDatabase.child("users").child(user.getUid()).child("timesAccepted").setValue(0);
                 }
                 if (dataSnapshot.child("users").child(user.getUid()).child("points").getValue() != null) {
                     points = (long) dataSnapshot.child("users").child(user.getUid()).child("points").getValue();
@@ -76,12 +110,13 @@ public class ConsoleFragment extends Fragment {
                 }
 
                 timesSentText.setText("" + timesSent);
+                timesAcceptedText.setText("" + timesAccepted);
 
                 openModerationConsoleButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (status >= 3 || user.isAnonymous()) {
-                            Intent intent = new Intent(getActivity(), SendMarkerInfoActivity.class);
+                        if (status >= 3) {
+                            Intent intent = new Intent(getActivity(), MarkerModerationActivity.class);
                             startActivity(intent);
                         } else {
                             Toast.makeText(getActivity(), "Только пользователи с пометной уровня Модератор или выше " +
@@ -95,21 +130,15 @@ public class ConsoleFragment extends Fragment {
                 addMarkerButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (points >= 10000 || status >= 3  || user.isAnonymous()) {
-                            Intent intent = new Intent(getActivity(), SendMarkerInfoActivity.class);
-                            startActivity(intent);
-                        } else {
-                            Toast.makeText(getActivity(), "Предлагать новые экопункты могут только пользователи, " +
-                                    "набравшие свыше 10000 очков, либо владельцы пометки повышенного " +
-                                    "уровня доступа.", Toast.LENGTH_LONG).show();
-                        }
+                        Intent intent = new Intent(getActivity(), SendMarkerInfoActivity.class);
+                        startActivity(intent);
                     }
                 });
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                Log.w("TAG", "loadPost:onCancelled", databaseError.toException());
             }
         };
         mDatabase.addValueEventListener(postListener);

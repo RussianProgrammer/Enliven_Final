@@ -1,0 +1,52 @@
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/training_card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:clickable="true"
+    android:foreground="?selectableItemBackground"
+    card_view:cardCornerRadius="10dp"
+    card_view:cardElevation="5dp"
+    card_view:contentPadding="5dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/training_icon"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentTop="true"
+            android:contentDescription="@string/description"
+            android:foregroundGravity="left"
+            android:padding="10dp" />
+
+        <TextView
+            android:id="@+id/training_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/training_icon"
+            android:paddingLeft="10dp"
+            android:paddingTop="0dp"
+            android:text="Закрыто"
+            android:textColor="#FFFFFF"
+            android:textSize="45sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/training_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/training_title"
+            android:layout_toRightOf="@id/training_icon"
+            android:paddingLeft="10dp"
+            android:paddingBottom="5dp"
+            android:text="Загрузка выполнения…"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp" />
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

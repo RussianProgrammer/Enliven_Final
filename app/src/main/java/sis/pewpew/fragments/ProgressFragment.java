@@ -16,7 +16,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import sis.pewpew.MainActivity;
 import sis.pewpew.R;
-import sis.pewpew.utils.ProgressRecyclerViewAdapter;
+import sis.pewpew.adapters.ProgressRecyclerViewAdapter;
 
 import static sis.pewpew.MainActivity.deleteCache;
 

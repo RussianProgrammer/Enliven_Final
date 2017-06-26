@@ -1,5 +1,6 @@
 package sis.pewpew.fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
@@ -11,6 +12,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -45,18 +47,16 @@ import java.util.Locale;
 
 import sis.pewpew.MainActivity;
 import sis.pewpew.R;
-import sis.pewpew.support.MarkerInfoActivity;
+import sis.pewpew.additions.MarkerInfoActivity;
 
 import static android.content.Context.LOCATION_SERVICE;
-import static com.google.android.gms.internal.zzt.TAG;
 
 public class MapFragment extends Fragment {
 
     private MapView mMapView;
-    private LatLng mDefaultLocation = new LatLng(55.755826, 37.6173);
     private boolean mLocationPermissionGranted;
     private GoogleMap mMap;
-    private boolean dialogShown = false;
+    private boolean addPointsDialogShown = false;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     private boolean closed;
@@ -64,6 +64,13 @@ public class MapFragment extends Fragment {
 
     private Locale locale = new Locale("ru");
     private String date = new SimpleDateFormat("dd-MM-yyyy", locale).format(new Date());
+
+    private LatLng mDefaultLocation;
+    private LatLng mMoscow = new LatLng(55.755826, 37.6173);
+    private LatLng mArkhangelsk = new LatLng(64.547251, 40.560155);
+    private LatLng mVladivostok = new LatLng(43.119809, 131.886924);
+    private LatLng mEkaterinburg = new LatLng(56.838926, 60.605703);
+    private LatLng mOmsk = new LatLng(54.988480, 73.324236);
 
     private List<Marker> usualMarkers = new ArrayList<>();
     private List<Marker> eventMarkers = new ArrayList<>();
@@ -101,9 +108,10 @@ public class MapFragment extends Fragment {
                             PERMISSION_REQUEST_CODE);
                 }
 
-                mMap.setMyLocationEnabled(true);
-                mMap.getUiSettings().setMyLocationButtonEnabled(true);
-                mMap.getUiSettings().setZoomControlsEnabled(true);
+                if (!user.isAnonymous()) {
+                    mMap.setMyLocationEnabled(true);
+                    mMap.getUiSettings().setMyLocationButtonEnabled(true);
+                }
 
                 for (final Marker marker : usualMarkers) {
                     Location loc = new Location(location);
@@ -111,50 +119,7 @@ public class MapFragment extends Fragment {
                     loc.setLongitude(marker.getPosition().longitude);
 
                     if (location.distanceTo(loc) < 50) {
-
-                        final AlertDialog.Builder isPointUsedDialog = new AlertDialog.Builder(getActivity());
-                        isPointUsedDialog.setTitle("Обнаружен флажок экопункта");
-                        isPointUsedDialog.setIcon(R.drawable.ic_menu_marker_icon);
-                        isPointUsedDialog.setCancelable(false);
-                        isPointUsedDialog.setMessage("Поздравляем, Вы нашли экопункт \"" + marker.getTitle() + "\"! " +
-                                "Если это не случайность, и Вы действительно использовали этот пункт по назначению, " +
-                                "мы подарим Вам заслуженные очки.");
-                        isPointUsedDialog.setNegativeButton("Закрыть", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.cancel();
-                            }
-                        });
-                        isPointUsedDialog.setPositiveButton("Получить", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                showProgressDialog();
-
-                                mDatabase.child("users").child(user.getUid()).child("markers").child(marker.getSnippet()).child(date).setValue("used");
-
-                                DatabaseReference mProfilePoints = FirebaseDatabase.getInstance().getReference()
-                                        .child("users").child(user.getUid()).child("points");
-                                DatabaseReference mPublicPoints = FirebaseDatabase.getInstance().getReference()
-                                        .child("progress").child("points");
-                                DatabaseReference mTimesUsed = FirebaseDatabase.getInstance().getReference()
-                                        .child("markers").child(marker.getSnippet()).child("timesUsed");
-                                DatabaseReference mTimesUsedProfile = FirebaseDatabase.getInstance().getReference()
-                                        .child("users").child(user.getUid()).child("timesUsed");
-                                DatabaseReference mTimesUsedProgress = FirebaseDatabase.getInstance().getReference()
-                                        .child("progress").child("timesUsed");
-                                onTimesUsedCount(mTimesUsed);
-                                onTimesUsedProfileCount(mTimesUsedProfile);
-                                onTimesUsedProgressCount(mTimesUsedProgress);
-                                onUsualProfilePointsAdded(mProfilePoints);
-                                onUsualPublicPointsAdded(mPublicPoints);
-
-                            }
-                        });
-
-                        if (!dialogShown) {
-                            isPointUsedDialog.show();
-                            dialogShown = true;
-                        }
+                        addUsualPoints(marker, 0);
                     }
                 }
 
@@ -164,211 +129,10 @@ public class MapFragment extends Fragment {
                     loc.setLongitude(marker.getPosition().longitude);
 
                     if (location.distanceTo(loc) < 50) {
-
-                        final AlertDialog.Builder isPointUsedDialog = new AlertDialog.Builder(getActivity());
-                        isPointUsedDialog.setTitle("Обнаружен флажок экособытия");
-                        isPointUsedDialog.setIcon(R.drawable.event_marker_icon);
-                        isPointUsedDialog.setCancelable(false);
-                        isPointUsedDialog.setMessage("Мы рады приветствовать Вас на экособытии \"" + marker.getTitle() + "\"! " +
-                                "Если это не случайность, и Вы действительно посетили это мероприятие, " +
-                                "мы наградим Вас заслуженными очками.");
-                        isPointUsedDialog.setNegativeButton("Закрыть", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.cancel();
-                            }
-                        });
-                        isPointUsedDialog.setPositiveButton("Получить", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                showProgressDialog();
-
-                                mDatabase.child("users").child(user.getUid()).child("markers").child(marker.getSnippet()).child(date).setValue("used");
-
-                                DatabaseReference mProfilePoints = FirebaseDatabase.getInstance().getReference()
-                                        .child("users").child(user.getUid()).child("points");
-                                DatabaseReference mPublicPoints = FirebaseDatabase.getInstance().getReference()
-                                        .child("progress").child("points");
-                                DatabaseReference mTimesUsed = FirebaseDatabase.getInstance().getReference()
-                                        .child("markers").child(marker.getSnippet()).child("timesUsed");
-                                DatabaseReference mTimesUsedProfile = FirebaseDatabase.getInstance().getReference()
-                                        .child("users").child(user.getUid()).child("timesUsed");
-                                DatabaseReference mTimesUsedProgress = FirebaseDatabase.getInstance().getReference()
-                                        .child("progress").child("timesUsed");
-                                onTimesUsedCount(mTimesUsed);
-                                onTimesUsedProfileCount(mTimesUsedProfile);
-                                onTimesUsedProgressCount(mTimesUsedProgress);
-                                onEventProfilePointsAdded(mProfilePoints);
-                                onEventPublicPointsAdded(mPublicPoints);
-
-                            }
-                        });
-
-                        if (!dialogShown) {
-                            isPointUsedDialog.show();
-                            dialogShown = true;
-                        }
+                        addEventPoints(marker, 0);
                     }
                 }
             }
-        }
-
-        private void onUsualProfilePointsAdded(DatabaseReference postRef) {
-            postRef.runTransaction(new Transaction.Handler() {
-                @Override
-                public Transaction.Result doTransaction(MutableData mutableData) {
-                    long pointsFromDatabase = 0;
-                    if (mutableData != null) {
-                        pointsFromDatabase = (long) mutableData.getValue();
-                    }
-                    pointsFromDatabase = pointsFromDatabase + 200;
-                    assert mutableData != null;
-                    mutableData.setValue(pointsFromDatabase);
-                    return Transaction.success(mutableData);
-                }
-
-                @Override
-                public void onComplete(DatabaseError databaseError, boolean b,
-                                       DataSnapshot dataSnapshot) {
-                    hideProgressDialog();
-                    showGratitudeDialog();
-                    Log.d(TAG, "postTransaction:onComplete:" + databaseError);
-                }
-            });
-        }
-
-        private void onTimesUsedCount(DatabaseReference postRef) {
-            postRef.runTransaction(new Transaction.Handler() {
-                @Override
-                public Transaction.Result doTransaction(MutableData mutableData) {
-                    long timesUsed = 0;
-                    if (mutableData != null) {
-                        timesUsed = (long) mutableData.getValue();
-                    }
-                    timesUsed = timesUsed + 1;
-                    assert mutableData != null;
-                    mutableData.setValue(timesUsed);
-                    return Transaction.success(mutableData);
-                }
-
-                @Override
-                public void onComplete(DatabaseError databaseError, boolean b,
-                                       DataSnapshot dataSnapshot) {
-                    Log.d(TAG, "postTransaction:onComplete:" + databaseError);
-                }
-            });
-        }
-
-        private void onTimesUsedProfileCount(DatabaseReference postRef) {
-            postRef.runTransaction(new Transaction.Handler() {
-                @Override
-                public Transaction.Result doTransaction(MutableData mutableData) {
-                    long timesUsed = 0;
-                    if (mutableData != null) {
-                        timesUsed = (long) mutableData.getValue();
-                    }
-                    timesUsed = timesUsed + 1;
-                    assert mutableData != null;
-                    mutableData.setValue(timesUsed);
-                    return Transaction.success(mutableData);
-                }
-
-                @Override
-                public void onComplete(DatabaseError databaseError, boolean b,
-                                       DataSnapshot dataSnapshot) {
-                    Log.d(TAG, "postTransaction:onComplete:" + databaseError);
-                }
-            });
-        }
-
-        private void onTimesUsedProgressCount(DatabaseReference postRef) {
-            postRef.runTransaction(new Transaction.Handler() {
-                @Override
-                public Transaction.Result doTransaction(MutableData mutableData) {
-                    long timesUsed = 0;
-                    if (mutableData != null) {
-                        timesUsed = (long) mutableData.getValue();
-                    }
-                    timesUsed = timesUsed + 1;
-                    assert mutableData != null;
-                    mutableData.setValue(timesUsed);
-                    return Transaction.success(mutableData);
-                }
-
-                @Override
-                public void onComplete(DatabaseError databaseError, boolean b,
-                                       DataSnapshot dataSnapshot) {
-                    Log.d(TAG, "postTransaction:onComplete:" + databaseError);
-                }
-            });
-        }
-
-        private void onUsualPublicPointsAdded(DatabaseReference postRef) {
-            postRef.runTransaction(new Transaction.Handler() {
-                @Override
-                public Transaction.Result doTransaction(MutableData mutableData) {
-                    long pointsFromDatabase = 0;
-                    if (mutableData != null) {
-                        pointsFromDatabase = (long) mutableData.getValue();
-                    }
-                    pointsFromDatabase = pointsFromDatabase + 200;
-                    assert mutableData != null;
-                    mutableData.setValue(pointsFromDatabase);
-                    return Transaction.success(mutableData);
-                }
-
-                @Override
-                public void onComplete(DatabaseError databaseError, boolean b,
-                                       DataSnapshot dataSnapshot) {
-                    Log.d(TAG, "postTransaction:onComplete:" + databaseError);
-                }
-            });
-        }
-
-        private void onEventProfilePointsAdded(DatabaseReference postRef) {
-            postRef.runTransaction(new Transaction.Handler() {
-                @Override
-                public Transaction.Result doTransaction(MutableData mutableData) {
-                    long pointsFromDatabase = 0;
-                    if (mutableData != null) {
-                        pointsFromDatabase = (long) mutableData.getValue();
-                    }
-                    pointsFromDatabase = pointsFromDatabase + 1000;
-                    assert mutableData != null;
-                    mutableData.setValue(pointsFromDatabase);
-                    return Transaction.success(mutableData);
-                }
-
-                @Override
-                public void onComplete(DatabaseError databaseError, boolean b,
-                                       DataSnapshot dataSnapshot) {
-                    hideProgressDialog();
-                    showGratitudeDialog();
-                    Log.d(TAG, "postTransaction:onComplete:" + databaseError);
-                }
-            });
-        }
-
-        private void onEventPublicPointsAdded(DatabaseReference postRef) {
-            postRef.runTransaction(new Transaction.Handler() {
-                @Override
-                public Transaction.Result doTransaction(MutableData mutableData) {
-                    long pointsFromDatabase = 0;
-                    if (mutableData != null) {
-                        pointsFromDatabase = (long) mutableData.getValue();
-                    }
-                    pointsFromDatabase = pointsFromDatabase + 1000;
-                    assert mutableData != null;
-                    mutableData.setValue(pointsFromDatabase);
-                    return Transaction.success(mutableData);
-                }
-
-                @Override
-                public void onComplete(DatabaseError databaseError, boolean b,
-                                       DataSnapshot dataSnapshot) {
-                    Log.d(TAG, "postTransaction:onComplete:" + databaseError);
-                }
-            });
         }
 
         @Override
@@ -404,7 +168,7 @@ public class MapFragment extends Fragment {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                Log.w("TAG", "loadPost:onCancelled", databaseError.toException());
             }
         };
         mDatabase.addValueEventListener(postListener);
@@ -417,11 +181,29 @@ public class MapFragment extends Fragment {
             mapFragmentWelcomeDialog.setMessage("В разделе \"Карта\" Вы сможете увидеть все доступные экопункты в Вашем городе. Коснувшись любого флажка, " +
                     "Вы сможете просмотреть подробную информацию о нем, а также проложить к нему маршрут. Кроме того, не забудьте открыть приложение, " +
                     "когда решите посетить один из них. Как только Вы окажетесь в зоне флажка, Вам будут начислены специальные очки, " +
-                    "которые будут отображаться в Вашем профиле.");
+                    "которые будут отображаться в Вашем профиле. Не забывайте касаться информационных окон флажков, чтобы узнать о них больше.");
             mapFragmentWelcomeDialog.setNegativeButton("Понятно", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     dialogInterface.cancel();
+                    if (user.isAnonymous()) {
+                        AlertDialog.Builder mapFragmentAnonymousDialog = new AlertDialog.Builder(getActivity());
+                        mapFragmentAnonymousDialog.setTitle("Карта в деморежиме");
+                        mapFragmentAnonymousDialog.setCancelable(false);
+                        mapFragmentAnonymousDialog.setIcon(R.drawable.ic_error_demo);
+                        mapFragmentAnonymousDialog.setMessage("В демонстрационном режиме приложение не получает Ваше реальное " +
+                                "местоположение. Вместо этого на Карте появляется большой флажок Вашего виртуального " +
+                                "местонахождения, который по умолчанию находится в центре города. С помощью долгого касания, " +
+                                "Вы можете перемещать его в любую точку карты. Чтобы активировать экопункт, " +
+                                "флажок местоположения должен находиться в радиусе 50 метров от флажка экопункта.");
+                        mapFragmentAnonymousDialog.setNegativeButton("Понятно", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.cancel();
+                            }
+                        });
+                        mapFragmentAnonymousDialog.show();
+                    }
                 }
             });
             mapFragmentWelcomeDialog.show();
@@ -433,6 +215,10 @@ public class MapFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
         ((MainActivity) getActivity()).setActionBarTitle(getString(R.string.map_fragment_name));
+
+        SharedPreferences pref = PreferenceManager
+                .getDefaultSharedPreferences(getActivity());
+        final String selectedCity = pref.getString("city_selector", "");
 
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
@@ -448,21 +234,84 @@ public class MapFragment extends Fragment {
             @Override
             public void onMapReady(GoogleMap mMap) {
 
+                switch (selectedCity) {
+                    case "1":
+                        mDefaultLocation = mMoscow;
+                        break;
+                    case "2":
+                        mDefaultLocation = mArkhangelsk;
+                        break;
+                    case "3":
+                        mDefaultLocation = mEkaterinburg;
+                        break;
+                    case "4":
+                        mDefaultLocation = mOmsk;
+                        break;
+                    case "5":
+                        mDefaultLocation = mVladivostok;
+                        break;
+                }
+
+                if (mDefaultLocation == null) {
+                    mDefaultLocation = mMoscow;
+                }
+
+                if (user.isAnonymous()) {
+                    mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+                        @Override
+                        public void onMarkerDragStart(Marker marker) {
+                            //IGNORE ACTION
+                        }
+
+                        @Override
+                        public void onMarkerDrag(Marker marker) {
+                            //IGNORE ACTION
+                        }
+
+                        @Override
+                        public void onMarkerDragEnd(Marker marker) {
+                            for (final Marker markers : usualMarkers) {
+                                float[] results = new float[1];
+                                Location.distanceBetween(
+                                        markers.getPosition().latitude,
+                                        markers.getPosition().longitude,
+                                        marker.getPosition().latitude,
+                                        marker.getPosition().longitude,
+                                        results);
+                                if (results[0] < 50) {
+                                    addUsualPoints(markers, 5);
+                                }
+                            }
+
+                            for (final Marker markers : eventMarkers) {
+                                float[] results = new float[1];
+                                Location.distanceBetween(
+                                        markers.getPosition().latitude,
+                                        markers.getPosition().longitude,
+                                        marker.getPosition().latitude,
+                                        marker.getPosition().longitude,
+                                        results);
+                                if (results[0] < 50) {
+                                    addEventPoints(markers, 5);
+                                }
+                            }
+                        }
+                    });
+
+                    mMap.addMarker(new MarkerOptions().position(mDefaultLocation)
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.my_location_marker_icon))
+                            .draggable(true)).hideInfoWindow();
+                }
+
                 MapFragment.this.mMap = mMap;
                 mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                     @Override
                     public void onInfoWindowClick(Marker marker) {
-                        if (marker.getSnippet().contains("ev")) {
-                            Intent intent = new Intent(getActivity().getApplicationContext(), MarkerInfoActivity.class);
-                            intent.putExtra("TITLE", marker.getTitle());
-                            intent.putExtra("SNIPPET", marker.getSnippet());
-                            startActivity(intent);
-                        } else {
-                            Intent intent = new Intent(getActivity().getApplicationContext(), MarkerInfoActivity.class);
-                            intent.putExtra("TITLE", marker.getTitle());
-                            intent.putExtra("SNIPPET", marker.getSnippet());
-                            startActivity(intent);
-                        }
+                        Intent intent = new Intent(getActivity().getApplicationContext(), MarkerInfoActivity.class);
+                        intent.putExtra("TITLE", marker.getTitle());
+                        intent.putExtra("SNIPPET", marker.getSnippet());
+                        startActivity(intent);
+
                     }
                 });
 
@@ -479,6 +328,7 @@ public class MapFragment extends Fragment {
                                 PERMISSION_REQUEST_CODE);
                     }
 
+                    mMap.getUiSettings().setZoomControlsEnabled(true);
                     mMap.setMinZoomPreference(10.0f);
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, 12));
 
@@ -487,12 +337,14 @@ public class MapFragment extends Fragment {
                         setMarkerOptionsIcon();
                         addMarkers();
 
-                        LocationManager mLocationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
-                        Location mLastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
-                                0, mLocationListener, null);
-                        if (mLastKnownLocation != null) {
-                            mLocationListener.onLocationChanged(mLastKnownLocation);
+                        if (!user.isAnonymous()) {
+                            LocationManager mLocationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
+                            Location mLastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
+                                    0, mLocationListener, null);
+                            if (mLastKnownLocation != null) {
+                                mLocationListener.onLocationChanged(mLastKnownLocation);
+                            }
                         }
                     }
                 }
@@ -515,8 +367,13 @@ public class MapFragment extends Fragment {
 
     private void addMarkers() {
         ValueEventListener markersListener = new ValueEventListener() {
+            @SuppressWarnings("ConstantConditions")
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.child("users").child(user.getUid()).child("timesUsed").getValue() == null) {
+                    mDatabase.child("users").child(user.getUid()).child("timesUsed").setValue(0);
+                }
+
                 for (DataSnapshot childSnapShot : dataSnapshot.child("markers").getChildren()) {
                     if (childSnapShot.child("id").getValue() != null) {
                         markerIdentifier = childSnapShot.child("id").getValue().toString();
@@ -540,63 +397,65 @@ public class MapFragment extends Fragment {
                     }
                     if (childSnapShot.child("long").getValue() != null) {
                         markerLongitude = (double) childSnapShot.child("long").getValue();
+                    } else if (childSnapShot.child("lng").getValue() != null) {
+                        markerLongitude = (double) childSnapShot.child("lng").getValue();
                     } else {
                         markerLongitude = 7.0000;
                     }
-                    if (childSnapShot.child("eventMark").getValue() == null) {
-                        switch (markerGroup) {
-                            case "battery":
-                                usualMarkers.add(mMap.addMarker(batteryMarkerOptions
-                                        .position(new LatLng(markerLatitude, markerLongitude))
-                                        .title(markerTitle).snippet(markerIdentifier)));
-                                break;
-                            case "paper":
-                                usualMarkers.add(mMap.addMarker(paperMarkerOptions
-                                        .position(new LatLng(markerLatitude, markerLongitude))
-                                        .title(markerTitle).snippet(markerIdentifier)));
-                                break;
-                            case "glass":
-                                usualMarkers.add(mMap.addMarker(glassMarkerOptions
-                                        .position(new LatLng(markerLatitude, markerLongitude))
-                                        .title(markerTitle).snippet(markerIdentifier)));
-                                break;
-                            case "metal":
-                                usualMarkers.add(mMap.addMarker(metalMarkerOptions
-                                        .position(new LatLng(markerLatitude, markerLongitude))
-                                        .title(markerTitle).snippet(markerIdentifier)));
-                                break;
-                            case "plastic":
-                                usualMarkers.add(mMap.addMarker(plasticMarkerOptions
-                                        .position(new LatLng(markerLatitude, markerLongitude))
-                                        .title(markerTitle).snippet(markerIdentifier)));
-                                break;
-                            case "bulb":
-                                usualMarkers.add(mMap.addMarker(bulbMarkerOptions
-                                        .position(new LatLng(markerLatitude, markerLongitude))
-                                        .title(markerTitle).snippet(markerIdentifier)));
-                                break;
-                            case "danger":
-                                usualMarkers.add(mMap.addMarker(dangersMarkerOptions
-                                        .position(new LatLng(markerLatitude, markerLongitude))
-                                        .title(markerTitle).snippet(markerIdentifier)));
-                                break;
-                            case "other":
-                                usualMarkers.add(mMap.addMarker(otherMarkerOptions
-                                        .position(new LatLng(markerLatitude, markerLongitude))
-                                        .title(markerTitle).snippet(markerIdentifier)));
-                                break;
-                        }
-                    } else {
-                        eventMarkers.add(mMap.addMarker(eventMarkerOptions
-                                .position(new LatLng(markerLatitude, markerLongitude))
-                                .title(markerTitle).snippet(markerIdentifier)));
+
+                    switch (markerGroup) {
+                        case "battery":
+                            usualMarkers.add(mMap.addMarker(batteryMarkerOptions
+                                    .position(new LatLng(markerLatitude, markerLongitude))
+                                    .title(markerTitle).snippet(markerIdentifier)));
+                            break;
+                        case "paper":
+                            usualMarkers.add(mMap.addMarker(paperMarkerOptions
+                                    .position(new LatLng(markerLatitude, markerLongitude))
+                                    .title(markerTitle).snippet(markerIdentifier)));
+                            break;
+                        case "glass":
+                            usualMarkers.add(mMap.addMarker(glassMarkerOptions
+                                    .position(new LatLng(markerLatitude, markerLongitude))
+                                    .title(markerTitle).snippet(markerIdentifier)));
+                            break;
+                        case "metal":
+                            usualMarkers.add(mMap.addMarker(metalMarkerOptions
+                                    .position(new LatLng(markerLatitude, markerLongitude))
+                                    .title(markerTitle).snippet(markerIdentifier)));
+                            break;
+                        case "plastic":
+                            usualMarkers.add(mMap.addMarker(plasticMarkerOptions
+                                    .position(new LatLng(markerLatitude, markerLongitude))
+                                    .title(markerTitle).snippet(markerIdentifier)));
+                            break;
+                        case "bulb":
+                            usualMarkers.add(mMap.addMarker(bulbMarkerOptions
+                                    .position(new LatLng(markerLatitude, markerLongitude))
+                                    .title(markerTitle).snippet(markerIdentifier)));
+                            break;
+                        case "danger":
+                            usualMarkers.add(mMap.addMarker(dangersMarkerOptions
+                                    .position(new LatLng(markerLatitude, markerLongitude))
+                                    .title(markerTitle).snippet(markerIdentifier)));
+                            break;
+                        case "other":
+                            usualMarkers.add(mMap.addMarker(otherMarkerOptions
+                                    .position(new LatLng(markerLatitude, markerLongitude))
+                                    .title(markerTitle).snippet(markerIdentifier)));
+                            break;
+                        case "event":
+                            eventMarkers.add(mMap.addMarker(eventMarkerOptions
+                                    .position(new LatLng(markerLatitude, markerLongitude))
+                                    .title(markerTitle).snippet(markerIdentifier)));
+                            break;
                     }
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                Log.w("TAG", "loadPost:onCancelled", databaseError.toException());
             }
         };
         mDatabase.addValueEventListener(markersListener);
@@ -610,6 +469,7 @@ public class MapFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.cancel();
+                addPointsDialogShown = false;
             }
         });
         gratitudeDialog.setPositiveButton("Поделиться", new DialogInterface.OnClickListener() {
@@ -626,7 +486,7 @@ public class MapFragment extends Fragment {
         shareIntent.setType("text/plain");
         String shareBody = "Найдя и использовав экопункт в приложении Enliven, я показал, " +
                 "насколько мне небезразлично будущее нашей планеты. " +
-                "Присоединяйтесь ко мне, пора все менять! #Enliven";
+                "Присоединяйтесь ко мне, пора все менять! #Enliven https://play.google.com/apps/testing/sis.pewpew";
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
         startActivity(Intent.createChooser(shareIntent, "Поделиться профилем"));
     }
@@ -638,7 +498,6 @@ public class MapFragment extends Fragment {
             mProgressDialog.setMessage("Подождите…");
             mProgressDialog.setIndeterminate(true);
         }
-
         mProgressDialog.show();
     }
 
@@ -646,6 +505,290 @@ public class MapFragment extends Fragment {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
         }
+    }
+
+    private void addEventPoints(final Marker marker, int flag) {
+        final AlertDialog.Builder isEventPointUsedDialog = new AlertDialog.Builder(getActivity());
+        isEventPointUsedDialog.setTitle("Обнаружен флажок экособытия");
+        isEventPointUsedDialog.setIcon(R.drawable.event_marker_icon);
+        isEventPointUsedDialog.setCancelable(false);
+        isEventPointUsedDialog.setMessage("Мы рады приветствовать Вас на экособытии \"" + marker.getTitle() + "\"! " +
+                "Если это не случайность, и Вы действительно посетили это мероприятие, " +
+                "мы наградим Вас заслуженными очками.");
+        isEventPointUsedDialog.setNegativeButton("Закрыть", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+                addPointsDialogShown = false;
+            }
+        });
+        isEventPointUsedDialog.setPositiveButton("Получить", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                showProgressDialog();
+
+                if (!user.isAnonymous()) {
+
+                    mDatabase.child("users").child(user.getUid()).child("markers").child(marker.getSnippet()).child(date).setValue("used");
+
+                    DatabaseReference mProfilePoints = FirebaseDatabase.getInstance().getReference()
+                            .child("users").child(user.getUid()).child("points");
+                    DatabaseReference mPublicPoints = FirebaseDatabase.getInstance().getReference()
+                            .child("progress").child("points");
+                    DatabaseReference mTimesUsed = FirebaseDatabase.getInstance().getReference()
+                            .child("markers").child(marker.getSnippet()).child("timesUsed");
+                    DatabaseReference mTimesUsedProfile = FirebaseDatabase.getInstance().getReference()
+                            .child("users").child(user.getUid()).child("timesUsed");
+                    DatabaseReference mTimesUsedProgress = FirebaseDatabase.getInstance().getReference()
+                            .child("progress").child("timesUsed");
+                    onTimesUsedCount(mTimesUsed);
+                    onTimesUsedProfileCount(mTimesUsedProfile);
+                    onTimesUsedProgressCount(mTimesUsedProgress);
+                    onEventProfilePointsAdded(mProfilePoints);
+                    onEventPublicPointsAdded(mPublicPoints);
+
+                    SharedPreferences sp = getActivity().getSharedPreferences("TIME", Activity.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putLong("timeMillis for" + marker.getSnippet(), System.currentTimeMillis());
+                    editor.apply();
+
+                } else {
+                    onEventProfilePointsAdded(FirebaseDatabase.getInstance().getReference()
+                            .child("users").child(user.getUid()).child("points"));
+                    onTimesUsedProfileCount(FirebaseDatabase.getInstance().getReference()
+                            .child("users").child(user.getUid()).child("timesUsed"));
+                }
+            }
+        });
+
+        SharedPreferences sp = getActivity().getSharedPreferences("TIME", Activity.MODE_PRIVATE);
+        long difference = sp.getLong("timeMillis for" + marker.getSnippet(), -1);
+
+        if ((System.currentTimeMillis() - difference > 43200000 || flag != 0) && !addPointsDialogShown) {
+            isEventPointUsedDialog.show();
+            addPointsDialogShown = true;
+        }
+    }
+
+    private void addUsualPoints(final Marker marker, int flag) {
+        final AlertDialog.Builder isPointUsedDialog = new AlertDialog.Builder(getActivity());
+        isPointUsedDialog.setTitle("Обнаружен флажок экопункта");
+        isPointUsedDialog.setIcon(R.drawable.ic_menu_marker_icon);
+        isPointUsedDialog.setCancelable(false);
+        isPointUsedDialog.setMessage("Поздравляем, Вы нашли экопункт \"" + marker.getTitle() + "\"! " +
+                "Если это не случайность, и Вы действительно использовали этот пункт по назначению, " +
+                "мы подарим Вам заслуженные очки.");
+        isPointUsedDialog.setNegativeButton("Закрыть", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+                addPointsDialogShown = false;
+            }
+        });
+        isPointUsedDialog.setPositiveButton("Получить", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                showProgressDialog();
+
+                if (!user.isAnonymous()) {
+
+                    mDatabase.child("users").child(user.getUid()).child("markers").child(marker.getSnippet()).child(date).setValue("used");
+
+                    DatabaseReference mProfilePoints = FirebaseDatabase.getInstance().getReference()
+                            .child("users").child(user.getUid()).child("points");
+                    DatabaseReference mPublicPoints = FirebaseDatabase.getInstance().getReference()
+                            .child("progress").child("points");
+                    DatabaseReference mTimesUsed = FirebaseDatabase.getInstance().getReference()
+                            .child("markers").child(marker.getSnippet()).child("timesUsed");
+                    DatabaseReference mTimesUsedProfile = FirebaseDatabase.getInstance().getReference()
+                            .child("users").child(user.getUid()).child("timesUsed");
+                    DatabaseReference mTimesUsedProgress = FirebaseDatabase.getInstance().getReference()
+                            .child("progress").child("timesUsed");
+                    onTimesUsedCount(mTimesUsed);
+                    onTimesUsedProfileCount(mTimesUsedProfile);
+                    onTimesUsedProgressCount(mTimesUsedProgress);
+                    onUsualProfilePointsAdded(mProfilePoints);
+                    onUsualPublicPointsAdded(mPublicPoints);
+
+                    SharedPreferences sp = getActivity().getSharedPreferences("TIME", Activity.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putLong("timeMillis for" + marker.getSnippet(), System.currentTimeMillis());
+                    editor.apply();
+
+                } else {
+                    onUsualProfilePointsAdded(FirebaseDatabase.getInstance().getReference()
+                            .child("users").child(user.getUid()).child("points"));
+                    onTimesUsedProfileCount(FirebaseDatabase.getInstance().getReference()
+                            .child("users").child(user.getUid()).child("timesUsed"));
+                }
+            }
+        });
+
+        SharedPreferences sp = getActivity().getSharedPreferences("TIME", Activity.MODE_PRIVATE);
+        long difference = sp.getLong("timeMillis for" + marker.getSnippet(), -1);
+
+        if ((System.currentTimeMillis() - difference > 3600000 || flag != 0) && !addPointsDialogShown) {
+            isPointUsedDialog.show();
+            addPointsDialogShown = true;
+        }
+    }
+
+    private void onUsualProfilePointsAdded(DatabaseReference postRef) {
+        postRef.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                long pointsFromDatabase = 0;
+                if (mutableData != null) {
+                    pointsFromDatabase = (long) mutableData.getValue();
+                }
+                pointsFromDatabase = pointsFromDatabase + 200;
+                assert mutableData != null;
+                mutableData.setValue(pointsFromDatabase);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b,
+                                   DataSnapshot dataSnapshot) {
+                hideProgressDialog();
+                showGratitudeDialog();
+                Log.d("TAG", "postTransaction:onComplete:" + databaseError);
+            }
+        });
+    }
+
+    private void onTimesUsedCount(DatabaseReference postRef) {
+        postRef.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                long timesUsed = 0;
+                if (mutableData != null) {
+                    timesUsed = (long) mutableData.getValue();
+                }
+                timesUsed = timesUsed + 1;
+                assert mutableData != null;
+                mutableData.setValue(timesUsed);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b,
+                                   DataSnapshot dataSnapshot) {
+                Log.d("TAG", "postTransaction:onComplete:" + databaseError);
+            }
+        });
+    }
+
+    private void onTimesUsedProfileCount(DatabaseReference postRef) {
+        postRef.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                long timesUsed = 0;
+                if (mutableData != null) {
+                    timesUsed = (long) mutableData.getValue();
+                }
+                timesUsed = timesUsed + 1;
+                assert mutableData != null;
+                mutableData.setValue(timesUsed);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b,
+                                   DataSnapshot dataSnapshot) {
+                Log.d("TAG", "postTransaction:onComplete:" + databaseError);
+            }
+        });
+    }
+
+    private void onTimesUsedProgressCount(DatabaseReference postRef) {
+        postRef.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                long timesUsed = 0;
+                if (mutableData != null) {
+                    timesUsed = (long) mutableData.getValue();
+                }
+                timesUsed = timesUsed + 1;
+                assert mutableData != null;
+                mutableData.setValue(timesUsed);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b,
+                                   DataSnapshot dataSnapshot) {
+                Log.d("TAG", "postTransaction:onComplete:" + databaseError);
+            }
+        });
+    }
+
+    private void onUsualPublicPointsAdded(DatabaseReference postRef) {
+        postRef.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                long pointsFromDatabase = 0;
+                if (mutableData != null) {
+                    pointsFromDatabase = (long) mutableData.getValue();
+                }
+                pointsFromDatabase = pointsFromDatabase + 200;
+                assert mutableData != null;
+                mutableData.setValue(pointsFromDatabase);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b,
+                                   DataSnapshot dataSnapshot) {
+                Log.d("TAG", "postTransaction:onComplete:" + databaseError);
+            }
+        });
+    }
+
+    private void onEventProfilePointsAdded(DatabaseReference postRef) {
+        postRef.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                long pointsFromDatabase = 0;
+                if (mutableData != null) {
+                    pointsFromDatabase = (long) mutableData.getValue();
+                }
+                pointsFromDatabase = pointsFromDatabase + 1000;
+                assert mutableData != null;
+                mutableData.setValue(pointsFromDatabase);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b,
+                                   DataSnapshot dataSnapshot) {
+                hideProgressDialog();
+                showGratitudeDialog();
+                Log.d("TAG", "postTransaction:onComplete:" + databaseError);
+            }
+        });
+    }
+
+    private void onEventPublicPointsAdded(DatabaseReference postRef) {
+        postRef.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                long pointsFromDatabase = 0;
+                if (mutableData != null) {
+                    pointsFromDatabase = (long) mutableData.getValue();
+                }
+                pointsFromDatabase = pointsFromDatabase + 1000;
+                assert mutableData != null;
+                mutableData.setValue(pointsFromDatabase);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b,
+                                   DataSnapshot dataSnapshot) {
+                Log.d("TAG", "postTransaction:onComplete:" + databaseError);
+            }
+        });
     }
 
     @Override

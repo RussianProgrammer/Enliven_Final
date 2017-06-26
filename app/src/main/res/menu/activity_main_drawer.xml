@@ -32,7 +32,7 @@
             android:title="@string/training_fragment_name" />
         <item
             android:id="@+id/nav_console"
-            android:icon="@drawable/ic_menu_marker"
+            android:icon="@drawable/ic_menu_console"
             android:title="@string/console_fragment_name" />
         <item
             android:id="@+id/nav_news"
@@ -58,10 +58,6 @@
                 android:id="@+id/nav_feedback"
                 android:icon="@drawable/ic_menu_feedback"
                 android:title="@string/feedback_fragment_name" />
-            <item
-                android:id="@+id/nav_gratitude"
-                android:icon="@drawable/ic_menu_gratitude"
-                android:title="@string/gratitude_fragment_name" />
         </menu>
     </item>
 

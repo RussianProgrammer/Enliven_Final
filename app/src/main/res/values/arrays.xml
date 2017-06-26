@@ -3,10 +3,18 @@
 
     <string-array name="listArrayCity">
         <item>Москва</item>
+        <item>Архангельск</item>
+        <item>Екатеринбург</item>
+        <item>Омск</item>
+        <item>Владивосток</item>
     </string-array>
 
     <string-array name="listValuesCity">
         <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
     </string-array>
 
     <string-array name="listMarkerGroups">

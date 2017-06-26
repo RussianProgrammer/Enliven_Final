@@ -28,7 +28,8 @@ public class ShareFragment extends Fragment {
             public void onClick(View view) {
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
-                String shareBody = "Присоединяйтесь к проекту Enliven. Здесь Вы сможете по-настоящему помочь планете и получить за это награду! #Enliven";
+                String shareBody = "Присоединяйтесь к проекту Enliven. Здесь Вы сможете по-настоящему помочь планете и получить за это награду! #Enliven " +
+                        "https://play.google.com/apps/testing/sis.pewpew";
                 shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
                 startActivity(Intent.createChooser(shareIntent, "Поделиться профилем"));
             }

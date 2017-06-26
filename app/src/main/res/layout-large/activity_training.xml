@@ -1,0 +1,76 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="sis.pewpew.fragments.ProfileFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/training_main_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_margin="10dp"
+                android:clickable="true"
+                android:foreground="?selectableItemBackground"
+                card_view:cardBackgroundColor="#FFFFFF"
+                card_view:cardCornerRadius="10dp"
+                card_view:cardElevation="5dp"
+                card_view:contentPadding="0dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/training_main_icon"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:contentDescription="@string/description"
+                        android:paddingBottom="5dp"
+                        android:paddingTop="15dp"
+                        app:srcCompat="@drawable/profile_icon" />
+
+                    <TextView
+                        android:id="@+id/training_main_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/training_main_icon"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:textColor="#FFFFFF"
+                        android:textSize="40sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/training_main_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/training_main_title"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="left"
+                        android:padding="20dp"
+                        android:paddingBottom="15dp"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20sp" />
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</FrameLayout>

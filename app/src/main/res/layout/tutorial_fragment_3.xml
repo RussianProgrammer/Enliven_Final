@@ -1,32 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1B5E20"
+    android:background="@color/colorPrimaryDark"
     tools:context="sis.pewpew.tutorial.TutorialFragment3">
 
-    <!-- TODO: Update blank fragment layout -->
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_margin="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:clickable="true"
+        card_view:cardBackgroundColor="#1B5E20"
+        card_view:cardCornerRadius="10dp"
+        card_view:cardElevation="5dp"
+        card_view:contentPadding="0dp">
 
-    <TextView
-        android:id="@+id/tutorial_text_3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:padding="20dp"
-        android:text="В проекте Enliven мы создали карту, на которой отмечены пункты, где можно безопасно утилизировать отходы без вреда для окружающей среды"
-        android:textColor="#FFFFFF"
-        android:textSize="40dp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:foreground="?selectableItemBackground">
 
-    <TextView
-        android:id="@+id/tutorial_switch_3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#FFFFFF"
-        android:paddingBottom="20dp"
-        android:text="Смахните, чтобы продолжить"
-        android:textSize="20sp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+            <ImageView
+                android:id="@+id/tutorial_3_icon"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:paddingBottom="10dp"
+                android:paddingTop="20dp"
+                android:src="@drawable/tutorial_page_3_icon" />
+
+            <TextView
+                android:id="@+id/main_share_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tutorial_3_icon"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:text="Все Ваши очки и очки сообщества конвертируются в спасенные растения, спасенных животных и людей. Более того, зарабатывая очки, Вы открываете новые достижения и поднимаете свой ранг."
+                android:textColor="#FFFFFF"
+                android:textSize="30sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="80dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:padding="20dp"
+                android:src="@drawable/tutorial_slider_icon" />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
 
 </RelativeLayout>

@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import sis.pewpew.MainActivity;
 import sis.pewpew.R;
 
-import static com.google.android.gms.internal.zzt.TAG;
 import static sis.pewpew.MainActivity.deleteCache;
 
 public class NewsFragment extends Fragment {
@@ -97,7 +96,7 @@ public class NewsFragment extends Fragment {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                Log.w("TAG", "loadPost:onCancelled", databaseError.toException());
             }
         };
         mDatabase.addListenerForSingleValueEvent(postListener);

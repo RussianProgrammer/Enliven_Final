@@ -31,7 +31,6 @@ import java.util.List;
 import sis.pewpew.MainActivity;
 import sis.pewpew.R;
 
-import static com.google.android.gms.internal.zzt.TAG;
 import static sis.pewpew.MainActivity.deleteCache;
 
 public class ProfileFragment extends Fragment {
@@ -199,7 +198,7 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                Log.w("TAG", "loadPost:onCancelled", databaseError.toException());
             }
         };
         mDatabase.addValueEventListener(pointsListener);
@@ -327,27 +326,27 @@ public class ProfileFragment extends Fragment {
                     String shareBody = "В приложении Enliven я заработал " + (int) pointsFromDatabase + " очков, спас " +
                             (int) (pointsFromDatabase / 500) + " деревьев, " + (int) (pointsFromDatabase / 1000) +
                             " животных и " + (int) (pointsFromDatabase / 1200) + " человек! Присоединяйтесь ко мне, " +
-                            "пора все менять! #Enliven";
+                            "пора все менять! #Enliven https://play.google.com/apps/testing/sis.pewpew";
                     shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
                 } else if (pointsFromDatabase > 1000) {
                     String shareBody = "В приложении Enliven я заработал " + (int) pointsFromDatabase + " очков, спас " +
                             (int) (pointsFromDatabase / 500) + " дерева и " + (int) (pointsFromDatabase / 1000) +
                             " животное! Присоединяйтесь ко мне, " +
-                            "пора все менять! #Enliven";
+                            "пора все менять! #Enliven https://play.google.com/apps/testing/sis.pewpew";
                     shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
                 } else if (pointsFromDatabase > 500) {
                     String shareBody = "В приложении Enliven я заработал " + (int) pointsFromDatabase + " очков и спас " +
                             (int) (pointsFromDatabase / 500) + " дерево! Присоединяйтесь ко мне, " +
-                            "пора все менять! #Enliven";
+                            "пора все менять! #Enliven https://play.google.com/apps/testing/sis.pewpew";
                     shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
                 } else if (pointsFromDatabase > 0) {
                     String shareBody = "В приложении Enliven я получил " + (int) pointsFromDatabase + " очков." +
                             " Зарабатывая их, я улучшаю экологию на планете. Присоединяйтесь ко мне, " +
-                            "пора все менять! #Enliven";
+                            "пора все менять! #Enliven https://play.google.com/apps/testing/sis.pewpew";
                     shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
                 } else {
                     String shareBody = "В приложении Enliven я спасаю наш мир. Присоединяйтесь ко мне, " +
-                            "пора все менять! #Enliven";
+                            "пора все менять! #Enliven https://play.google.com/apps/testing/sis.pewpew";
                     shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
                 }
                 startActivity(Intent.createChooser(shareIntent, "Поделиться профилем"));
@@ -355,7 +354,7 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                Log.w("TAG", "loadPost:onCancelled", databaseError.toException());
             }
         };
         mDatabase.addListenerForSingleValueEvent(postListenerForSharing);

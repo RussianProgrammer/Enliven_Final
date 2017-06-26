@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 
 import sis.pewpew.MainActivity;
 import sis.pewpew.R;
-import sis.pewpew.connections.AuthActivity;
+import sis.pewpew.providers.AuthActivity;
 
 public class TutorialActivity extends AppCompatActivity {
 

@@ -1,0 +1,28 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1B5E20"
+    tools:context="sis.pewpew.fragments.AboutFragment">
+
+    <TextView
+        android:id="@+id/about_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:padding="20dp"
+        android:text="Мы глубоко убеждены в том, что достичь целей мирового масштаба невозможно в одиночку. именно поэтому мы разработали проект Enliven — место, где люди могут объединиться во имя общего великого дела. Станьте частью нашей команды по спасению Земли"
+        android:textColor="#FFFFFF"
+        android:textSize="40dp" />
+
+    <Button
+        android:id="@+id/start_tutorial"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="25dp"
+        android:text="Пройти введение снова" />
+
+</RelativeLayout>

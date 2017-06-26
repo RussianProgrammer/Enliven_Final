@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="sis.pewpew.additions.MarkerInfoActivity"
+    tools:showIn="@layout/activity_marker_info">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/marker_info_details_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_margin="7dp"
+            android:clickable="true"
+            android:foreground="?selectableItemBackground"
+            card_view:cardBackgroundColor="#424242"
+            card_view:cardCornerRadius="10dp"
+            card_view:cardElevation="5dp"
+            card_view:contentPadding="3dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/marker_info_details"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="12dp"
+                    android:paddingLeft="12dp"
+                    android:paddingTop="7dp"
+                    android:text="Загрузка…"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp" />
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/marker_info_address_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/marker_info_details_card"
+            android:layout_margin="7dp"
+            android:clickable="true"
+            android:foreground="?selectableItemBackground"
+            card_view:cardBackgroundColor="#A9A778"
+            card_view:cardCornerRadius="10dp"
+            card_view:cardElevation="5dp"
+            card_view:contentPadding="3dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/marker_info_address_icon"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:layout_alignParentTop="true"
+                    android:contentDescription="@string/description"
+                    android:foregroundGravity="left"
+                    android:padding="7dp"
+                    app:srcCompat="@drawable/marker_info_address_icon" />
+
+                <TextView
+                    android:id="@+id/marker_info_address_call"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/marker_info_address_icon"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="0dp"
+                    android:text="Адрес"
+                    android:textColor="#FFFFFF"
+                    android:textSize="33sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/marker_info_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/marker_info_address_call"
+                    android:layout_toRightOf="@id/marker_info_address_icon"
+                    android:paddingLeft="5dp"
+                    android:text="Загрузка…"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp" />
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/marker_info_work_time_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/marker_info_address_card"
+            android:layout_margin="7dp"
+            android:clickable="true"
+            android:foreground="?selectableItemBackground"
+            card_view:cardBackgroundColor="#288"
+            card_view:cardCornerRadius="10dp"
+            card_view:cardElevation="5dp"
+            card_view:contentPadding="3dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/marker_info_work_time_icon"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:layout_alignParentTop="true"
+                    android:contentDescription="@string/description"
+                    android:foregroundGravity="left"
+                    android:padding="7dp"
+                    app:srcCompat="@drawable/marker_info_work_time_icon" />
+
+                <TextView
+                    android:id="@+id/marker_info_work_time_call"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_toRightOf="@id/marker_info_work_time_icon"
+                    android:paddingLeft="5dp"
+                    android:text="Время"
+                    android:textColor="#FFFFFF"
+                    android:textSize="33sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/marker_info_work_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/marker_info_work_time_call"
+                    android:layout_toRightOf="@id/marker_info_work_time_icon"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="5dp"
+                    android:text="Загрузка…"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/marker_info_work_time_break"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/marker_info_work_time"
+                    android:layout_toRightOf="@id/marker_info_work_time_icon"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="5dp"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp" />
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/marker_info_contacts_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/marker_info_work_time_card"
+            android:layout_margin="7dp"
+            android:clickable="true"
+            android:foreground="?selectableItemBackground"
+            card_view:cardBackgroundColor="#944"
+            card_view:cardCornerRadius="10dp"
+            card_view:cardElevation="5dp"
+            card_view:contentPadding="3dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/marker_info_contacts_icon"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:layout_alignParentTop="true"
+                    android:contentDescription="@string/description"
+                    android:foregroundGravity="left"
+                    android:padding="7dp"
+                    app:srcCompat="@drawable/marker_info_contacts_icon" />
+
+                <TextView
+                    android:id="@+id/marker_info_contacts_call"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_toRightOf="@id/marker_info_contacts_icon"
+                    android:paddingLeft="5dp"
+                    android:text="Контакты"
+                    android:textColor="#FFFFFF"
+                    android:textSize="33sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/marker_info_contacts_email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:autoLink="email"
+                    android:linksClickable="true"
+                    android:layout_below="@id/marker_info_contacts_call"
+                    android:layout_toRightOf="@id/marker_info_contacts_icon"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="5dp"
+                    android:text="Загрузка…"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/marker_info_contacts_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:autoLink="phone"
+                    android:linksClickable="true"
+                    android:layout_below="@id/marker_info_contacts_email"
+                    android:layout_toRightOf="@id/marker_info_contacts_icon"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="5dp"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/marker_info_contacts_url"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:autoLink="web"
+                    android:linksClickable="true"
+                    android:layout_below="@id/marker_info_contacts_phone"
+                    android:layout_toRightOf="@id/marker_info_contacts_icon"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="5dp"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp" />
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/marker_info_prize_fund_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/marker_info_contacts_card"
+            android:layout_margin="7dp"
+            android:clickable="true"
+            android:foreground="?selectableItemBackground"
+            card_view:cardBackgroundColor="#490"
+            card_view:cardCornerRadius="10dp"
+            card_view:cardElevation="5dp"
+            card_view:contentPadding="3dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/marker_info_prize_fund_icon"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:layout_alignParentTop="true"
+                    android:contentDescription="@string/description"
+                    android:foregroundGravity="left"
+                    android:padding="7dp"
+                    app:srcCompat="@drawable/marker_info_prize_fund_icon" />
+
+                <TextView
+                    android:id="@+id/marker_info_prize_fund"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_toRightOf="@id/marker_info_prize_fund_icon"
+                    android:paddingLeft="5dp"
+                    android:text="Загрузка…"
+                    android:textColor="#FFFFFF"
+                    android:textSize="33sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/marker_info_prize_fund_call"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/marker_info_prize_fund"
+                    android:layout_toRightOf="@id/marker_info_prize_fund_icon"
+                    android:paddingLeft="5dp"
+                    android:text="Награда"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp" />
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/marker_info_used_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/marker_info_prize_fund_card"
+            android:layout_margin="7dp"
+            android:clickable="true"
+            android:foreground="?selectableItemBackground"
+            card_view:cardBackgroundColor="#757575"
+            card_view:cardCornerRadius="10dp"
+            card_view:cardElevation="5dp"
+            card_view:contentPadding="3dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/marker_info_used_icon"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:layout_alignParentTop="true"
+                    android:contentDescription="@string/description"
+                    android:foregroundGravity="left"
+                    android:padding="7dp"
+                    app:srcCompat="@drawable/marker_info_used_icon" />
+
+                <TextView
+                    android:id="@+id/marker_info_used"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_toRightOf="@id/marker_info_used_icon"
+                    android:paddingLeft="5dp"
+                    android:text="Загрузка…"
+                    android:textColor="#FFFFFF"
+                    android:textSize="33sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/marker_info_used_call"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/marker_info_used"
+                    android:layout_toRightOf="@id/marker_info_used_icon"
+                    android:paddingLeft="5dp"
+                    android:text="Раз был использован"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp" />
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/marker_info_rating_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/marker_info_used_card"
+            android:layout_margin="7dp"
+            android:clickable="true"
+            android:foreground="?selectableItemBackground"
+            card_view:cardBackgroundColor="#FF9800"
+            card_view:cardCornerRadius="10dp"
+            card_view:cardElevation="5dp"
+            card_view:contentPadding="3dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/marker_info_rating_icon"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:layout_alignParentTop="true"
+                    android:contentDescription="@string/description"
+                    android:foregroundGravity="left"
+                    android:padding="7dp"
+                    app:srcCompat="@drawable/marker_info_rating_icon" />
+
+                <TextView
+                    android:id="@+id/marker_info_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_toRightOf="@id/marker_info_rating_icon"
+                    android:paddingLeft="5dp"
+                    android:text="Загрузка…"
+                    android:textColor="#FFFFFF"
+                    android:textSize="33sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/marker_info_rating_call"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/marker_info_rating"
+                    android:layout_toRightOf="@id/marker_info_rating_icon"
+                    android:paddingLeft="5dp"
+                    android:text="Средний рейтинг"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp" />
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+    </RelativeLayout>
+
+</android.support.v4.widget.NestedScrollView>

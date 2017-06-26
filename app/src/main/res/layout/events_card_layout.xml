@@ -4,7 +4,7 @@
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
+    android:layout_margin="7dp"
     android:clickable="true"
     android:foreground="?selectableItemBackground"
     card_view:cardBackgroundColor="@color/colorPrimary"
@@ -20,7 +20,7 @@
         <ImageView
             android:id="@+id/item_image"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="150dp"
             android:layout_alignParentTop="true"
             android:contentDescription="@string/events_card_image"
             android:scaleType="centerCrop" />
@@ -31,11 +31,11 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/item_image"
             android:maxLines="3"
-            android:paddingBottom="10dp"
-            android:paddingLeft="15dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
             android:paddingTop="10dp"
             android:textColor="#FFFFFF"
-            android:textSize="40sp"
+            android:textSize="30sp"
             android:textStyle="bold" />
 
         <TextView
@@ -45,11 +45,11 @@
             android:layout_below="@+id/item_title"
             android:maxLines="10"
             android:paddingBottom="10dp"
-            android:paddingLeft="15dp"
+            android:paddingLeft="10dp"
             android:paddingRight="15dp"
-            android:paddingTop="10dp"
+            android:paddingTop="5dp"
             android:textColor="#FFFFFF"
-            android:textSize="20sp" />
+            android:textSize="15sp" />
 
         <Button
             android:id="@+id/event_share_button"

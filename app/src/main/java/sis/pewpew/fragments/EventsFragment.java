@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 
 import sis.pewpew.MainActivity;
 import sis.pewpew.R;
-import sis.pewpew.utils.EventsRecyclerViewAdapter;
+import sis.pewpew.adapters.EventsRecyclerViewAdapter;
 
 import static sis.pewpew.MainActivity.deleteCache;
 

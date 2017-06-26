@@ -17,6 +17,12 @@
         <item name="android:windowBackground">@drawable/splash_screen</item>
     </style>
 
+    <style name="ActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="TransparentToolbar" parent="Theme.AppCompat.Light" />

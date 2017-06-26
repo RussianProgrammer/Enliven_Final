@@ -125,7 +125,7 @@ public class SettingsFragment extends PreferenceFragment {
 
         verifyAccountSupport = new AlertDialog.Builder(getActivity());
         verifyAccountSupport.setTitle("Аккаунт уже был подтвержден");
-        verifyAccountSupport.setMessage("Дело в том, что при использовании учетной записи Google или демонстрационного режима, мы подтверждаем Ваш аккаунт автоматически. " +
+        verifyAccountSupport.setMessage("Дело в том, что при использовании учетной записи Google, мы подтверждаем Ваш аккаунт автоматически. " +
                 "Если же у Вас возникли подозрения, что кто-то мог получить доступ к Вашему аккаунту, пожалуйста, незамедлительно свяжитесь с нами.");
         verifyAccountSupport.setNegativeButton("Закрыть", new DialogInterface.OnClickListener() {
             @Override
@@ -344,7 +344,7 @@ public class SettingsFragment extends PreferenceFragment {
     }
 
     private void reset() {
-        String[] sharedPrefsName = new String[]{"MAP", "ACHIEVEMENTS", "EVENTS", "NEWS", "PROFILE", "PROGRESS", "TRAINING", "RATING"};
+        String[] sharedPrefsName = new String[]{"MAP", "ACHIEVEMENTS", "EVENTS", "NEWS", "PROFILE", "PROGRESS", "TRAINING", "RATING", "CONSOLE"};
         for (String sharedPrefs : sharedPrefsName)
             getActivity().getSharedPreferences(sharedPrefs, 0).edit().clear().apply();
         Toast.makeText(getActivity(), "Настройки сброшены", Toast.LENGTH_SHORT).show();

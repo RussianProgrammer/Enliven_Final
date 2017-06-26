@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 
 import sis.pewpew.MainActivity;
 import sis.pewpew.R;
-import sis.pewpew.utils.TrainingRecyclerViewAdapter;
+import sis.pewpew.adapters.TrainingRecyclerViewAdapter;
 
 import static sis.pewpew.MainActivity.deleteCache;
 

@@ -1,4 +1,4 @@
 <menu xmlns:tools="http://schemas.android.com/tools"
-    tools:context="sis.pewpew.support.MarkerInfoActivity">
+    tools:context="sis.pewpew.additions.MarkerInfoActivity">
 
 </menu>
