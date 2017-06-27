@@ -96,17 +96,32 @@ public class AchievesRecyclerViewAdapter extends RecyclerView.Adapter<AchievesRe
             ValueEventListener postListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.child("users").child(user.getUid()).child("points").getValue() != null) {
-                        points = (long) dataSnapshot.child("users").child(user.getUid()).child("points").getValue();
+                    if (!user.isAnonymous()) {
+                        if (dataSnapshot.child("users").child(user.getUid()).child("points").getValue() != null) {
+                            points = (long) dataSnapshot.child("users").child(user.getUid()).child("points").getValue();
+                        } else {
+                            points = 0;
+                        }
+                        if (dataSnapshot.child("users").child(user.getUid())
+                                .child("achievements").child("" + (getAdapterPosition() + 1)).getValue() != null) {
+                            dateFromDatabase = dataSnapshot.child("users").child(user.getUid())
+                                    .child("achievements").child("" + (getAdapterPosition() + 1)).getValue().toString();
+                        } else {
+                            dateFromDatabase = "Когда-то";
+                        }
                     } else {
-                        points = 0;
-                    }
-                    if (dataSnapshot.child("users").child(user.getUid())
-                            .child("achievements").child("" + (getAdapterPosition() + 1)).getValue() != null) {
-                        dateFromDatabase = dataSnapshot.child("users").child(user.getUid())
-                                .child("achievements").child("" + (getAdapterPosition() + 1)).getValue().toString();
-                    } else {
-                        dateFromDatabase = "Когда-то";
+                        if (dataSnapshot.child("demos").child(user.getUid()).child("points").getValue() != null) {
+                            points = (long) dataSnapshot.child("demos").child(user.getUid()).child("points").getValue();
+                        } else {
+                            points = 0;
+                        }
+                        if (dataSnapshot.child("demos").child(user.getUid())
+                                .child("achievements").child("" + (getAdapterPosition() + 1)).getValue() != null) {
+                            dateFromDatabase = dataSnapshot.child("demos").child(user.getUid())
+                                    .child("achievements").child("" + (getAdapterPosition() + 1)).getValue().toString();
+                        } else {
+                            dateFromDatabase = "Когда-то";
+                        }
                     }
                     itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -158,21 +173,39 @@ public class AchievesRecyclerViewAdapter extends RecyclerView.Adapter<AchievesRe
                 @SuppressLint("SetTextI18n")
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.child("users").child(user.getUid()).child("points").getValue() != null) {
-                        points = (long) dataSnapshot.child("users").child(user.getUid()).child("points").getValue();
+                    if (!user.isAnonymous()) {
+                        if (dataSnapshot.child("users").child(user.getUid()).child("points").getValue() != null) {
+                            points = (long) dataSnapshot.child("users").child(user.getUid()).child("points").getValue();
+                        } else {
+                            points = 0;
+                        }
                     } else {
-                        points = 0;
+                        if (dataSnapshot.child("demos").child(user.getUid()).child("points").getValue() != null) {
+                            points = (long) dataSnapshot.child("demos").child(user.getUid()).child("points").getValue();
+                        } else {
+                            points = 0;
+                        }
                     }
 
                     if (points >= limits[position]) {
                         viewHolder.achieveCard.setCardBackgroundColor(Color.parseColor(colors1[position]));
                         viewHolder.achieveTitle.setText(titles[position]);
-                        if (dataSnapshot.child("users").child(user.getUid())
-                                .child("achievements").child("" + (position + 1)).getValue() != null) {
-                            dateFromDatabase = dataSnapshot.child("users").child(user.getUid())
-                                    .child("achievements").child("" + (position + 1)).getValue().toString();
+                        if (!user.isAnonymous()) {
+                            if (dataSnapshot.child("users").child(user.getUid())
+                                    .child("achievements").child("" + (position + 1)).getValue() != null) {
+                                dateFromDatabase = dataSnapshot.child("users").child(user.getUid())
+                                        .child("achievements").child("" + (position + 1)).getValue().toString();
+                            } else {
+                                dateFromDatabase = "когда-то";
+                            }
                         } else {
-                            dateFromDatabase = "когда-то";
+                            if (dataSnapshot.child("demos").child(user.getUid())
+                                    .child("achievements").child("" + (position + 1)).getValue() != null) {
+                                dateFromDatabase = dataSnapshot.child("demos").child(user.getUid())
+                                        .child("achievements").child("" + (position + 1)).getValue().toString();
+                            } else {
+                                dateFromDatabase = "когда-то";
+                            }
                         }
                         viewHolder.achieveProgress.setText("Получено " + dateFromDatabase);
                         viewHolder.achieveImage.setImageResource(iconIds[position]);

@@ -11,8 +11,11 @@ import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -48,6 +51,7 @@ public class NetIntegrationActivity extends AppCompatActivity {
 
                     NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
                     View headerView = navigationView.getHeaderView(0);
+
                     if (user.getDisplayName() != null) {
                         TextView navUserName = (TextView) headerView.findViewById(R.id.user_display_name);
                         navUserName.setText(username);
@@ -76,9 +80,17 @@ public class NetIntegrationActivity extends AppCompatActivity {
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (user != null && dataSnapshot.child("users").child(user.getUid()).child("points").getValue() != null) {
 
-                    final long points = (long) dataSnapshot.child("users").child(user.getUid()).child("points").getValue();
+                if (user != null && dataSnapshot.child("demos").child(user.getUid()).child("points").getValue() != null) {
+
+                    NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+                    View headerView = navigationView.getHeaderView(0);
+
+                    ImageView userIcon = (ImageView) headerView.findViewById(R.id.user_icon);
+
+                    userIcon.setImageResource(R.drawable.demo_user_icon);
+
+                    final long points = (long) dataSnapshot.child("demos").child(user.getUid()).child("points").getValue();
 
                     if (points >= 1500) {
                         AlertDialog.Builder demoFinishDialog = new AlertDialog.Builder(NetIntegrationActivity.this);
@@ -97,23 +109,74 @@ public class NetIntegrationActivity extends AppCompatActivity {
                                 SharedPreferences.Editor editor = sp.edit();
                                 editor.putLong("pointsForUpgrade", points);
                                 editor.apply();
-                                logOut();
+                                mDatabase.child("demos").child(user.getUid()).removeValue()
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                logOut();
+                                            }
+                                        });
                             }
                         });
                         demoFinishDialog.setNegativeButton("Не переносить", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                SharedPreferences sp2 = getSharedPreferences("POINTS_FOR_UPGRADE_TRANSFER", Activity.MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sp2.edit();
-                                editor.putBoolean("noTransfer", true);
+                                SharedPreferences sp = getSharedPreferences("POINTS_FOR_UPGRADE", Activity.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sp.edit();
+                                editor.putLong("pointsForUpgrade", points);
                                 editor.apply();
-                                logOut();
+                                SharedPreferences sp2 = getSharedPreferences("POINTS_FOR_UPGRADE_TRANSFER", Activity.MODE_PRIVATE);
+                                SharedPreferences.Editor editor1 = sp2.edit();
+                                editor1.putBoolean("noTransfer", true);
+                                editor1.apply();
+                                mDatabase.child("demos").child(user.getUid()).removeValue()
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                logOut();
+                                            }
+                                        });
+
                             }
                         });
                         if (!dialogShown && user.isAnonymous()) {
                             demoFinishDialog.show();
                             dialogShown = true;
                         }
+                    }
+                } else {
+
+                    NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+                    View headerView = navigationView.getHeaderView(0);
+
+                    ImageView navUserIcon = (ImageView) headerView.findViewById(R.id.user_icon);
+
+                    if (user != null && dataSnapshot.child("users").child(user.getUid()).child("status").getValue() != null) {
+
+                        final String status = dataSnapshot.child("users").child(user.getUid())
+                                .child("status").getValue().toString();
+
+                        switch (status) {
+                            case "1":
+                                navUserIcon.setImageResource(R.drawable.employee_user_icon);
+                                break;
+                            case "2":
+                                navUserIcon.setImageResource(R.drawable.organizer_user_icon);
+                                break;
+                            case "3":
+                                navUserIcon.setImageResource(R.drawable.moderator_user_icon);
+                                break;
+                            case "4":
+                                navUserIcon.setImageResource(R.drawable.administrator_user_icon);
+                                break;
+                            case "5":
+                                navUserIcon.setImageResource(R.drawable.ceo_user_icon);
+                                break;
+                        }
+                    } else if (user != null && user.isAnonymous()) {
+                        navUserIcon.setImageResource(R.drawable.demo_user_icon);
+                    } else {
+                        navUserIcon.setImageResource(R.drawable.dummy_user_icon);
                     }
                 }
             }

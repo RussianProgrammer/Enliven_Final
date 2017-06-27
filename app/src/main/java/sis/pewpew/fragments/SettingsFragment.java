@@ -70,8 +70,14 @@ public class SettingsFragment extends PreferenceFragment {
         deleteAccountDialog.setPositiveButton("Продолжить", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                String reference;
                 showProgressDialog("Удаление…");
-                mDatabase.child("users").child(user.getUid()).removeValue().addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
+                if (user.isAnonymous()) {
+                    reference = "demos";
+                } else {
+                    reference = "users";
+                }
+                mDatabase.child(reference).child(user.getUid()).removeValue().addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         hideProgressDialog();
@@ -104,13 +110,23 @@ public class SettingsFragment extends PreferenceFragment {
                 if (!user.isAnonymous()) {
                     FirebaseAuth.getInstance().signOut();
                     logOut();
+                    String[] sharedPrefsName = new String[]{"ACHIEVE1", "ACHIEVE2", "ACHIEVE3", "ACHIEVE4",
+                            "ACHIEVE5", "ACHIEVE6", "ACHIEVE7", "ACHIEVE8", "ACHIEVE9", "ACHIEVE10", "ACHIEVE11",
+                            "ACHIEVE12", "ACHIEVE13", "ACHIEVE14", "ACHIEVE15"};
+                    for (String sharedPrefs : sharedPrefsName)
+                        getActivity().getSharedPreferences(sharedPrefs, 0).edit().clear().apply();
                 } else {
-                    mDatabase.child("users").child(user.getUid()).removeValue().addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
+                    mDatabase.child("demos").child(user.getUid()).removeValue().addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             FirebaseAuth.getInstance().signOut();
                             user.delete();
                             logOut();
+                            String[] sharedPrefsName = new String[]{"ACHIEVE1", "ACHIEVE2", "ACHIEVE3", "ACHIEVE4",
+                                    "ACHIEVE5", "ACHIEVE6", "ACHIEVE7", "ACHIEVE8", "ACHIEVE9", "ACHIEVE10", "ACHIEVE11",
+                                    "ACHIEVE12", "ACHIEVE13", "ACHIEVE14", "ACHIEVE15"};
+                            for (String sharedPrefs : sharedPrefsName)
+                                getActivity().getSharedPreferences(sharedPrefs, 0).edit().clear().apply();
                         }
                     });
                 }
@@ -206,9 +222,15 @@ public class SettingsFragment extends PreferenceFragment {
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     if (dataSnapshot.child("vouchers").child(input.getText().toString().toUpperCase()).getValue() != null) {
                                         long pointsFromVoucher = (long) dataSnapshot.child("vouchers").child(input.getText().toString().toUpperCase()).getValue();
-                                        DatabaseReference mProfilePoints = FirebaseDatabase.getInstance().getReference()
-                                                .child("users").child(user.getUid()).child("points");
-                                        onVoucherPointsAdded(mProfilePoints, pointsFromVoucher);
+                                        if (!user.isAnonymous()) {
+                                            DatabaseReference mProfilePoints = FirebaseDatabase.getInstance().getReference()
+                                                    .child("users").child(user.getUid()).child("points");
+                                            onVoucherPointsAdded(mProfilePoints, pointsFromVoucher);
+                                        } else {
+                                            DatabaseReference mProfilePoints = FirebaseDatabase.getInstance().getReference()
+                                                    .child("demos").child(user.getUid()).child("points");
+                                            onVoucherPointsAdded(mProfilePoints, pointsFromVoucher);
+                                        }
                                         mDatabase.child("vouchers").child(input.getText().toString().toUpperCase()).removeValue();
                                     } else {
                                         showVoucherRedeemResultDialog("Несуществующий промокод", "Пожалуйста, проверьте корректность введенного промокода. " +

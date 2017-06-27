@@ -1,23 +1,19 @@
 package sis.pewpew.classes;
 
+@SuppressWarnings("unused")
 public class LeaderData {
 
     public String name;
+    public String key;
     public long points;
 
-    public String getName() {
-        return name;
+    public LeaderData() {
     }
 
-    public long getPoints() {
-        return points;
-    }
-
-    public void setName(String name) {
+    public LeaderData(String name, String key, long points) {
         this.name = name;
-    }
-
-    public void setPoints(long points) {
+        this.key = key;
         this.points = points;
     }
+
 }

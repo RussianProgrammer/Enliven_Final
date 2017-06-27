@@ -114,7 +114,9 @@ public class MarkerInfoActivity extends AppCompatActivity {
                         markerInfoRatingDialog.setPositiveButton("Оценить", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                if (dataSnapshot.child("users").child(user.getUid()).child("markers").child(snippet).getChildrenCount() > 0) {
+                                if (user.isAnonymous()) {
+                                    Toast.makeText(MarkerInfoActivity.this, "В деморежиме нельзя оценивать экопункты", Toast.LENGTH_LONG).show();
+                                } else if (dataSnapshot.child("users").child(user.getUid()).child("markers").child(snippet).getChildrenCount() > 0) {
                                     final android.app.AlertDialog.Builder setRatingDialog = new android.app.AlertDialog.Builder(MarkerInfoActivity.this);
                                     setRatingDialog.setTitle("Оценить");
                                     setRatingDialog.setMessage("Учтите, что в итоговом рейтинге будет учитываться " +

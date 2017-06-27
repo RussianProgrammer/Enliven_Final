@@ -158,11 +158,20 @@ public class MapFragment extends Fragment {
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child("users").child(user.getUid()).child("points").getValue() == null && !closed) {
-                    mDatabase.child("users").child(user.getUid()).child("points").setValue(0);
-                }
-                if (dataSnapshot.child("users").child(user.getUid()).child("timesUsed").getValue() == null && !closed) {
-                    mDatabase.child("users").child(user.getUid()).child("timesUsed").setValue(0);
+                if (!user.isAnonymous()) {
+                    if (dataSnapshot.child("users").child(user.getUid()).child("points").getValue() == null && !closed) {
+                        mDatabase.child("users").child(user.getUid()).child("points").setValue(0);
+                    }
+                    if (dataSnapshot.child("users").child(user.getUid()).child("timesUsed").getValue() == null && !closed) {
+                        mDatabase.child("users").child(user.getUid()).child("timesUsed").setValue(0);
+                    }
+                } else {
+                    if (dataSnapshot.child("demos").child(user.getUid()).child("points").getValue() == null && !closed) {
+                        mDatabase.child("demos").child(user.getUid()).child("points").setValue(0);
+                    }
+                    if (dataSnapshot.child("demos").child(user.getUid()).child("timesUsed").getValue() == null && !closed) {
+                        mDatabase.child("demos").child(user.getUid()).child("timesUsed").setValue(0);
+                    }
                 }
             }
 
@@ -178,10 +187,10 @@ public class MapFragment extends Fragment {
             mapFragmentWelcomeDialog.setTitle(getString(R.string.map_fragment_name));
             mapFragmentWelcomeDialog.setCancelable(false);
             mapFragmentWelcomeDialog.setIcon(R.drawable.ic_menu_map);
-            mapFragmentWelcomeDialog.setMessage("В разделе \"Карта\" Вы сможете увидеть все доступные экопункты в Вашем городе. Коснувшись любого флажка, " +
+            mapFragmentWelcomeDialog.setMessage("В разделе \"Карта\" Вы можете увидеть все доступные экопункты в Вашем городе. Коснувшись любого флажка, " +
                     "Вы сможете просмотреть подробную информацию о нем, а также проложить к нему маршрут. Кроме того, не забудьте открыть приложение, " +
                     "когда решите посетить один из них. Как только Вы окажетесь в зоне флажка, Вам будут начислены специальные очки, " +
-                    "которые будут отображаться в Вашем профиле. Не забывайте касаться информационных окон флажков, чтобы узнать о них больше.");
+                    "которые будут отображаться в Вашем профиле.");
             mapFragmentWelcomeDialog.setNegativeButton("Понятно", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -200,9 +209,12 @@ public class MapFragment extends Fragment {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 dialogInterface.cancel();
+                                showTapInfoWindowDialog();
                             }
                         });
                         mapFragmentAnonymousDialog.show();
+                    } else {
+                        showTapInfoWindowDialog();
                     }
                 }
             });
@@ -311,7 +323,6 @@ public class MapFragment extends Fragment {
                         intent.putExtra("TITLE", marker.getTitle());
                         intent.putExtra("SNIPPET", marker.getSnippet());
                         startActivity(intent);
-
                     }
                 });
 
@@ -370,8 +381,9 @@ public class MapFragment extends Fragment {
             @SuppressWarnings("ConstantConditions")
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child("users").child(user.getUid()).child("timesUsed").getValue() == null) {
-                    mDatabase.child("users").child(user.getUid()).child("timesUsed").setValue(0);
+
+                if (user.isAnonymous() && (long) dataSnapshot.child("demos").child(user.getUid()).child("points").getValue() >= 1500) {
+                    closed = true;
                 }
 
                 for (DataSnapshot childSnapShot : dataSnapshot.child("markers").getChildren()) {
@@ -554,9 +566,9 @@ public class MapFragment extends Fragment {
 
                 } else {
                     onEventProfilePointsAdded(FirebaseDatabase.getInstance().getReference()
-                            .child("users").child(user.getUid()).child("points"));
+                            .child("demos").child(user.getUid()).child("points"));
                     onTimesUsedProfileCount(FirebaseDatabase.getInstance().getReference()
-                            .child("users").child(user.getUid()).child("timesUsed"));
+                            .child("demos").child(user.getUid()).child("timesUsed"));
                 }
             }
         });
@@ -617,9 +629,9 @@ public class MapFragment extends Fragment {
 
                 } else {
                     onUsualProfilePointsAdded(FirebaseDatabase.getInstance().getReference()
-                            .child("users").child(user.getUid()).child("points"));
+                            .child("demos").child(user.getUid()).child("points"));
                     onTimesUsedProfileCount(FirebaseDatabase.getInstance().getReference()
-                            .child("users").child(user.getUid()).child("timesUsed"));
+                            .child("demos").child(user.getUid()).child("timesUsed"));
                 }
             }
         });
@@ -789,6 +801,21 @@ public class MapFragment extends Fragment {
                 Log.d("TAG", "postTransaction:onComplete:" + databaseError);
             }
         });
+    }
+
+    private void showTapInfoWindowDialog() {
+        AlertDialog.Builder tapInfoWindowDialog = new AlertDialog.Builder(getActivity());
+        tapInfoWindowDialog.setTitle("Информационные окна");
+        tapInfoWindowDialog.setMessage("Касайтесь информационных окон флажков, чтобы открыть страницу с полными данными.");
+        tapInfoWindowDialog.setIcon(R.drawable.ic_menu_help);
+        tapInfoWindowDialog.setCancelable(false);
+        tapInfoWindowDialog.setNegativeButton("Понятно", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        tapInfoWindowDialog.show();
     }
 
     @Override

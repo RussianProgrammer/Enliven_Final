@@ -22,7 +22,7 @@
                 android:layout_margin="10dp"
                 android:clickable="true"
                 android:foreground="?selectableItemBackground"
-                card_view:cardBackgroundColor="#FFFFFF"
+                card_view:cardBackgroundColor="#999999"
                 card_view:cardCornerRadius="10dp"
                 card_view:cardElevation="5dp"
                 card_view:contentPadding="0dp">
@@ -40,7 +40,7 @@
                         android:contentDescription="@string/description"
                         android:paddingBottom="5dp"
                         android:paddingTop="15dp"
-                        app:srcCompat="@drawable/profile_icon" />
+                        app:srcCompat="@drawable/unknown_achieve_icon" />
 
                     <TextView
                         android:id="@+id/profile_username"

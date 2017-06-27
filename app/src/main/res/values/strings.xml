@@ -23,7 +23,7 @@
     <string name="gratitude_fragment_name">Особая благодарность</string>
     <string name="progress_dialog_message">Подождите…</string>
     <string name="email_sending_error_message">Увы, но у нас закончилась бумага для писем. Приходите позже</string>
-    <string name="authentication_error_message">Хм… К сожалению, нам не удалось отыскать Ваш профиль</string>
+    <string name="authentication_error_message">Ваш аккаунт временно отключен. Попробуйте войти позже, либо обратитесь в службу поддержки</string>
     <string name="google_play_services_error_message">Произошла ошибка сервисов Google Play</string>
     <string name="title_activity_maps">Map</string>
     <string name="grant_access_button_text">Начнем</string>

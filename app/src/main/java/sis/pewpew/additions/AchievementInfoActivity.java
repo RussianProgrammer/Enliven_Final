@@ -133,12 +133,22 @@ public class AchievementInfoActivity extends AppCompatActivity {
                 }
                 gottenFromCard.setText(gotAchieve * 100 / allUsers + "%");
 
-                if (dataSnapshot.child("users").child(user.getUid())
-                        .child("achievements").child("" + id).getValue() != null) {
-                    dateFromCard.setText(dataSnapshot.child("users").child(user.getUid())
-                            .child("achievements").child("" + id).getValue().toString());
+                if (!user.isAnonymous()) {
+                    if (dataSnapshot.child("users").child(user.getUid())
+                            .child("achievements").child("" + id).getValue() != null) {
+                        dateFromCard.setText(dataSnapshot.child("users").child(user.getUid())
+                                .child("achievements").child("" + id).getValue().toString());
+                    } else {
+                        dateFromCard.setText("Когда-то");
+                    }
                 } else {
-                    dateFromCard.setText("Когда-то");
+                    if (dataSnapshot.child("demos").child(user.getUid())
+                            .child("achievements").child("" + id).getValue() != null) {
+                        dateFromCard.setText(dataSnapshot.child("demos").child(user.getUid())
+                                .child("achievements").child("" + id).getValue().toString());
+                    } else {
+                        dateFromCard.setText("Когда-то");
+                    }
                 }
             }
 

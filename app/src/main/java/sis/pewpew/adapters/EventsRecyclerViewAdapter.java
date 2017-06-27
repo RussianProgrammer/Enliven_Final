@@ -36,7 +36,6 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
             R.drawable.fest_icon_3,
     };
 
-
     class ViewHolder extends RecyclerView.ViewHolder {
         ImageView itemImage;
         TextView itemTitle;

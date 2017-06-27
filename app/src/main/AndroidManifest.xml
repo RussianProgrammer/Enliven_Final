@@ -89,6 +89,10 @@
             android:name=".additions.ProposedMarkerInfoActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/ActionBar" />
+        <activity
+            android:name=".additions.UserProfileActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/ActionBar" />
     </application>
 
 </manifest>

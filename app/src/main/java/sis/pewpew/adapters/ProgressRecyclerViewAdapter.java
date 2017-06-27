@@ -101,7 +101,7 @@ public class ProgressRecyclerViewAdapter extends RecyclerView.Adapter<ProgressRe
                             showProgressDialog("Карточка спасенных животных", "Собирая очки в приложении," +
                                     " Вы спасаете настоящих животных в будущем. " +
                                     "Они никак не могут повлиять на катострофу, от которой погибают. " +
-                                    "Но мы можем.");
+                                    "Но мы — можем.");
                             break;
                         case 6:
                             showProgressDialog("Карточка спасенных людей", "Собирая очки в приложении," +
@@ -129,6 +129,7 @@ public class ProgressRecyclerViewAdapter extends RecyclerView.Adapter<ProgressRe
 
     @Override
     public void onBindViewHolder(final ProgressRecyclerViewAdapter.ViewHolder viewHolder, int i) {
+
         final int position = viewHolder.getAdapterPosition();
         if (position != RecyclerView.NO_POSITION) {
 

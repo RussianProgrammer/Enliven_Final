@@ -1,41 +1,57 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rating_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
+    android:layout_margin="7dp"
     android:clickable="true"
     android:foreground="?selectableItemBackground"
     card_view:cardBackgroundColor="#616161"
     card_view:cardCornerRadius="10dp"
     card_view:cardElevation="5dp"
-    card_view:contentPadding="5dp">
+    card_view:contentPadding="3dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/rating_icon"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+        <FrameLayout
+            android:id="@+id/frame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:contentDescription="@string/description"
-            android:foregroundGravity="left"
-            android:padding="10dp"
-            app:srcCompat="@drawable/gray_circle_icon" />
+            android:foregroundGravity="left">
+
+            <ImageView
+                android:id="@+id/rating_icon"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:contentDescription="@string/description"
+                android:foregroundGravity="left"
+                android:padding="7dp"
+                app:srcCompat="@drawable/gray_circle_icon" />
+
+            <TextView
+                android:id="@+id/leader_position"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textSize="45sp"
+                android:textStyle="bold" />
+
+        </FrameLayout>
 
         <TextView
             android:id="@+id/rating_points"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/rating_icon"
-            android:paddingLeft="10dp"
+            android:layout_toRightOf="@id/frame"
+            android:paddingLeft="5dp"
             android:paddingTop="0dp"
             android:text="Закрыто"
             android:textColor="#FFFFFF"
-            android:textSize="45sp"
+            android:textSize="33sp"
             android:textStyle="bold" />
 
         <TextView
@@ -43,11 +59,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/rating_points"
-            android:layout_toRightOf="@id/rating_icon"
-            android:paddingLeft="10dp"
+            android:layout_toRightOf="@id/frame"
+            android:paddingLeft="5dp"
             android:text="Загрузка выполнения…"
             android:textColor="#FFFFFF"
-            android:textSize="20sp" />
+            android:textSize="15sp" />
 
     </RelativeLayout>
 

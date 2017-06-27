@@ -38,7 +38,6 @@ public class ConsoleFragment extends Fragment {
 
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    private long points;
     private long timesSent;
     private long timesAccepted;
     private long status;
@@ -58,7 +57,7 @@ public class ConsoleFragment extends Fragment {
             newsFragmentWelcomeDialog.setCancelable(false);
             newsFragmentWelcomeDialog.setIcon(R.drawable.ic_menu_console);
             newsFragmentWelcomeDialog.setMessage("В разделе \"Консоль\" Вы можете добавлять свои собственые маркеры " +
-                    "на Карту. Здесь есть два раздела: один – для пользователя, а другой – для модератора. В первом Вы можете " +
+                    "на Карту. Здесь есть два раздела: один – для пользователя, а другой – для модераторов. В первом Вы можете " +
                     "отправлять запросы на добавление новых экопунктов, а во втором сотрудники организаций по охране природы " +
                     "могут просматривать Ваши запросы, а также принимать или отклонять их.");
             newsFragmentWelcomeDialog.setNegativeButton("Понятно", new DialogInterface.OnClickListener() {
@@ -86,25 +85,29 @@ public class ConsoleFragment extends Fragment {
             @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child("users").child(user.getUid()).child("timesSent").getValue() != null) {
-                    timesSent = (long) dataSnapshot.child("users").child(user.getUid()).child("timesSent").getValue();
+
+                String reference;
+
+                if (!user.isAnonymous()) {
+                    reference = "users";
+                } else {
+                    reference = "demos";
+                }
+
+                if (dataSnapshot.child(reference).child(user.getUid()).child("timesSent").getValue() != null) {
+                    timesSent = (long) dataSnapshot.child(reference).child(user.getUid()).child("timesSent").getValue();
                 } else {
                     timesSent = 0;
-                    mDatabase.child("users").child(user.getUid()).child("timesSent").setValue(0);
+                    mDatabase.child(reference).child(user.getUid()).child("timesSent").setValue(0);
                 }
-                if (dataSnapshot.child("users").child(user.getUid()).child("timesAccepted").getValue() != null) {
-                    timesAccepted = (long) dataSnapshot.child("users").child(user.getUid()).child("timesAccepted").getValue();
+                if (dataSnapshot.child(reference).child(user.getUid()).child("timesAccepted").getValue() != null) {
+                    timesAccepted = (long) dataSnapshot.child(reference).child(user.getUid()).child("timesAccepted").getValue();
                 } else {
                     timesAccepted = 0;
-                    mDatabase.child("users").child(user.getUid()).child("timesAccepted").setValue(0);
+                    mDatabase.child(reference).child(user.getUid()).child("timesAccepted").setValue(0);
                 }
-                if (dataSnapshot.child("users").child(user.getUid()).child("points").getValue() != null) {
-                    points = (long) dataSnapshot.child("users").child(user.getUid()).child("points").getValue();
-                } else {
-                    points = 0;
-                }
-                if (dataSnapshot.child("users").child(user.getUid()).child("status").getValue() != null) {
-                    status = (long) dataSnapshot.child("users").child(user.getUid()).child("status").getValue();
+                if (dataSnapshot.child(reference).child(user.getUid()).child("status").getValue() != null) {
+                    status = (long) dataSnapshot.child(reference).child(user.getUid()).child("status").getValue();
                 } else {
                     status = 0;
                 }
@@ -115,14 +118,18 @@ public class ConsoleFragment extends Fragment {
                 openModerationConsoleButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (status >= 3) {
-                            Intent intent = new Intent(getActivity(), MarkerModerationActivity.class);
-                            startActivity(intent);
+                        if (!user.isAnonymous()) {
+                            if (status >= 3) {
+                                Intent intent = new Intent(getActivity(), MarkerModerationActivity.class);
+                                startActivity(intent);
+                            } else {
+                                Toast.makeText(getActivity(), "Только пользователи с пометной уровня Модератор или выше " +
+                                        "могут производить модерацию запросов. Если Вы являетесь сотрудником " +
+                                        "организации по защите окружающей среды, Вы можете запросить пометку " +
+                                        "повышенного уровня доступа в Настройках.", Toast.LENGTH_LONG).show();
+                            }
                         } else {
-                            Toast.makeText(getActivity(), "Только пользователи с пометной уровня Модератор или выше " +
-                                    "могут производить модерацию запросов. Если Вы являетесь сотрудником " +
-                                    "организации по защите окружающей среды, Вы можете запросить пометку " +
-                                    "повышенного уровня доступа в Настройках.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), "В деморежиме нельзя открыть консоль модерации", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -130,8 +137,12 @@ public class ConsoleFragment extends Fragment {
                 addMarkerButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(getActivity(), SendMarkerInfoActivity.class);
-                        startActivity(intent);
+                        if (!user.isAnonymous()) {
+                            Intent intent = new Intent(getActivity(), SendMarkerInfoActivity.class);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(getActivity(), "В деморежиме нельзя предлагать экопункты", Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
             }

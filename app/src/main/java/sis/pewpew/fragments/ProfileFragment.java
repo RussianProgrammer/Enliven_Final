@@ -15,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -94,8 +95,16 @@ public class ProfileFragment extends Fragment {
                 TextView savedAnimals = (TextView) rootView.findViewById(R.id.profile_saved_animals);
                 TextView savedPeople = (TextView) rootView.findViewById(R.id.profile_saved_people);
 
-                if (user != null && dataSnapshot.child("users").child(user.getUid()).child("points").getValue() != null) {
-                    pointsFromDatabase = (long) dataSnapshot.child("users").child(user.getUid()).child("points").getValue();
+                if (user != null) {
+                    if (!user.isAnonymous() && dataSnapshot.child("users")
+                            .child(user.getUid()).child("points").getValue() != null) {
+                        pointsFromDatabase = (long) dataSnapshot.child("users").child(user.getUid()).child("points").getValue();
+                    } else if (user.isAnonymous() && dataSnapshot.child("demos")
+                            .child(user.getUid()).child("points").getValue() != null) {
+                        pointsFromDatabase = (long) dataSnapshot.child("demos").child(user.getUid()).child("points").getValue();
+                    } else {
+                        pointsFromDatabase = 0;
+                    }
 
                     points.setText("" + pointsFromDatabase);
                     savedTrees.setText("" + (int) pointsFromDatabase / 500);
@@ -156,7 +165,6 @@ public class ProfileFragment extends Fragment {
                         rank.setText("Легенда");
                     }
                 } else {
-
                     points.setText("" + 0);
                     savedTrees.setText("" + 0);
                     savedAnimals.setText("" + 0);
@@ -165,34 +173,54 @@ public class ProfileFragment extends Fragment {
                     rank.setText("Нет ранга");
                 }
 
+                ImageView profileIcon = (ImageView) rootView.findViewById(R.id.profile_user_icon);
+
                 if (user != null && dataSnapshot.child("users").child(user.getUid()).child("status").getValue() != null) {
                     statusFromDatabase = dataSnapshot.child("users").child(user.getUid()).child("status").getValue().toString();
 
                     switch (statusFromDatabase) {
                         case "1":
                             status.setText("Сотрудник");
+                            profileIcon.setImageResource(R.drawable.employee_user_icon);
                             break;
                         case "2":
                             status.setText("Организатор");
+                            profileIcon.setImageResource(R.drawable.organizer_user_icon);
                             break;
                         case "3":
                             status.setText("Модератор");
+                            profileIcon.setImageResource(R.drawable.moderator_user_icon);
                             break;
                         case "4":
                             status.setText("Администратор");
+                            profileIcon.setImageResource(R.drawable.administrator_user_icon);
                             break;
                         case "5":
                             status.setText("Создатель");
+                            profileIcon.setImageResource(R.drawable.ceo_user_icon);
                             break;
                     }
+                } else if (user.isAnonymous()) {
+                    status.setText("Демоверсия");
+                    profileIcon.setImageResource(R.drawable.demo_user_icon);
                 } else {
                     status.setText("Пользователь");
+                    profileIcon.setImageResource(R.drawable.dummy_user_icon);
                 }
-                if (dataSnapshot.child("users").child(user.getUid()).child("timesUsed").getValue() != null) {
-                    timesUsedFromDatabase = (long) dataSnapshot.child("users").child(user.getUid()).child("timesUsed").getValue();
-                    used.setText("" + timesUsedFromDatabase);
+                if (!user.isAnonymous()) {
+                    if (dataSnapshot.child("users").child(user.getUid()).child("timesUsed").getValue() != null) {
+                        timesUsedFromDatabase = (long) dataSnapshot.child("users").child(user.getUid()).child("timesUsed").getValue();
+                        used.setText("" + timesUsedFromDatabase);
+                    } else {
+                        used.setText("0");
+                    }
                 } else {
-                    used.setText("0");
+                    if (dataSnapshot.child("demos").child(user.getUid()).child("timesUsed").getValue() != null) {
+                        timesUsedFromDatabase = (long) dataSnapshot.child("demos").child(user.getUid()).child("timesUsed").getValue();
+                        used.setText("" + timesUsedFromDatabase);
+                    } else {
+                        used.setText("0");
+                    }
                 }
             }
 
@@ -219,7 +247,6 @@ public class ProfileFragment extends Fragment {
         cards.add((CardView) rootView.findViewById(R.id.profile_saved_trees_card));
         cards.add((CardView) rootView.findViewById(R.id.profile_saved_animals_card));
         cards.add((CardView) rootView.findViewById(R.id.profile_saved_people_card));
-
 
         titles.add("Карточка профиля");
         titles.add("Карточка очков");
@@ -257,7 +284,7 @@ public class ProfileFragment extends Fragment {
                 "За каждые заработанные Вами 1200 очков один человек из будущего или даже настоящего говорит Вам \"Спасибо\"" +
                 " за сохраненную жизнь.");
 
-        imageIds.add(R.drawable.profile_icon);
+        imageIds.add(R.drawable.dummy_user_icon);
         imageIds.add(R.drawable.profile_points_icon_2);
         imageIds.add(R.drawable.profile_used_icon);
         imageIds.add(R.drawable.profile_rank_icon);
@@ -315,10 +342,18 @@ public class ProfileFragment extends Fragment {
         ValueEventListener postListenerForSharing = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (user != null && dataSnapshot.child("users").child(user.getUid()).child("points").getValue() != null) {
-                    pointsFromDatabase = (long) dataSnapshot.child("users").child(user.getUid()).child("points").getValue();
+                if (!user.isAnonymous()) {
+                    if (user != null && dataSnapshot.child("users").child(user.getUid()).child("points").getValue() != null) {
+                        pointsFromDatabase = (long) dataSnapshot.child("users").child(user.getUid()).child("points").getValue();
+                    } else {
+                        pointsFromDatabase = 0;
+                    }
                 } else {
-                    pointsFromDatabase = 0;
+                    if (user != null && dataSnapshot.child("demos").child(user.getUid()).child("points").getValue() != null) {
+                        pointsFromDatabase = (long) dataSnapshot.child("demos").child(user.getUid()).child("points").getValue();
+                    } else {
+                        pointsFromDatabase = 0;
+                    }
                 }
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");

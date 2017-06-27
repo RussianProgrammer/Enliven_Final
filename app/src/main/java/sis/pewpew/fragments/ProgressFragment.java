@@ -37,7 +37,7 @@ public class ProgressFragment extends Fragment {
             progressFragmentWelcomeDialog.setCancelable(false);
             progressFragmentWelcomeDialog.setIcon(R.drawable.ic_menu_progress);
             progressFragmentWelcomeDialog.setMessage("В разделе \"Прогресс\" показаны результаты совместной работы всего сообщества. " +
-                    "Также здесь показан и Ваш личный вклад в спасение планеты.");
+                    "Касайтесь карточек, чтобы узнать больше о наших целях.");
             progressFragmentWelcomeDialog.setNegativeButton("Понятно", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {

@@ -1,8 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="sis.pewpew.fragments.AchievementsFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -13,12 +13,6 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
 
-        <Button
-            android:id="@+id/show_rating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="UPDATE"/>
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rating_list"
             android:layout_width="match_parent"
@@ -28,10 +22,18 @@
 
     </android.support.design.widget.CoordinatorLayout>
 
-
-
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <ProgressBar
+        android:id="@+id/rating_progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:foregroundGravity="center" />
 
 </RelativeLayout>

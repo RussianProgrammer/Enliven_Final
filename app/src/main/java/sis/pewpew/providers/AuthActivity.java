@@ -49,6 +49,8 @@ public class AuthActivity extends ProgressDialogActivity implements
         findViewById(R.id.sign_in_button).setOnClickListener(this);
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
+        final SharedPreferences sp = getSharedPreferences("POINTS_FOR_UPGRADE", Activity.MODE_PRIVATE);
+
         findViewById(R.id.anonymous_sign_in_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -56,11 +58,16 @@ public class AuthActivity extends ProgressDialogActivity implements
                 achievementsFragmentWelcomeDialog.setTitle("Демоверсия");
                 achievementsFragmentWelcomeDialog.setCancelable(false);
                 achievementsFragmentWelcomeDialog.setIcon(R.drawable.ic_error_demo);
-                achievementsFragmentWelcomeDialog.setMessage("Демонстрационный режим предназначен исключительно " +
-                        "для ознакомительных целей. У Вас не будет личного аккаунта, однако Вам будет " +
-                        "открыт весь функционал приложения, не связанный с персональными данными. " +
-                        "Кроме того вся Ваша активность не повлияет на публично доступную " +
-                        "информацию о прогрессе, количестве активаций экопунктов и так далее.");
+                if (sp.getLong("pointsForUpgrade", -1) < 1500) {
+                    achievementsFragmentWelcomeDialog.setMessage("Демонстрационный режим предназначен исключительно " +
+                            "для ознакомительных целей. У Вас не будет личного аккаунта, однако Вам будет " +
+                            "открыт весь функционал приложения, не связанный с персональными данными. " +
+                            "Кроме того вся Ваша активность не повлияет на публично доступную " +
+                            "информацию о прогрессе, количестве активаций экопунктов и так далее.");
+                } else {
+                    achievementsFragmentWelcomeDialog.setMessage("Демонстрационный режим уже был использован. Мы " +
+                            "рекомендуем использовать Google-аккаунт для входа. Все равно продолжить?");
+                }
                 achievementsFragmentWelcomeDialog.setPositiveButton("Попробовать", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -161,7 +168,7 @@ public class AuthActivity extends ProgressDialogActivity implements
                         if (!task.isSuccessful()) {
                             Log.w(TAG, "signInWithCredential", task.getException());
                             Toast.makeText(AuthActivity.this, R.string.authentication_error_message,
-                                    Toast.LENGTH_SHORT).show();
+                                    Toast.LENGTH_LONG).show();
                         }
                         hideProgressDialog();
                     }
@@ -177,6 +184,7 @@ public class AuthActivity extends ProgressDialogActivity implements
         hideProgressDialog();
         if (user != null) {
             if (!user.isAnonymous()) {
+                mDatabase.child("users").child(user.getUid()).child("key").setValue(user.getUid());
                 SharedPreferences sp = getSharedPreferences("POINTS_FOR_UPGRADE", Activity.MODE_PRIVATE);
                 SharedPreferences sp2 = getSharedPreferences("POINTS_FOR_UPGRADE_TRANSFER", Activity.MODE_PRIVATE);
                 if (sp.getLong("pointsForUpgrade", -1) >= 1500 && !sp2.getBoolean("noTransfer", false)) {
@@ -184,8 +192,9 @@ public class AuthActivity extends ProgressDialogActivity implements
                 }
                 mDatabase.child("users").child(user.getUid()).child("name").setValue(user.getDisplayName());
             } else {
-                mDatabase.child("users").child(user.getUid()).child("name").setValue("Demo Account");
-                mDatabase.child("users").child(user.getUid()).child("points").setValue(0);
+                mDatabase.child("demos").child(user.getUid()).child("key").setValue(user.getUid());
+                mDatabase.child("demos").child(user.getUid()).child("name").setValue("Demo Account");
+                mDatabase.child("demos").child(user.getUid()).child("points").setValue(0);
             }
             if (user.getEmail() != null) {
                 mDatabase.child("users").child(user.getUid()).child("email").setValue(user.getEmail());
