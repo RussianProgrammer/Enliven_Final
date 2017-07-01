@@ -118,23 +118,21 @@ public class ConsoleFragment extends Fragment {
                 openModerationConsoleButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (!user.isAnonymous()) {
-                            if (status >= 3) {
-                                Intent intent = new Intent(getActivity(), MarkerModerationActivity.class);
-                                startActivity(intent);
-                            } else {
-                                Toast.makeText(getActivity(), "Только пользователи с пометной уровня Модератор или выше " +
-                                        "могут производить модерацию запросов. Если Вы являетесь сотрудником " +
-                                        "организации по защите окружающей среды, Вы можете запросить пометку " +
-                                        "повышенного уровня доступа в Настройках.", Toast.LENGTH_LONG).show();
-                            }
-                        } else {
+                        if (user.isAnonymous()) {
                             Toast.makeText(getActivity(), "В деморежиме нельзя открыть консоль модерации", Toast.LENGTH_LONG).show();
+                        } else if (status < 3) {
+                            Toast.makeText(getActivity(), "Только пользователи с пометкой уровня Модератор " +
+                                    "или выше могут открыть консоль модерации", Toast.LENGTH_LONG).show();
+                        } else {
+                            Intent intent = new Intent(getActivity(), MarkerModerationActivity.class);
+                            startActivity(intent);
                         }
                     }
                 });
 
-                addMarkerButton.setOnClickListener(new View.OnClickListener() {
+                addMarkerButton.setOnClickListener(new View.OnClickListener()
+
+                {
                     @Override
                     public void onClick(View view) {
                         if (!user.isAnonymous()) {
@@ -176,7 +174,10 @@ public class ConsoleFragment extends Fragment {
         imageIds.add(R.drawable.add_marker_icon);
         imageIds.add(R.drawable.verified_markers_icon);
 
-        for (int i = 0; i < cards.size(); i++) {
+        for (
+                int i = 0; i < cards.size(); i++)
+
+        {
             final int finalI = i;
             cards.get(finalI).setOnClickListener(new View.OnClickListener() {
                 @Override

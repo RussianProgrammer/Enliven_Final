@@ -23,7 +23,8 @@
             android:layout_height="150dp"
             android:layout_alignParentTop="true"
             android:contentDescription="@string/events_card_image"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            android:src="@drawable/empty_event_icon"/>
 
         <TextView
             android:id="@+id/item_title"

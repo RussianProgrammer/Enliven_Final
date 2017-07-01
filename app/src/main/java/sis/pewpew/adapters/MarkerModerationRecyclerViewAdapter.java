@@ -55,38 +55,7 @@ public class MarkerModerationRecyclerViewAdapter extends RecyclerView.Adapter<Ma
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    switch (getAdapterPosition()) {
-                        case 0:
-                            checkAvailability(1);
-                            break;
-                        case 1:
-                            checkAvailability(2);
-                            break;
-                        case 2:
-                            checkAvailability(3);
-                            break;
-                        case 3:
-                            checkAvailability(4);
-                            break;
-                        case 4:
-                            checkAvailability(5);
-                            break;
-                        case 5:
-                            checkAvailability(6);
-                            break;
-                        case 6:
-                            checkAvailability(7);
-                            break;
-                        case 7:
-                            checkAvailability(8);
-                            break;
-                        case 8:
-                            checkAvailability(9);
-                            break;
-                        case 9:
-                            checkAvailability(10);
-                            break;
-                    }
+                    checkAvailability(getAdapterPosition() + 1);
                 }
             });
         }

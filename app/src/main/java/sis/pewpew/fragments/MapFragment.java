@@ -190,7 +190,7 @@ public class MapFragment extends Fragment {
             mapFragmentWelcomeDialog.setMessage("В разделе \"Карта\" Вы можете увидеть все доступные экопункты в Вашем городе. Коснувшись любого флажка, " +
                     "Вы сможете просмотреть подробную информацию о нем, а также проложить к нему маршрут. Кроме того, не забудьте открыть приложение, " +
                     "когда решите посетить один из них. Как только Вы окажетесь в зоне флажка, Вам будут начислены специальные очки, " +
-                    "которые будут отображаться в Вашем профиле.");
+                    "которые будут отображаться в Вашем профиле. Изменить город проживания можно в Настройках.");
             mapFragmentWelcomeDialog.setNegativeButton("Понятно", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -381,86 +381,87 @@ public class MapFragment extends Fragment {
             @SuppressWarnings("ConstantConditions")
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
-                if (user.isAnonymous() && (long) dataSnapshot.child("demos").child(user.getUid()).child("points").getValue() >= 1500) {
-                    closed = true;
-                }
-
-                for (DataSnapshot childSnapShot : dataSnapshot.child("markers").getChildren()) {
-                    if (childSnapShot.child("id").getValue() != null) {
-                        markerIdentifier = childSnapShot.child("id").getValue().toString();
-                    } else {
-                        markerIdentifier = "unknown";
-                    }
-                    if (childSnapShot.child("title").getValue() != null) {
-                        markerTitle = childSnapShot.child("title").getValue().toString();
-                    } else {
-                        markerTitle = "Неизвестный пункт";
-                    }
-                    if (childSnapShot.child("group").getValue() != null) {
-                        markerGroup = childSnapShot.child("group").getValue().toString();
-                    } else {
-                        markerGroup = "battery";
-                    }
-                    if (childSnapShot.child("lat").getValue() != null) {
-                        markerLatitude = (double) childSnapShot.child("lat").getValue();
-                    } else {
-                        markerLatitude = 5.0000;
-                    }
-                    if (childSnapShot.child("long").getValue() != null) {
-                        markerLongitude = (double) childSnapShot.child("long").getValue();
-                    } else if (childSnapShot.child("lng").getValue() != null) {
-                        markerLongitude = (double) childSnapShot.child("lng").getValue();
-                    } else {
-                        markerLongitude = 7.0000;
+                if (!closed) {
+                    if (user.isAnonymous() && (long) dataSnapshot.child("demos").child(user.getUid()).child("points").getValue() >= 1500) {
+                        closed = true;
                     }
 
-                    switch (markerGroup) {
-                        case "battery":
-                            usualMarkers.add(mMap.addMarker(batteryMarkerOptions
-                                    .position(new LatLng(markerLatitude, markerLongitude))
-                                    .title(markerTitle).snippet(markerIdentifier)));
-                            break;
-                        case "paper":
-                            usualMarkers.add(mMap.addMarker(paperMarkerOptions
-                                    .position(new LatLng(markerLatitude, markerLongitude))
-                                    .title(markerTitle).snippet(markerIdentifier)));
-                            break;
-                        case "glass":
-                            usualMarkers.add(mMap.addMarker(glassMarkerOptions
-                                    .position(new LatLng(markerLatitude, markerLongitude))
-                                    .title(markerTitle).snippet(markerIdentifier)));
-                            break;
-                        case "metal":
-                            usualMarkers.add(mMap.addMarker(metalMarkerOptions
-                                    .position(new LatLng(markerLatitude, markerLongitude))
-                                    .title(markerTitle).snippet(markerIdentifier)));
-                            break;
-                        case "plastic":
-                            usualMarkers.add(mMap.addMarker(plasticMarkerOptions
-                                    .position(new LatLng(markerLatitude, markerLongitude))
-                                    .title(markerTitle).snippet(markerIdentifier)));
-                            break;
-                        case "bulb":
-                            usualMarkers.add(mMap.addMarker(bulbMarkerOptions
-                                    .position(new LatLng(markerLatitude, markerLongitude))
-                                    .title(markerTitle).snippet(markerIdentifier)));
-                            break;
-                        case "danger":
-                            usualMarkers.add(mMap.addMarker(dangersMarkerOptions
-                                    .position(new LatLng(markerLatitude, markerLongitude))
-                                    .title(markerTitle).snippet(markerIdentifier)));
-                            break;
-                        case "other":
-                            usualMarkers.add(mMap.addMarker(otherMarkerOptions
-                                    .position(new LatLng(markerLatitude, markerLongitude))
-                                    .title(markerTitle).snippet(markerIdentifier)));
-                            break;
-                        case "event":
-                            eventMarkers.add(mMap.addMarker(eventMarkerOptions
-                                    .position(new LatLng(markerLatitude, markerLongitude))
-                                    .title(markerTitle).snippet(markerIdentifier)));
-                            break;
+                    for (DataSnapshot childSnapShot : dataSnapshot.child("markers").getChildren()) {
+                        if (childSnapShot.child("id").getValue() != null) {
+                            markerIdentifier = childSnapShot.child("id").getValue().toString();
+                        } else {
+                            markerIdentifier = "unknown";
+                        }
+                        if (childSnapShot.child("title").getValue() != null) {
+                            markerTitle = childSnapShot.child("title").getValue().toString();
+                        } else {
+                            markerTitle = "Неизвестный пункт";
+                        }
+                        if (childSnapShot.child("group").getValue() != null) {
+                            markerGroup = childSnapShot.child("group").getValue().toString();
+                        } else {
+                            markerGroup = "battery";
+                        }
+                        if (childSnapShot.child("lat").getValue() != null) {
+                            markerLatitude = (double) childSnapShot.child("lat").getValue();
+                        } else {
+                            markerLatitude = 5.0000;
+                        }
+                        if (childSnapShot.child("long").getValue() != null) {
+                            markerLongitude = (double) childSnapShot.child("long").getValue();
+                        } else if (childSnapShot.child("lng").getValue() != null) {
+                            markerLongitude = (double) childSnapShot.child("lng").getValue();
+                        } else {
+                            markerLongitude = 7.0000;
+                        }
+
+                        switch (markerGroup) {
+                            case "battery":
+                                usualMarkers.add(mMap.addMarker(batteryMarkerOptions
+                                        .position(new LatLng(markerLatitude, markerLongitude))
+                                        .title(markerTitle).snippet(markerIdentifier)));
+                                break;
+                            case "paper":
+                                usualMarkers.add(mMap.addMarker(paperMarkerOptions
+                                        .position(new LatLng(markerLatitude, markerLongitude))
+                                        .title(markerTitle).snippet(markerIdentifier)));
+                                break;
+                            case "glass":
+                                usualMarkers.add(mMap.addMarker(glassMarkerOptions
+                                        .position(new LatLng(markerLatitude, markerLongitude))
+                                        .title(markerTitle).snippet(markerIdentifier)));
+                                break;
+                            case "metal":
+                                usualMarkers.add(mMap.addMarker(metalMarkerOptions
+                                        .position(new LatLng(markerLatitude, markerLongitude))
+                                        .title(markerTitle).snippet(markerIdentifier)));
+                                break;
+                            case "plastic":
+                                usualMarkers.add(mMap.addMarker(plasticMarkerOptions
+                                        .position(new LatLng(markerLatitude, markerLongitude))
+                                        .title(markerTitle).snippet(markerIdentifier)));
+                                break;
+                            case "bulb":
+                                usualMarkers.add(mMap.addMarker(bulbMarkerOptions
+                                        .position(new LatLng(markerLatitude, markerLongitude))
+                                        .title(markerTitle).snippet(markerIdentifier)));
+                                break;
+                            case "danger":
+                                usualMarkers.add(mMap.addMarker(dangersMarkerOptions
+                                        .position(new LatLng(markerLatitude, markerLongitude))
+                                        .title(markerTitle).snippet(markerIdentifier)));
+                                break;
+                            case "other":
+                                usualMarkers.add(mMap.addMarker(otherMarkerOptions
+                                        .position(new LatLng(markerLatitude, markerLongitude))
+                                        .title(markerTitle).snippet(markerIdentifier)));
+                                break;
+                            case "event":
+                                eventMarkers.add(mMap.addMarker(eventMarkerOptions
+                                        .position(new LatLng(markerLatitude, markerLongitude))
+                                        .title(markerTitle).snippet(markerIdentifier)));
+                                break;
+                        }
                     }
                 }
             }
